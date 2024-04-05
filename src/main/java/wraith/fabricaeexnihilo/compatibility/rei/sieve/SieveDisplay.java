@@ -9,9 +9,10 @@ import wraith.fabricaeexnihilo.compatibility.recipeviewer.SieveRecipeKey;
 import wraith.fabricaeexnihilo.compatibility.recipeviewer.SieveRecipeOutputs;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SieveDisplay implements Display {
     public final boolean waterlogged;
@@ -23,11 +24,10 @@ public class SieveDisplay implements Display {
         this.waterlogged = key.waterlogged();
         this.input = EntryIngredients.ofIngredient(key.input());
         this.mesh = EntryIngredients.of(key.mesh());
-        this.outputs = outputs.outputs()
-                .entries()
-                .stream()
-                .map(entry -> Map.entry(EntryIngredients.of(entry.getKey()), entry.getValue()))
-                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        Map<EntryIngredient, Double> map = new HashMap<>();
+        outputs.outputs().forEach((stack, d) -> map.put(EntryIngredients.of(stack), d));
+        this.outputs = Collections.unmodifiableMap(map);
     }
 
     @Override
