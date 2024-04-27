@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "fabricaeexnihilo:flowing_brine",
+    "fabricaeexnihilo:brine",
+    "fabricaeexnihilo:flowing_blood",
+    "fabricaeexnihilo:blood",
+    "fabricaeexnihilo:flowing_witchwater",
+    "fabricaeexnihilo:witchwater",
+    "fabricaeexnihilo:flowing_milk",
+    "fabricaeexnihilo:milk"
+  ]
+}

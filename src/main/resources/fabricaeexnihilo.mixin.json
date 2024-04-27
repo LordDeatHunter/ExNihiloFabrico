@@ -13,6 +13,7 @@
     "EntityMixin",
     "FluidBlockAccess",
     "FluidBlockMixin",
+    "ItemEntityMixin",
     "ItemModelGeneratorAccess",
     "LivingEntityMixin",
     "LootContextTypesAccess"

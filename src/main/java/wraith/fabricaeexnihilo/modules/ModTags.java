@@ -22,6 +22,7 @@ public final class ModTags {
     public static final TagKey<Fluid> TRUE_LAVA = TagKey.of(RegistryKeys.FLUID, id("true_lava"));
     public static final TagKey<Fluid> TRUE_WATER = TagKey.of(RegistryKeys.FLUID, id("true_water"));
     public static final TagKey<Fluid> WITCHWATER = TagKey.of(RegistryKeys.FLUID, id("witchwater"));
+    public static final TagKey<Fluid> WATER_LIKE = TagKey.of(RegistryKeys.FLUID, id("water_like"));
 
     private ModTags() {
     }

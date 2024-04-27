@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import wraith.fabricaeexnihilo.modules.witchwater.WitchWaterFluid;
+import wraith.fabricaeexnihilo.modules.ModTags;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -28,8 +28,8 @@ public abstract class LivingEntityMixin extends Entity {
             at = @At(value = "INVOKE:LAST", target = "Lnet/minecraft/entity/LivingEntity;isOnGround()Z"),
             slice = @Slice(to = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;jump()V")))
     private void fabricaeexnihilo$fixSwimming(CallbackInfo ci) {
-        if (!this.firstUpdate && getFluidHeight(WitchWaterFluid.TAG) > 0.0 && (!this.isOnGround() || getFluidHeight(WitchWaterFluid.TAG) > getSwimHeight())) {
-            swimUpward(WitchWaterFluid.TAG);
+        if (!this.firstUpdate && getFluidHeight(ModTags.WATER_LIKE) > 0.0 && (!this.isOnGround() || getFluidHeight(ModTags.WATER_LIKE) > getSwimHeight())) {
+            swimUpward(ModTags.WATER_LIKE);
             jumpingCooldown = 1; // Prevent default jump, resets next tick anyway
         }
     }

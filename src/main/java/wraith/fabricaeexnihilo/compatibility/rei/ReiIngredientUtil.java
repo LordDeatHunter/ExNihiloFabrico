@@ -6,8 +6,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.item.Items;
 import wraith.fabricaeexnihilo.mixins.FluidBlockAccess;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 import wraith.fabricaeexnihilo.recipe.util.FluidIngredient;

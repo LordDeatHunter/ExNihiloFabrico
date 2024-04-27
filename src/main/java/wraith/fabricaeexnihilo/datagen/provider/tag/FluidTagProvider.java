@@ -40,5 +40,10 @@ public class FluidTagProvider extends FabricTagProvider.FluidTagProvider {
                 .addOptionalTag(new Identifier("techreborn", "nitro_diesel"));
         getOrCreateTagBuilder(ConventionalFluidTags.MILK)
                 .add(MilkFluid.FLOWING, MilkFluid.STILL);
+        getOrCreateTagBuilder(ModTags.WATER_LIKE)
+                .add(BrineFluid.FLOWING, BrineFluid.STILL,
+                        BloodFluid.FLOWING, BloodFluid.STILL,
+                        WitchWaterFluid.FLOWING, WitchWaterFluid.STILL,
+                        MilkFluid.FLOWING, MilkFluid.STILL);
     }
 }

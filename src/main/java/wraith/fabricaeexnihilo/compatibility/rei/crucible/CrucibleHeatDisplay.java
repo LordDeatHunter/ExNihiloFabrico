@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
 import wraith.fabricaeexnihilo.compatibility.rei.ReiIngredientUtil;
 import wraith.fabricaeexnihilo.recipe.crucible.CrucibleHeatRecipe;
-import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 
 import java.util.List;
 import java.util.Optional;

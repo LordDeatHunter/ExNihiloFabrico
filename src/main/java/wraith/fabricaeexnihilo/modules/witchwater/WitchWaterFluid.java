@@ -2,13 +2,11 @@ package wraith.fabricaeexnihilo.modules.witchwater;
 
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BucketItem;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
 import wraith.fabricaeexnihilo.modules.ModFluids;
+import wraith.fabricaeexnihilo.modules.ModTags;
 import wraith.fabricaeexnihilo.modules.base.AbstractFluid;
 import wraith.fabricaeexnihilo.modules.base.FluidSettings;
-
-import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
 public class WitchWaterFluid extends AbstractFluid {
 
@@ -17,7 +15,7 @@ public class WitchWaterFluid extends AbstractFluid {
     public static final WitchWaterFluid STILL = new WitchWaterFluid(true);
     public static final BucketItem BUCKET = new BucketItem(STILL, ModFluids.getBucketItemSettings());
     public static final WitchWaterBlock BLOCK = new WitchWaterBlock(STILL, ModFluids.getBlockSettings());
-    public static final TagKey<Fluid> TAG = TagKey.of(Registries.FLUID.getKey(), id("witchwater"));
+    public static final TagKey<Fluid> TAG = ModTags.WITCHWATER;
 
     public WitchWaterFluid(boolean isStill) {
         super(isStill, FLUID_SETTINGS,

@@ -2,6 +2,7 @@ package wraith.fabricaeexnihilo.modules.barrels;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -104,8 +105,8 @@ public class BarrelBlock extends BlockWithEntity {
             if (FabricaeExNihilo.CONFIG.get().barrels().bleeding()) {
                 var thorns = barrel.getEnchantmentContainer().getEnchantmentLevel(Enchantments.THORNS);
                 if (thorns > 0
-                        && barrel.fluidStorage.simulateInsert(FluidVariant.of(BloodFluid.STILL), 1, null) >= 1
-                        && livingEntity.damage(world.getDamageSources().cactus(), thorns / 2F)) {
+                    && StorageUtil.simulateInsert(barrel.fluidStorage, FluidVariant.of(BloodFluid.STILL), 1, null) >= 1
+                                   && livingEntity.damage(world.getDamageSources().cactus(), thorns / 2F)) {
                     var amount = FluidConstants.BUCKET * thorns / livingEntity.getMaxHealth();
                     try (Transaction t = Transaction.openOuter()) {
                         barrel.fluidStorage.insert(FluidVariant.of(BloodFluid.STILL), (long) amount, t);
