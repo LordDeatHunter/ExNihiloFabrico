@@ -19,7 +19,7 @@ public class BarrelItemStorage extends SnapshotParticipant<BarrelBlockEntity.Sna
     public long insert(ItemVariant item, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notBlankNotNegative(item, maxAmount);
         if (barrel.isCrafting()) return 0;
-        if (barrel.getState() != BarrelState.EMPTY && barrel.getState() != BarrelState.FLUID && barrel.getState() != BarrelState.COMPOST) return 0;
+        if (barrel.getState() == BarrelState.ITEM) return 0;
 
         var recipe = BarrelRecipe.findInsert(barrel, item);
 

@@ -43,14 +43,14 @@ public final class BarrelRecipe extends BaseRecipe<BarrelRecipe.Context> {
         var world = barrel.getWorld();
         if (world == null) return Optional.empty();
         var recipes = world.getRecipeManager().getAllMatches(ModRecipes.BARREL, new Context(barrel, Optional.empty()), world);
-        return recipes.size() > 0 ? Optional.of(recipes.get(world.random.nextInt(recipes.size()))) : Optional.empty();
+        return !recipes.isEmpty() ? Optional.of(recipes.get(world.random.nextInt(recipes.size()))) : Optional.empty();
     }
 
     public static Optional<BarrelRecipe> findInsert(BarrelBlockEntity barrel, ItemVariant inserted) {
         var world = barrel.getWorld();
         if (world == null) return Optional.empty();
         var recipes = world.getRecipeManager().getAllMatches(ModRecipes.BARREL, new Context(barrel, Optional.of(inserted)), world);
-        return recipes.size() > 0 ? Optional.of(recipes.get(world.random.nextInt(recipes.size()))) : Optional.empty();
+        return !recipes.isEmpty() ? Optional.of(recipes.get(world.random.nextInt(recipes.size()))) : Optional.empty();
     }
 
     @Override

@@ -183,7 +183,9 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     }
 
     public void tick() {
-        if (isCrafting() && world instanceof ServerWorld serverWorld) serverWorld.spawnParticles(ParticleTypes.EFFECT, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0.2, 0, 0.2, 0);
+        if (isCrafting() && world instanceof ServerWorld serverWorld) {
+            serverWorld.spawnParticles(ParticleTypes.EFFECT, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0.2, 0, 0.2, 0);
+        }
         if (tickCounter <= 0) {
             tickCounter = FabricaeExNihilo.CONFIG.get().barrels().tickRate();
             markDirty();
@@ -201,6 +203,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             if (!getRecipe().canContinue(world, this)) {
                 recipe = null;
                 recipeProgress = 0;
+                return;
             }
 
             var duration = getRecipe().getDuration();
@@ -292,7 +295,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     }
 
     public boolean isCrafting() {
-        return getRecipe() != null;
+        return recipeProgress > 0;
     }
 
     void beginRecipe(BarrelRecipe recipe) {
@@ -341,7 +344,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             this.state = BarrelBlockEntity.this.state;
             this.fluid = BarrelBlockEntity.this.fluid;
             this.fluidAmount = BarrelBlockEntity.this.fluidAmount;
-            this.stack = BarrelBlockEntity.this.stack;
+            this.stack = BarrelBlockEntity.this.stack.copy();
             this.compostLevel = BarrelBlockEntity.this.compostLevel;
             this.recipeProgress = BarrelBlockEntity.this.recipeProgress;
             this.recipe = BarrelBlockEntity.this.getRecipe();

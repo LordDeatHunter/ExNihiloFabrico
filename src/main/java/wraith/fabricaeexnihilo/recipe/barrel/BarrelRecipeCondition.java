@@ -147,7 +147,7 @@ public sealed interface BarrelRecipeCondition {
 
         @Override
         public boolean check(World world, BarrelBlockEntity barrel) {
-            return block.test(world.getBlockState(barrel.getPos().up()));
+            return block.test(world.getBlockState(barrel.getPos().down()));
         }
 
         @Override
