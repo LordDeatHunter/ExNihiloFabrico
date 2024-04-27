@@ -5,6 +5,7 @@ import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.type.EntryTypeRegistry;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
 import wraith.fabricaeexnihilo.compatibility.recipeviewer.SieveRecipeCombiner;
@@ -128,4 +129,8 @@ public class PluginEntry implements REIClientPlugin {
         registry.registerRecipeFiller(WitchWaterWorldRecipe.class, ModRecipes.WITCH_WATER_WORLD, WitchWaterWorldDisplay::new);
     }
 
+    @Override
+    public void registerEntryTypes(EntryTypeRegistry registry) {
+        registry.register(FireEntryDefinition.TYPE, new FireEntryDefinition());
+    }
 }

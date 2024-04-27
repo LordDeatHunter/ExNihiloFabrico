@@ -1,10 +1,18 @@
 package wraith.fabricaeexnihilo.compatibility.rei;
 
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FluidBlock;
+import net.minecraft.item.Items;
+import wraith.fabricaeexnihilo.mixins.FluidBlockAccess;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 import wraith.fabricaeexnihilo.recipe.util.FluidIngredient;
+
+import java.util.function.Function;
 
 public class ReiIngredientUtil {
     private ReiIngredientUtil() {}
@@ -13,7 +21,15 @@ public class ReiIngredientUtil {
         return fluid.getValue().map(EntryIngredients::of, EntryIngredients::ofFluidTag);
     }
 
-    public static EntryIngredient of(BlockIngredient fluid) {
-        return fluid.getValue().map(EntryIngredients::of, tag -> EntryIngredients.ofTag(tag, entry -> EntryStacks.of(entry.value())));
+    public static EntryIngredient of(BlockIngredient ingredient) {
+        Function<Block, EntryStack<?>> stackFunction = block -> {
+            if (block == Blocks.FIRE) return EntryStack.of(FireEntryDefinition.TYPE, FireEntryDefinition.FireType.NORMAL);
+            if (block == Blocks.SOUL_FIRE) return EntryStack.of(FireEntryDefinition.TYPE, FireEntryDefinition.FireType.SOUL);
+            if (block instanceof FluidBlockAccess fluidBlock) return EntryStacks.of(fluidBlock.getFluid().getBucketItem());
+            return EntryStacks.of(block);
+        };
+        return ingredient.getValue().map(
+                block -> EntryIngredient.of(stackFunction.apply(block)),
+                tag -> EntryIngredients.ofTag(tag, entry -> stackFunction.apply(entry.value())));
     }
 }

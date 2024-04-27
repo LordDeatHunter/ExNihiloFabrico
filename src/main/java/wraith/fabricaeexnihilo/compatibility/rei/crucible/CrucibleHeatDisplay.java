@@ -18,8 +18,7 @@ public class CrucibleHeatDisplay implements Display {
     private final Identifier id;
 
     public CrucibleHeatDisplay(CrucibleHeatRecipe recipe) {
-        BlockIngredient blockIngredient = recipe.getBlock();
-        this.source = ReiIngredientUtil.of(blockIngredient);
+        this.source = ReiIngredientUtil.of(recipe.getBlock());
         this.heat = recipe.getHeat();
         this.id = recipe.getId();
     }
