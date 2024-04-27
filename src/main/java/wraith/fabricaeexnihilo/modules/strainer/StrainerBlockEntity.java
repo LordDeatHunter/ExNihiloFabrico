@@ -96,7 +96,7 @@ public class StrainerBlockEntity extends BaseBlockEntity {
 
     private class StrainerItemStorage extends CombinedStorage<ItemVariant, StackStorage> {
         public StrainerItemStorage() {
-            super(IntStream.range(0, 7).mapToObj(StackStorage::new).toList());
+            super(IntStream.range(0, 8).mapToObj(StackStorage::new).toList());
         }
     }
 
