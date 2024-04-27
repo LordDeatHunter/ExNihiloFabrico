@@ -5,8 +5,7 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '1.3-SNAPSHOT'
-    id 'io.github.juuxel.loom-vineflower' version '1.11.0'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -24,6 +23,7 @@ repositories {
     maven { url "https://maven.bai.lol/" }
     maven { url "https://maven.wispforest.io" }
     maven { url "https://maven.architectury.dev/" }
+    maven { url "https://maven.quiltmc.org/repository/release" }
     maven {
         url "https://maven.blamejared.com"
         content {
@@ -33,7 +33,7 @@ repositories {
     maven {
         url "https://maven.isxander.dev/releases"
         content {
-            includeGroup "dev.isxander.yacl"
+            includeGroup "dev.isxander"
         }
     }
     maven {
@@ -55,7 +55,12 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-    maven { url "https://jitpack.io" }
+    maven {
+        url "https://jitpack.io"
+        content {
+            includeGroupByRegex("com\\.github\\..+")
+        }
+    }
 }
 
 // toggle this if you need to make a change to allow intellij to refresh
@@ -67,8 +72,6 @@ var settings = new Object() {
     boolean modmenu
     boolean rei
     boolean emi
-    boolean theOneProbe
-    boolean kubejs
     boolean techReborn
     boolean industrialRevolution
     boolean modernIndustrialization
@@ -85,13 +88,9 @@ dependencies {
 
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version"
     modCompileOnly "dev.emi:emi-fabric:$emi_version:api"
-    modCompileOnly "dev.latvian.mods:kubejs-fabric:$kubejs_version"
     modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
 
-    include(implementation("com.github.LlamaLad7.mixinextras:mixinextras-fabric:$mixinextras_version"))
-    annotationProcessor("com.github.LlamaLad7.mixinextras:mixinextras-fabric:$mixinextras_version")
-
-    modImplementation include("dev.isxander.yacl:yet-another-config-lib-fabric:$yacl_version")
+    modImplementation include("dev.isxander:yet-another-config-lib:$yacl_version")
     modImplementation annotationProcessor(include("com.github.mattidragon:configtoolkit:$configtoolkit_version"))
 
     // Add generated data to runtime classpath (slightly hacky)
@@ -104,12 +103,9 @@ dependencies {
     if (settings.emi) {
         modRuntimeOnly "dev.emi:emi-fabric:$emi_version"
     }
-    // Disabled: no 1.19.3 support
-    //if (settings.kubejs) modRuntimeOnly "dev.latvian.mods:kubejs-fabric:$kubejs_version"
     if (settings.modmenu) modRuntimeOnly "com.terraformersmc:modmenu:$modmenu_version"
     if (settings.techReborn) modRuntimeOnly "TechReborn:TechReborn-1.19:$tech_reborn_version"
-    // Disabled: Mojmap breaking shit
-    //if (settings.modernIndustrialization) modRuntimeOnly "maven.modrinth:modern-industrialization:$modern_industrialization_version"
+    if (settings.modernIndustrialization) modRuntimeOnly "maven.modrinth:modern-industrialization:$modern_industrialization_version"
     if (settings.industrialRevolution) modRuntimeOnly "curse.maven:industrial-revolution-391708:$industrial_revolution_version"
 
     // WTHIT and Megane
@@ -125,17 +121,9 @@ dependencies {
         modRuntimeOnly "lol.bai.megane:megane-api:$megane_version"
     }
 
-    // The one probe
-    modCompileOnly "mcjty.theoneprobe:theoneprobe-fabric:$theoneprobe_version"
-    // Disabled: No 1.19.3 support
-    //if (settings.theOneProbe) {
-    //    modRuntimeOnly "mcjty.theoneprobe:theoneprobe-fabric:$theoneprobe_version"
-    //    modRuntimeOnly "com.electronwill.night-config:toml:3.6.0"
-    //}
-
-    modCompileOnly "curse.maven:jade-324717:4434061"
+    modCompileOnly "maven.modrinth:jade:$jade_version+fabric"
     if (settings.jade) {
-        modRuntimeOnly "curse.maven:jade-324717:4434061"
+        modRuntimeOnly "maven.modrinth:jade:$jade_version+fabric"
     }
 }
 

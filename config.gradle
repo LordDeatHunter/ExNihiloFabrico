@@ -2,7 +2,7 @@ import java.nio.file.Files
 
 var path = project.file("dev_settings.properties").toPath()
 var properties = new Properties()
-properties.putAll(wthit: "false", the_one_probe: "true", modmenu: "true", rei: "true", emi: "false", kubejs: "false", tech_reborn: "false", industrial_revolution: "false", modern_industrialization: "false", jade: "false")
+properties.putAll(wthit: "false", modmenu: "true", rei: "true", emi: "false", tech_reborn: "false", industrial_revolution: "false", modern_industrialization: "false", jade: "false")
 
 if (Files.exists(path)) {
     properties.load(Files.newBufferedReader(path))
@@ -15,8 +15,6 @@ megane = Boolean.parseBoolean(properties.getProperty("megane"))
 modmenu = Boolean.parseBoolean(properties.getProperty("modmenu"))
 rei = Boolean.parseBoolean(properties.getProperty("rei"))
 emi = Boolean.parseBoolean(properties.getProperty("emi"))
-theOneProbe = Boolean.parseBoolean(properties.getProperty("the_one_probe"))
-kubejs = Boolean.parseBoolean(properties.getProperty("kubejs"))
 techReborn = Boolean.parseBoolean(properties.getProperty("tech_reborn"))
 industrialRevolution = Boolean.parseBoolean(properties.getProperty("industrial_revolution"))
 modernIndustrialization = Boolean.parseBoolean(properties.getProperty("modern_industrialization"))
