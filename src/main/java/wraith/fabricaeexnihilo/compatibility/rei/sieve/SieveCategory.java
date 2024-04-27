@@ -7,7 +7,6 @@ import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
-import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
@@ -26,7 +25,6 @@ import java.util.List;
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
 public class SieveCategory implements DisplayCategory<SieveDisplay> {
-
     public static final Identifier ARROW = id("textures/gui/rei/glyphs.png");
     public static final int ARROW_HEIGHT = 16;
     public static final int ARROW_U = 0;
@@ -58,10 +56,10 @@ public class SieveCategory implements DisplayCategory<SieveDisplay> {
 
     private void applyTooltip(EntryIngredient ingredient, List<Tooltip.Entry> tooltips) {
         for (var stack : ingredient) {
-            ClientEntryStacks.setTooltipProcessor(stack, ((entryStack, tooltip) -> {
+            stack.tooltipProcessor((entryStack, tooltip) -> {
                 tooltip.entries().addAll(1, tooltips);
                 return tooltip;
-            }));
+            });
         }
     }
 
@@ -116,8 +114,10 @@ public class SieveCategory implements DisplayCategory<SieveDisplay> {
                 if (index < outputs.size()) {
                     var output = outputs.get(index);
                     List<Tooltip.Entry> tooltips = new ArrayList<>();
-                    var chance = display.outputs.get(output);
-                    tooltips.add(Tooltip.entry(Text.literal(chance * 100 + "%").formatted(Formatting.GRAY)));
+                    var chances = display.outputs.get(output);
+                    for (var chance : chances) {
+                        tooltips.add(Tooltip.entry(Text.literal(chance * 100 + "%").formatted(Formatting.GRAY)));
+                    }
 
                     applyTooltip(output, tooltips);
                     slot.entries(output);

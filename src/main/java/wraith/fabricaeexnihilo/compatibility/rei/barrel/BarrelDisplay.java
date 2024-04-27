@@ -65,7 +65,7 @@ public class BarrelDisplay implements Display {
         } else if (condition instanceof BarrelRecipeCondition.FluidIn fluidIn) {
             inputFluid = ReiIngredientUtil.of(fluidIn.fluid());
         } else {
-            FabricaeExNihilo.LOGGER.warn("Unsupported barrel recipe condition in REI code: " + condition);
+            FabricaeExNihilo.LOGGER.warn("Unsupported barrel recipe condition in REI code: {}", condition);
         }
     }
 

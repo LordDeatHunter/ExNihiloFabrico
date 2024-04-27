@@ -1,5 +1,7 @@
 package wraith.fabricaeexnihilo.compatibility.rei.sieve;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -10,24 +12,19 @@ import wraith.fabricaeexnihilo.compatibility.recipeviewer.SieveRecipeOutputs;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SieveDisplay implements Display {
     public final boolean waterlogged;
     public final EntryIngredient input;
     public final EntryIngredient mesh;
-    public final Map<EntryIngredient, Double> outputs;
+    public final Multimap<EntryIngredient, Double> outputs;
 
     public SieveDisplay(SieveRecipeKey key, SieveRecipeOutputs outputs) {
         this.waterlogged = key.waterlogged();
         this.input = EntryIngredients.ofIngredient(key.input());
         this.mesh = EntryIngredients.of(key.mesh());
-        this.outputs = outputs.outputs()
-                .entries()
-                .stream()
-                .map(entry -> Map.entry(EntryIngredients.of(entry.getKey()), entry.getValue()))
-                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+        this.outputs = HashMultimap.create();
+        outputs.outputs().forEach((stack, chance) -> this.outputs.put(EntryIngredients.of(stack), chance));
     }
 
     @Override
