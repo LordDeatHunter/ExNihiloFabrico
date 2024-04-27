@@ -24,6 +24,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
+import wraith.fabricaeexnihilo.config.SieveConfig;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
 import wraith.fabricaeexnihilo.modules.base.BaseBlockEntity;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
@@ -42,7 +43,8 @@ public class SieveBlockEntity extends BaseBlockEntity {
             ModBlocks.SIEVES.values().toArray(new SieveBlock[0])
     ).build(null);
     public static final Identifier BLOCK_ENTITY_ID = id("sieve");
-    double progress = 0.0;
+    private double progress = 0.0;
+    private long lastClickTick = 0;
     private ItemStack contents = ItemStack.EMPTY;
     private ItemStack mesh = ItemStack.EMPTY;
 
@@ -111,13 +113,17 @@ public class SieveBlockEntity extends BaseBlockEntity {
         if (world == null) {
             return;
         }
-        var haste = player.getActiveStatusEffects().get(StatusEffects.HASTE);
-        var efficiency = FabricaeExNihilo.CONFIG.get().sieves().efficiency() ? EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, mesh) : 0;
-        var hasteLevel = FabricaeExNihilo.CONFIG.get().sieves().haste() ? (haste == null ? -1 : haste.getAmplifier()) + 1 : 0;
+        if (world.getTime() - lastClickTick < 4) return;
+        lastClickTick = world.getTime();
 
-        progress += FabricaeExNihilo.CONFIG.get().sieves().baseProgress()
-                    + FabricaeExNihilo.CONFIG.get().sieves().efficiencyScaleFactor() * efficiency
-                    + FabricaeExNihilo.CONFIG.get().sieves().hasteScaleFactor() * hasteLevel;
+        var config = FabricaeExNihilo.CONFIG.get().sieves();
+        var haste = player.getActiveStatusEffects().get(StatusEffects.HASTE);
+        var efficiency = config.efficiency() ? EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, mesh) : 0;
+        var hasteLevel = config.haste() ? (haste == null ? -1 : haste.getAmplifier()) + 1 : 0;
+
+        progress += config.baseProgress()
+                    + config.efficiencyScaleFactor() * efficiency
+                    + config.hasteScaleFactor() * hasteLevel;
 
         //TODO: spawn some particles
         if (progress > 1.0) {
