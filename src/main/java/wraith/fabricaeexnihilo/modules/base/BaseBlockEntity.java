@@ -16,9 +16,7 @@ public abstract class BaseBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
-    @Override
-    public void markDirty() {
-        super.markDirty();
+    public final void markForUpdate() {
         if (this.world != null && this.world instanceof ServerWorld serverWorld) {
             var chunkManager = serverWorld.getChunkManager();
             if (chunkManager != null) {

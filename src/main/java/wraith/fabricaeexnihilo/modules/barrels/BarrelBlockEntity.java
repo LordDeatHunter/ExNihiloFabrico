@@ -92,7 +92,6 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             world.spawnEntity(entity);
         }
         setItem(ItemStack.EMPTY);
-        markDirty();
     }
 
     public int getEfficiencyMultiplier() {
@@ -212,6 +211,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                 finishRecipe();
             }
             markDirty();
+            markForUpdate();
             return;
         }
 
@@ -223,6 +223,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                         finishRecipe(); // instant recipe
                     }
                     markDirty();
+                    markForUpdate();
                 });
             }
             case ITEM -> {}
@@ -231,6 +232,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                 recipeProgress += FabricaeExNihilo.CONFIG.get().barrels().compostRate() * getEfficiencyMultiplier();
                 if (recipeProgress >= 1) finishCompost();
                 markDirty();
+                markForUpdate();
             }
         }
 
@@ -242,12 +244,14 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             this.fluidAmount = 0;
             this.state = BarrelState.EMPTY;
             markDirty();
+            markForUpdate();
             return;
         }
         this.fluid = fluid;
         this.fluidAmount = amount;
         this.state = BarrelState.FLUID;
         markDirty();
+        markForUpdate();
     }
 
     public void setItem(ItemStack stack) {
@@ -261,6 +265,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         this.state = BarrelState.ITEM;
         this.stack = stack.copy();
         markDirty();
+        markForUpdate();
     }
 
     public void fillCompost(ItemStack result, float increment) {
@@ -276,6 +281,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                 throw new IllegalStateException("Can't compost in state: " + state);
         }
         markDirty();
+        markForUpdate();
     }
 
     public FluidVariant getFluid() {

@@ -98,6 +98,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
             var amount = StorageUtil.move(fluidStorage, bucketFluidStorage, fluid -> true, Long.MAX_VALUE, null);
             if (amount > 0) {
                 markDirty();
+                markForUpdate();
                 return ActionResult.SUCCESS;
             }
         }
@@ -110,6 +111,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
                     held.decrement((int) amount);
                 }
                 markDirty();
+                markForUpdate();
                 return ActionResult.SUCCESS;
             }
         }
@@ -192,6 +194,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
             contained += amount;
             queued -= amount;
             markDirty();
+            markForUpdate();
             tickCounter = FabricaeExNihilo.CONFIG.get().crucibles().tickRate();
         }
     }

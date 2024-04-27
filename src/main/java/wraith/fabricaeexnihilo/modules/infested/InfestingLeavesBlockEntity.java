@@ -45,6 +45,7 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
 
         if (infestedLeavesEntity.progress < 1f) {
             infestedLeavesEntity.markDirty();
+            infestedLeavesEntity.markForUpdate();
             if (infestedLeavesEntity.progress > FabricaeExNihilo.CONFIG.get().infested().minimumSpreadProgress() && world != null) {
                 InfestedHelper.tryToSpreadFrom(world, blockPos, FabricaeExNihilo.CONFIG.get().infested().infestingSpreadAttempts());
             }

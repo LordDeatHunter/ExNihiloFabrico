@@ -110,7 +110,7 @@ public class StrainerBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!(world.getBlockEntity(pos) instanceof StrainerBlockEntity strainer)) {
-            FabricaeExNihilo.LOGGER.warn("Strainer has wrong type of block entity at " + pos);
+            FabricaeExNihilo.LOGGER.warn("Strainer has wrong type of block entity at {}", pos);
             return ActionResult.PASS;
         }
         for (int i = 0; i < strainer.getInventory().size(); i++) {
@@ -120,6 +120,7 @@ public class StrainerBlock extends BlockWithEntity implements Waterloggable {
             strainer.getInventory().set(i, ItemStack.EMPTY);
             player.getInventory().offerOrDrop(stack);
             strainer.markDirty();
+            strainer.markForUpdate();
             return ActionResult.SUCCESS;
         }
 

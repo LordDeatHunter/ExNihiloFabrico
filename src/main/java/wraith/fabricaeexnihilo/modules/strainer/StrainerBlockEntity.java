@@ -90,6 +90,7 @@ public class StrainerBlockEntity extends BaseBlockEntity {
             }
             var config = FabricaeExNihilo.CONFIG.get().strainers();
             strainer.timeUntilCatch = world.random.nextBetween(config.minWaitTime(), config.maxWaitTime());
+            strainer.markForUpdate();
         }
         strainer.markDirty();
     }
@@ -135,6 +136,7 @@ public class StrainerBlockEntity extends BaseBlockEntity {
         @Override
         protected void onFinalCommit() {
             markDirty();
+            markForUpdate();
         }
     }
 

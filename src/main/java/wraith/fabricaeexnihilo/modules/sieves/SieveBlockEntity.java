@@ -77,6 +77,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
             player.getInventory().offerOrDrop(mesh.copy());
             mesh = ItemStack.EMPTY;
             markDirty();
+            markForUpdate();
             return ActionResult.SUCCESS;
         } else if (mesh.isEmpty() && isValidMesh(item)) {
             // Add mesh
@@ -85,6 +86,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
                 held.decrement(1);
             }
             markDirty();
+            markForUpdate();
             return ActionResult.SUCCESS;
         }
 
@@ -92,7 +94,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
         if (held.isEmpty() || SieveRecipe.find(held.getItem(), state.get(WATERLOGGED), Registries.ITEM.getId(mesh.getItem()), world).isEmpty()) {
             return ActionResult.PASS;
         }
-        final ItemStack finalHeld = held;
+        var finalHeld = held;
         sieves.forEach(sieve -> sieve.setContents(finalHeld, !player.isCreative()));
         return ActionResult.SUCCESS;
     }
@@ -127,6 +129,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
             contents = ItemStack.EMPTY;
         }
         markDirty();
+        markForUpdate();
     }
 
     public void dropInventory() {
@@ -217,7 +220,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         if (nbt == null) {
-            FabricaeExNihilo.LOGGER.warn("A sieve at " + this.pos + " is missing data.");
+            FabricaeExNihilo.LOGGER.warn("A sieve at {} is missing data.", this.pos);
             return;
         }
         readNbtWithoutWorldInfo(nbt);
@@ -239,6 +242,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
         }
         progress = 0.0;
         markDirty();
+        markForUpdate();
     }
 
     /**
@@ -256,6 +260,4 @@ public class SieveBlockEntity extends BaseBlockEntity {
         nbt.put("contents", contents.writeNbt(new NbtCompound()));
         nbt.putDouble("progress", progress);
     }
-
-
 }
