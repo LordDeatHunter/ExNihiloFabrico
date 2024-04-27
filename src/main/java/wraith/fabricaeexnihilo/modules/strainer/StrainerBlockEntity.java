@@ -71,7 +71,7 @@ public class StrainerBlockEntity extends BaseBlockEntity {
     public static void tick(World world, BlockPos blockPos, BlockState state, StrainerBlockEntity strainer) {
         if (world.isClient || !state.get(StrainerBlock.WATERLOGGED))
             return;
-        if (strainer.timeUntilCatch-- == 0) {
+        if (strainer.timeUntilCatch-- <= 0) {
             var params = new LootContextParameterSet.Builder((ServerWorld) world)
                     .add(LootContextParameters.BLOCK_ENTITY, strainer)
                     .add(LootContextParameters.BLOCK_STATE, state)
@@ -89,7 +89,7 @@ public class StrainerBlockEntity extends BaseBlockEntity {
                 }
             }
             var config = FabricaeExNihilo.CONFIG.get().strainers();
-            strainer.timeUntilCatch = world.random.nextBetweenExclusive(config.minWaitTime(), config.maxWaitTime());
+            strainer.timeUntilCatch = world.random.nextBetween(config.minWaitTime(), config.maxWaitTime());
         }
         strainer.markDirty();
     }
