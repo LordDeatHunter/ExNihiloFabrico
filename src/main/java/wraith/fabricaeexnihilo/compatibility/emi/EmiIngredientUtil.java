@@ -2,14 +2,12 @@ package wraith.fabricaeexnihilo.compatibility.emi;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import wraith.fabricaeexnihilo.compatibility.recipeviewer.FireType;
-import wraith.fabricaeexnihilo.compatibility.rei.FireEntryDefinition;
 import wraith.fabricaeexnihilo.mixins.FluidBlockAccess;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 import wraith.fabricaeexnihilo.recipe.util.FluidIngredient;

@@ -24,7 +24,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
-import wraith.fabricaeexnihilo.config.SieveConfig;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
 import wraith.fabricaeexnihilo.modules.base.BaseBlockEntity;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
