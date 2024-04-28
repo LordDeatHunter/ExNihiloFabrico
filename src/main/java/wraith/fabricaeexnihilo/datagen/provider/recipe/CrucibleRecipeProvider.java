@@ -27,9 +27,10 @@ public class CrucibleRecipeProvider extends FabricRecipeProvider {
         new CrucibleHeatRecipeJsonBuilder(Blocks.SHROOMLIGHT, 2).offerTo(exporter, "heat_from_shroomlight");
         new CrucibleHeatRecipeJsonBuilder(Blocks.MAGMA_BLOCK, 3).offerTo(exporter, "heat_from_magma_block");
         new CrucibleHeatRecipeJsonBuilder(Blocks.LAVA, 4).offerTo(exporter, "heat_from_lava");
-        new CrucibleHeatRecipeJsonBuilder(Blocks.SOUL_CAMPFIRE, 4).offerTo(exporter, "heat_from_soul_campfire");
         new CrucibleHeatRecipeJsonBuilder(Blocks.CAMPFIRE, 4).offerTo(exporter, "heat_from_campfire");
+        new CrucibleHeatRecipeJsonBuilder(Blocks.SOUL_CAMPFIRE, 4).offerTo(exporter, "heat_from_soul_campfire");
         new CrucibleHeatRecipeJsonBuilder(Blocks.FIRE, 5).offerTo(exporter, "heat_from_fire");
+        new CrucibleHeatRecipeJsonBuilder(Blocks.SOUL_FIRE, 5).offerTo(exporter, "heat_from_soul_fire");
 
         CrucibleRecipeJsonBuilder.lava(Items.OBSIDIAN, 81000).offerTo(exporter, "lava_from_obsidian");
 

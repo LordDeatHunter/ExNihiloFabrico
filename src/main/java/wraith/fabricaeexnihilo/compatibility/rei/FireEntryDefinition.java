@@ -11,22 +11,20 @@ import me.shedaniel.rei.api.common.entry.type.EntryDefinition;
 import me.shedaniel.rei.api.common.entry.type.EntryType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
+import wraith.fabricaeexnihilo.compatibility.recipeviewer.FireType;
 
 import java.util.stream.Stream;
 
-public class FireEntryDefinition implements EntryDefinition<FireEntryDefinition.FireType> {
+public class FireEntryDefinition implements EntryDefinition<FireType> {
     public static final EntryType<FireType> TYPE = EntryType.deferred(FabricaeExNihilo.id("fire"));
 
     @Override
@@ -95,25 +93,6 @@ public class FireEntryDefinition implements EntryDefinition<FireEntryDefinition.
         return Stream.empty();
     }
 
-    public enum FireType {
-        NORMAL(Blocks.FIRE),
-        SOUL(Blocks.SOUL_FIRE);
-
-        public final Block block;
-
-        FireType(Block block) {
-            this.block = block;
-        }
-
-        private Identifier getId() {
-            return Registries.BLOCK.getId(block);
-        }
-
-        private Text getName() {
-            return block.getName();
-        }
-    }
-
     @Environment(EnvType.CLIENT)
     private static class Renderer implements EntryRenderer<FireType> {
         public static final Renderer INSTANCE = new Renderer();
@@ -130,7 +109,7 @@ public class FireEntryDefinition implements EntryDefinition<FireEntryDefinition.
 
         @Override
         public @Nullable Tooltip getTooltip(EntryStack<FireType> entry, TooltipContext context) {
-            return Tooltip.create();
+            return Tooltip.create(entry.getValue().getName());
         }
     }
 }
