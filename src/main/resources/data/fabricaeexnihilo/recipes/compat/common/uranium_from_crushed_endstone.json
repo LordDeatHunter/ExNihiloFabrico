@@ -2,7 +2,7 @@
   "type": "fabricaeexnihilo:sieve",
   "result": "fabricaeexnihilo:raw_uranium_piece",
   "input": {
-    "item": "minecraft:gravel"
+    "item": "fabricaeexnihilo:crushed_endstone"
   },
   "rolls": {
     "fabricaeexnihilo:diamond_mesh": [0.2],

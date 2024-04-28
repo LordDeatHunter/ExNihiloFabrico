@@ -2,7 +2,7 @@
   "type": "fabricaeexnihilo:sieve",
   "result": "fabricaeexnihilo:raw_platinum_piece",
   "input": {
-    "item": "fabricaeexnihilo:crushed_endstone"
+    "item": "minecraft:gravel"
   },
   "rolls": {
     "fabricaeexnihilo:diamond_mesh": [0.1, 0.1],
