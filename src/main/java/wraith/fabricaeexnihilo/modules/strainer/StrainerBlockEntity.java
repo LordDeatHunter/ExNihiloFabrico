@@ -92,8 +92,14 @@ public class StrainerBlockEntity extends BaseBlockEntity {
             strainer.timeUntilCatch = world.random.nextBetween(config.minWaitTime(), config.maxWaitTime());
             strainer.markForUpdate();
         }
-        strainer.markDirty();
+        // dirty fix for https://github.com/LordDeatHunter/FabricaeExNihilo/issues/55
+        if (--dirtyTimeout<=0) {
+            // why do we even want to call this in tick()?
+            strainer.markDirty();
+            dirtyTimeout = 100;
+        }
     }
+    private static int dirtyTimeout = 100;
 
     private class StrainerItemStorage extends CombinedStorage<ItemVariant, StackStorage> {
         public StrainerItemStorage() {

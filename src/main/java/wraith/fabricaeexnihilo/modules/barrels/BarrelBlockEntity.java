@@ -187,13 +187,25 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         }
         if (tickCounter <= 0) {
             tickCounter = FabricaeExNihilo.CONFIG.get().barrels().tickRate();
-            markDirty();
+            // dirty fix for https://github.com/LordDeatHunter/FabricaeExNihilo/issues/55
+            if (--dirtyTimeoutA<=0) {
+                // why do we even want to call this in tick()?
+                markDirty();
+                dirtyTimeoutA = 100;
+            }
             tickRecipe();
         } else {
             --tickCounter;
-            markDirty();
+            // dirty fix for https://github.com/LordDeatHunter/FabricaeExNihilo/issues/55
+            if (--dirtyTimeoutB<=0) {
+                // why do we even want to call this in tick()?
+                markDirty();
+                dirtyTimeoutB = 100;
+            }
         }
     }
+    private static int dirtyTimeoutA = 100;
+    private static int dirtyTimeoutB = 100;
 
     private void tickRecipe() {
         if (world == null || world.isClient) return;
