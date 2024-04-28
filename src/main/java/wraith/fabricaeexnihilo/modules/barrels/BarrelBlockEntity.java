@@ -182,8 +182,15 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     }
 
     public void tick() {
-        if (isCrafting() && world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(ParticleTypes.EFFECT, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0.2, 0, 0.2, 0);
+        if (isCrafting() && world != null && world.isClient) {
+            var random = world.random;
+            world.addParticle(ParticleTypes.EFFECT,
+                    pos.getX() + 0.5 + random.nextGaussian() * 0.2,
+                    pos.getY() + 1,
+                    pos.getZ() + 0.5 + random.nextGaussian() * 0.2,
+                    0,
+                    0,
+                    0);
         }
         if (tickCounter <= 0) {
             tickCounter = FabricaeExNihilo.CONFIG.get().barrels().tickRate();
@@ -196,7 +203,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     }
 
     private void tickRecipe() {
-        if (world == null || world.isClient) return;
+        if (world == null/* || world.isClient*/) return;
 
         if (getRecipe() != null) {
             if (!getRecipe().canContinue(world, this)) {
@@ -211,7 +218,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                 finishRecipe();
             }
             markDirty();
-            markForUpdate();
+//            markForUpdate();
             return;
         }
 
@@ -223,16 +230,16 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                         finishRecipe(); // instant recipe
                     }
                     markDirty();
-                    markForUpdate();
+//                    markForUpdate();
                 });
             }
             case ITEM -> {}
             case COMPOST -> {
                 if (compostLevel < 1) break;
-                recipeProgress += FabricaeExNihilo.CONFIG.get().barrels().compostRate() * getEfficiencyMultiplier();
+                recipeProgress += (float) (FabricaeExNihilo.CONFIG.get().barrels().compostRate() * getEfficiencyMultiplier());
                 if (recipeProgress >= 1) finishCompost();
                 markDirty();
-                markForUpdate();
+//                markForUpdate();
             }
         }
 
@@ -243,13 +250,11 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             this.fluid = FluidVariant.blank();
             this.fluidAmount = 0;
             this.state = BarrelState.EMPTY;
-            markDirty();
-            markForUpdate();
-            return;
+        } else {
+            this.fluid = fluid;
+            this.fluidAmount = amount;
+            this.state = BarrelState.FLUID;
         }
-        this.fluid = fluid;
-        this.fluidAmount = amount;
-        this.state = BarrelState.FLUID;
         markDirty();
         markForUpdate();
     }
@@ -259,11 +264,10 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         if (stack.isEmpty()) {
             this.state = BarrelState.EMPTY;
             this.stack = ItemStack.EMPTY;
-            markDirty();
-            return;
+        } else {
+            this.state = BarrelState.ITEM;
+            this.stack = stack.copy();
         }
-        this.state = BarrelState.ITEM;
-        this.stack = stack.copy();
         markDirty();
         markForUpdate();
     }
@@ -309,16 +313,19 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     }
 
     private void finishRecipe() {
-        if (!(world instanceof ServerWorld serverWorld)) return;
-        getRecipe().apply(serverWorld, this);
+        if (world instanceof ServerWorld serverWorld) {
+            getRecipe().apply(serverWorld, this);
+        }
         recipe = null;
         recipeProgress = 0;
+        markForUpdate();
     }
 
     private void finishCompost() {
         state = BarrelState.ITEM;
         compostLevel = 0;
         recipeProgress = 0;
+        markForUpdate();
     }
 
     private BarrelRecipe getRecipe() {

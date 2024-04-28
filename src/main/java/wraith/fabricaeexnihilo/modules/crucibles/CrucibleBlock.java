@@ -59,7 +59,7 @@ public class CrucibleBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? null : checkType(type, CrucibleBlockEntity.TYPE, CrucibleBlockEntity::ticker);
+        return checkType(type, CrucibleBlockEntity.TYPE, (world1, blockPos, blockState, crucibleEntity) -> crucibleEntity.tick());
     }
 
     public boolean isFireproof() {

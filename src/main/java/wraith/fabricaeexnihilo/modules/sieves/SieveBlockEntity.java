@@ -79,7 +79,6 @@ public class SieveBlockEntity extends BaseBlockEntity {
             player.getInventory().offerOrDrop(mesh.copy());
             mesh = ItemStack.EMPTY;
             markDirty();
-            markForUpdate();
             return ActionResult.SUCCESS;
         } else if (mesh.isEmpty() && isValidMesh(item)) {
             // Add mesh
@@ -88,7 +87,6 @@ public class SieveBlockEntity extends BaseBlockEntity {
                 held.decrement(1);
             }
             markDirty();
-            markForUpdate();
             return ActionResult.SUCCESS;
         }
 
@@ -133,9 +131,9 @@ public class SieveBlockEntity extends BaseBlockEntity {
             }
             progress = 0.0;
             contents = ItemStack.EMPTY;
+            markForUpdate();
         }
         markDirty();
-        markForUpdate();
     }
 
     public void dropInventory() {

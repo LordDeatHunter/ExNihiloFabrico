@@ -24,7 +24,7 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
     public static final Identifier BLOCK_ENTITY_ID = id("infesting");
     private double progress = 0.0;
     private InfestedLeavesBlock target = ModBlocks.INFESTED_LEAVES.values().stream().findFirst().orElseThrow();
-    private int tickCounter;
+    private int tickCounter = 0;
     public static final BlockEntityType<InfestingLeavesBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
             InfestingLeavesBlockEntity::new,
             ModBlocks.INFESTING_LEAVES
@@ -32,35 +32,25 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
 
     public InfestingLeavesBlockEntity(BlockPos pos, BlockState state) {
         super(TYPE, pos, state);
-        tickCounter = world == null ? 0 : world.random.nextInt(FabricaeExNihilo.CONFIG.get().barrels().tickRate());
     }
 
-    public static void ticker(World world, BlockPos blockPos, BlockState blockState, InfestingLeavesBlockEntity infestedLeavesEntity) {
+    public static void ticker(World world, BlockPos pos, BlockState state, InfestingLeavesBlockEntity blockEntity) {
         // Don't update every single tick
-        if (++infestedLeavesEntity.tickCounter % FabricaeExNihilo.CONFIG.get().infested().updateFrequency() != 0) {
+        if (++blockEntity.tickCounter % FabricaeExNihilo.CONFIG.get().infested().updateFrequency() != 0) {
             return;
         }
         // Advance
-        infestedLeavesEntity.progress += FabricaeExNihilo.CONFIG.get().infested().progressPerUpdate();
+        blockEntity.progress += FabricaeExNihilo.CONFIG.get().infested().progressPerUpdate();
+        blockEntity.markDirty();
 
-        if (infestedLeavesEntity.progress < 1f) {
-            infestedLeavesEntity.markDirty();
-            infestedLeavesEntity.markForUpdate();
-            if (infestedLeavesEntity.progress > FabricaeExNihilo.CONFIG.get().infested().minimumSpreadProgress() && world != null) {
-                InfestedHelper.tryToSpreadFrom(world, blockPos, FabricaeExNihilo.CONFIG.get().infested().infestingSpreadAttempts());
-            }
-            return;
+        if (blockEntity.progress >= 1f) { // Done Transforming
+            var newState = blockEntity.target.getDefaultState()
+                    .with(LeavesBlock.DISTANCE, state.get(LeavesBlock.DISTANCE))
+                    .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT));
+            world.setBlockState(pos, newState);
+        } else if (!world.isClient && blockEntity.progress > FabricaeExNihilo.CONFIG.get().infested().minimumSpreadProgress()) {
+            InfestedHelper.tryToSpreadFrom(world, pos, FabricaeExNihilo.CONFIG.get().infested().infestingSpreadAttempts());
         }
-
-        // Done Transforming
-        if (world == null) {
-            return;
-        }
-        var curState = world.getBlockState(blockPos);
-        var newState = infestedLeavesEntity.target.getDefaultState()
-                .with(LeavesBlock.DISTANCE, curState.get(LeavesBlock.DISTANCE))
-                .with(LeavesBlock.PERSISTENT, curState.get(LeavesBlock.PERSISTENT));
-        world.setBlockState(blockPos, newState);
     }
 
     @Override
@@ -84,10 +74,6 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        if (nbt == null) {
-            FabricaeExNihilo.LOGGER.warn("An infesting leaves block at " + pos + " is missing data.");
-            return;
-        }
         readNbtWithoutWorldInfo(nbt);
     }
 

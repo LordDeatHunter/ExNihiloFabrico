@@ -27,7 +27,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
@@ -58,9 +57,6 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
         FluidStorage.SIDED.registerForBlockEntity((crucible, direction) -> crucible.fluidStorage, TYPE);
     }
 
-    /**
-     * Enchantments
-     */
     private final EnchantmentContainer enchantments = new EnchantmentContainer();
     private final Storage<FluidVariant> fluidStorage = new CrucibleFluidStorage();
     private final Storage<ItemVariant> itemStorage = new CrucibleItemStorage();
@@ -79,11 +75,6 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
                 : world.random.nextInt(FabricaeExNihilo.CONFIG.get().crucibles().tickRate());
     }
 
-    @SuppressWarnings("unused") // lambda stuff
-    public static void ticker(World world, BlockPos blockPos, BlockState blockState, CrucibleBlockEntity crucibleEntity) {
-        crucibleEntity.tick();
-    }
-
     public ActionResult activate(@Nullable PlayerEntity player, @Nullable Hand hand) {
         if (world == null || player == null) {
             return ActionResult.PASS;
@@ -98,7 +89,6 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
             var amount = StorageUtil.move(fluidStorage, bucketFluidStorage, fluid -> true, Long.MAX_VALUE, null);
             if (amount > 0) {
                 markDirty();
-                markForUpdate();
                 return ActionResult.SUCCESS;
             }
         }
@@ -111,7 +101,6 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
                     held.decrement((int) amount);
                 }
                 markDirty();
-                markForUpdate();
                 return ActionResult.SUCCESS;
             }
         }
@@ -168,7 +157,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         if (nbt == null) {
-            FabricaeExNihilo.LOGGER.warn("A crucible at " + pos + " is missing data.");
+            FabricaeExNihilo.LOGGER.warn("A crucible at {} is missing data.", pos);
             return;
         }
         readNbtWithoutWorldInfo(nbt);
@@ -194,7 +183,6 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
             contained += amount;
             queued -= amount;
             markDirty();
-            markForUpdate();
             tickCounter = FabricaeExNihilo.CONFIG.get().crucibles().tickRate();
         }
     }
@@ -207,7 +195,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
         var state = world.getBlockState(pos.down());
         heat = CrucibleHeatRecipe.find(state, world).map(CrucibleHeatRecipe::getHeat).orElse(0);
         if (state.getBlock() instanceof FluidBlock) {
-            heat *= state.getFluidState().getHeight();
+            heat = (int) (heat * state.getFluidState().getHeight());
         }
         heat += getFireAspectAdder();
         if (heat != oldHeat) {

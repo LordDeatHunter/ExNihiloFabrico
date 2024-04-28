@@ -9,10 +9,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BlockWithEntity.class)
 public interface BlockWithEntityInvoker {
-
     @Invoker("checkType")
     static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
         throw new AssertionError("Not implemented");
     }
-
 }
