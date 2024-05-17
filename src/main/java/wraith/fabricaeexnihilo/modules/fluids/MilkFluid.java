@@ -12,7 +12,6 @@ import wraith.fabricaeexnihilo.modules.ModFluids;
 import wraith.fabricaeexnihilo.modules.base.AbstractFluid;
 import wraith.fabricaeexnihilo.modules.base.FluidSettings;
 
-@SuppressWarnings("UnstableApiUsage")
 public class MilkFluid extends AbstractFluid {
     private static final FluidSettings FLUID_SETTINGS = new FluidSettings("milk", 0xFFFFFF, false, false);
     public static final Item BUCKET = Items.MILK_BUCKET;

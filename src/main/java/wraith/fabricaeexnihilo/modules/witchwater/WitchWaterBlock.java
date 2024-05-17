@@ -1,23 +1,18 @@
 package wraith.fabricaeexnihilo.modules.witchwater;
 
-import java.util.Optional;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.ShulkerBulletEntity;
 import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -31,7 +26,6 @@ import wraith.fabricaeexnihilo.modules.ModEffects;
 import wraith.fabricaeexnihilo.recipe.witchwater.WitchWaterEntityRecipe;
 import wraith.fabricaeexnihilo.recipe.witchwater.WitchWaterWorldRecipe;
 
-@SuppressWarnings("deprecation")
 public class WitchWaterBlock extends FluidBlock {
 
     public WitchWaterBlock(FlowableFluid fluid, Settings settings) {
@@ -123,32 +117,36 @@ public class WitchWaterBlock extends FluidBlock {
             return;
         }
         if (entity instanceof LivingEntity livingEntity && !isMarked(livingEntity)) {
-            if (livingEntity instanceof CreeperEntity creeper) {
-                markEntity(livingEntity);
-                if (!creeper.isIgnited()) {
-                    var lightning = EntityType.LIGHTNING_BOLT.create(world);
-                    if (world instanceof ServerWorld serverWorld && lightning != null) {
-                        lightning.setPos(creeper.getPos().x, creeper.getPos().y, creeper.getPos().z);
-                        creeper.onStruckByLightning(serverWorld, lightning);
+            switch (livingEntity) {
+                case CreeperEntity creeper -> {
+                    markEntity(livingEntity);
+                    if (!creeper.isIgnited()) {
+                        var lightning = EntityType.LIGHTNING_BOLT.create(world);
+                        if (world instanceof ServerWorld serverWorld && lightning != null) {
+                            lightning.setPos(creeper.getPos().x, creeper.getPos().y, creeper.getPos().z);
+                            creeper.onStruckByLightning(serverWorld, lightning);
+                        }
                     }
+                    creeper.setHealth(creeper.getMaxHealth());
+                    return;
                 }
-                creeper.setHealth(creeper.getMaxHealth());
-                return;
-            }
-            if (livingEntity instanceof RabbitEntity rabbit) {
-                markEntity(rabbit);
-                // Killer Rabbit.
-                if (rabbit.getVariant() != RabbitEntity.RabbitType.EVIL) {
-                    rabbit.setVariant(RabbitEntity.RabbitType.EVIL);
+                case RabbitEntity rabbit -> {
+                    markEntity(rabbit);
+                    // Killer Rabbit.
+                    if (rabbit.getVariant() != RabbitEntity.RabbitType.EVIL) {
+                        rabbit.setVariant(RabbitEntity.RabbitType.EVIL);
+                    }
+                    return;
                 }
-                return;
-            }
-            if (livingEntity instanceof PlayerEntity player && !player.isCreative()) {
-                FabricaeExNihilo.CONFIG.get().witchwater().effects().forEach((effect) -> {
-                    var type = Registries.STATUS_EFFECT.getEntry(effect.type()).orElseThrow();
-                    applyStatusEffect(player, new StatusEffectInstance(type, effect.duration(), effect.amplifier()));
-                });
-                return;
+                case PlayerEntity player when !player.isCreative() -> {
+                    FabricaeExNihilo.CONFIG.get().witchwater().effects().forEach((effect) -> {
+                        var type = Registries.STATUS_EFFECT.getEntry(effect.type()).orElseThrow();
+                        applyStatusEffect(player, new StatusEffectInstance(type, effect.duration(), effect.amplifier()));
+                    });
+                    return;
+                }
+                default -> {
+                }
             }
             var recipe = WitchWaterEntityRecipe.find(entity, world);
             if (recipe.isPresent()) {

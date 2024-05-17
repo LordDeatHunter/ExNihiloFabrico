@@ -3,10 +3,7 @@ package wraith.fabricaeexnihilo.compatibility.recipeviewer;
 import com.google.common.collect.HashMultimap;
 import net.minecraft.recipe.RecipeManager;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
-import wraith.fabricaeexnihilo.recipe.SieveRecipe;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 public class SieveRecipeCombiner {
     public static void combineRecipes(RecipeManager recipeManager, int maxOutputs, RecipeConsumer consumer) {

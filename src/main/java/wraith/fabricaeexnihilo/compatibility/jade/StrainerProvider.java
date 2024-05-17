@@ -7,7 +7,6 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElement;
-import snownee.jade.api.ui.IElementHelper;
 import snownee.jade.impl.ui.ItemStackElement;
 import wraith.fabricaeexnihilo.modules.strainer.StrainerBlockEntity;
 

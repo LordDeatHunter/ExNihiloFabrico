@@ -9,7 +9,6 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.random.Random;
 import wraith.fabricaeexnihilo.util.ItemUtils;
@@ -23,7 +22,6 @@ public class WeightedList {
     public static final Codec<WeightedList> CODEC = Codec.unboundedMap(Registries.BLOCK.getCodec(), Codec.INT)
             .xmap(WeightedList::new, WeightedList::getValues);
 
-    @SuppressWarnings("deprecation")
     public static final PacketCodec<RegistryByteBuf, WeightedList> PACKET_CODEC = PacketCodecs.map(
             i -> (Map<Block, Integer>) new Object2ObjectOpenHashMap<Block, Integer>(i),
             PacketCodecs.registryValue(RegistryKeys.BLOCK),

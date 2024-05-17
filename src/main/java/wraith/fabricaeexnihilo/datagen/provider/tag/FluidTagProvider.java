@@ -2,7 +2,7 @@ package wraith.fabricaeexnihilo.datagen.provider.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalFluidTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalFluidTags;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;

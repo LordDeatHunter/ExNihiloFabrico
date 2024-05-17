@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.compatibility.jade;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -12,7 +11,6 @@ import wraith.fabricaeexnihilo.modules.crucibles.CrucibleBlockEntity;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleProvider implements IBlockComponentProvider {
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.recipe.barrel;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryByteBuf;

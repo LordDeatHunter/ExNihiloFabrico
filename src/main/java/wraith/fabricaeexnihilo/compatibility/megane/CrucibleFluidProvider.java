@@ -5,7 +5,6 @@ import net.minecraft.fluid.Fluid;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.modules.crucibles.CrucibleBlockEntity;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleFluidProvider extends FluidProvider<CrucibleBlockEntity> {
     @Override
     public int getSlotCount() {

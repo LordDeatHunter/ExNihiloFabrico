@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.modules.crucibles;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -21,13 +20,11 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemActionResult;
@@ -41,19 +38,16 @@ import wraith.fabricaeexnihilo.modules.base.EnchantableBlockEntity;
 import wraith.fabricaeexnihilo.modules.base.EnchantmentContainer;
 import wraith.fabricaeexnihilo.recipe.crucible.CrucibleHeatRecipe;
 import wraith.fabricaeexnihilo.recipe.crucible.CrucibleRecipe;
-import wraith.fabricaeexnihilo.util.CodecUtils;
 
 import java.util.Iterator;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableBlockEntity {
 
     public static final Identifier BLOCK_ENTITY_ID = id("crucible");
 
-    public static final BlockEntityType<CrucibleBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
+    public static final BlockEntityType<CrucibleBlockEntity> TYPE = BlockEntityType.Builder.create(
             CrucibleBlockEntity::new,
             ModBlocks.CRUCIBLES.values().toArray(new CrucibleBlock[0])
     ).build(null);

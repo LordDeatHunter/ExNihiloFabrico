@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
 
-@SuppressWarnings("UnstableApiUsage")
 public class MilkingRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final EntityType<?> entity;
     private final FluidVariant fluid;

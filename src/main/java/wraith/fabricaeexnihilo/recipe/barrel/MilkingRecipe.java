@@ -1,13 +1,11 @@
 package wraith.fabricaeexnihilo.recipe.barrel;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -16,18 +14,14 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
 import wraith.fabricaeexnihilo.recipe.RecipeContext;
-import wraith.fabricaeexnihilo.util.CodecUtils;
 
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage")
 public class MilkingRecipe extends BaseRecipe<MilkingRecipe.Context> {
     private final EntityType<?> entity;
     private final FluidVariant fluid;
@@ -113,6 +107,6 @@ public class MilkingRecipe extends BaseRecipe<MilkingRecipe.Context> {
         }
     }
 
-    protected record Context(EntityType<?> entity) implements RecipeContext {
+    public record Context(EntityType<?> entity) implements RecipeContext {
     }
 }

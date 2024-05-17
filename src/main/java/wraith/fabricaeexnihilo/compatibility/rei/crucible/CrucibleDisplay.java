@@ -11,7 +11,6 @@ import wraith.fabricaeexnihilo.recipe.crucible.CrucibleRecipe;
 import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleDisplay implements Display {
     private final CategoryIdentifier<?> category;
     public final long amount;

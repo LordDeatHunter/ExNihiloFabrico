@@ -172,8 +172,7 @@ public sealed interface BarrelRecipeCondition {
         public boolean check(World world, BarrelBlockEntity barrel) {
             if (barrel.getState() != BarrelState.FLUID && barrel.getState() != BarrelState.EMPTY) return false;
             if (!fluid.test(barrel.getFluid().getFluid())) return false;
-            if (barrel.getFluidAmount() < FluidConstants.BUCKET) return false;
-            return true;
+            return barrel.getFluidAmount() >= FluidConstants.BUCKET;
         }
 
         @Override

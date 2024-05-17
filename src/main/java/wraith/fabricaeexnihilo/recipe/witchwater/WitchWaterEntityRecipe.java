@@ -1,12 +1,10 @@
 package wraith.fabricaeexnihilo.recipe.witchwater;
 
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.command.argument.NbtPathArgumentType.NbtPath;
 import net.minecraft.entity.Entity;
@@ -14,7 +12,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -23,15 +20,11 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
 import wraith.fabricaeexnihilo.recipe.RecipeContext;
-import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
 
 import java.util.Optional;
 
@@ -114,7 +107,7 @@ public class WitchWaterEntityRecipe extends BaseRecipe<WitchWaterEntityRecipe.Co
                 var reader = new StringReader(string);
                 nbt = NbtPathArgumentType.nbtPath().parse(reader);
                 var remaining = reader.getRemaining();
-                if (remaining.length() > 0) {
+                if (!remaining.isEmpty()) {
                     throw new IllegalArgumentException("Found trailing data after nbt path: " + remaining);
                 }
             } catch (CommandSyntaxException e) {

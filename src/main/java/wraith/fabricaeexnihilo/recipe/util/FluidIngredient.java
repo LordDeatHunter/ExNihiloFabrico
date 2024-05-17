@@ -1,20 +1,15 @@
 package wraith.fabricaeexnihilo.recipe.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.*;
-import net.minecraft.registry.entry.RegistryFixedCodec;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -36,14 +31,6 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
             buf -> FluidIngredient.fromId(buf.readString(),
                     buf.getRegistryManager().getOptionalWrapper(RegistryKeys.FLUID).orElse(null))
     );
-
-    public static FluidIngredient fromJson(JsonElement json) {
-        var data = JsonHelper.asString(json, "fluid ingredient");
-        if (data.startsWith("#"))
-            return new Tag(TagKey.of(RegistryKeys.FLUID, new Identifier(data.substring(1))));
-        else
-            return new Single(Registries.FLUID.get(new Identifier(data)));
-    }
 
     public static FluidIngredient fromId(String id, @Nullable RegistryEntryLookup<Fluid> lookup) {
         if (id.startsWith("#"))
@@ -76,7 +63,6 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
 
     public abstract void toPacket(PacketByteBuf buf);
 
-    public abstract JsonElement toJson();
 
     public abstract String toId();
 
@@ -106,15 +92,9 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
         }
 
         @Override
-        public JsonElement toJson() {
-            return new JsonPrimitive(Registries.FLUID.getId(fluid).toString());
-        }
-
-        @Override
         public String toId() {
             return fluid.getRegistryEntry().registryKey().getValue().toString();
         }
-
 
         @Override
         public boolean isEmpty() {
@@ -143,11 +123,6 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
         public void toPacket(PacketByteBuf buf) {
             buf.writeByte(1);
             buf.writeIdentifier(tag.id());
-        }
-
-        @Override
-        public JsonElement toJson() {
-            return new JsonPrimitive("#" + tag.id().toString());
         }
 
         @Override

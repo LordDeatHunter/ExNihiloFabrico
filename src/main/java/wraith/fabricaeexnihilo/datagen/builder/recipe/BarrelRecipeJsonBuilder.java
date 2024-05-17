@@ -245,7 +245,7 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     @Override
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
         if (duration == -1) throw new IllegalStateException("Duration not set");
-        if (actions.size() == 0) throw new IllegalStateException("No actions set");
+        if (actions.isEmpty()) throw new IllegalStateException("No actions set");
         if (icon == null) throw new IllegalStateException("No icon set");
         if (!hasStateCondition) throw new IllegalStateException("No state condition set, this recipe could trigger on all kinds of barrels");
 

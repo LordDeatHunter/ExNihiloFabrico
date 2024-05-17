@@ -1,18 +1,14 @@
 package wraith.fabricaeexnihilo.recipe.witchwater;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
@@ -56,7 +52,7 @@ public class WitchWaterWorldRecipe extends BaseRecipe<WitchWaterWorldRecipe.Cont
 
     @Override
     public ItemStack getDisplayStack() {
-        return result.asListOfStacks().get(0);
+        return result.asListOfStacks().getFirst();
     }
 
     public FluidIngredient getTarget() {
@@ -67,7 +63,7 @@ public class WitchWaterWorldRecipe extends BaseRecipe<WitchWaterWorldRecipe.Cont
         return result;
     }
 
-    protected record Context(Fluid fluid) implements RecipeContext {
+    public record Context(Fluid fluid) implements RecipeContext {
     }
 
     public static class Serializer implements RecipeSerializer<WitchWaterWorldRecipe> {

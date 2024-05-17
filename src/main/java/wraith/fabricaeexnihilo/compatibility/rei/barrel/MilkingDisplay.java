@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@SuppressWarnings("UnstableApiUsage")
 public final class MilkingDisplay implements Display {
 
     public final long amount;

@@ -8,14 +8,12 @@ import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.ToolRecipe;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 import wraith.fabricaeexnihilo.recipe.util.Loot;
-import wraith.fabricaeexnihilo.util.CodecUtils;
 
 public class ToolRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final ToolRecipe.ToolType tool;

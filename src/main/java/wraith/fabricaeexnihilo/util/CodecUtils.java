@@ -1,36 +1,21 @@
 package wraith.fabricaeexnihilo.util;
 
 import com.google.gson.JsonElement;
-import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtSizeTracker;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
-import wraith.fabricaeexnihilo.FabricaeExNihilo;
-
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 
 /**
  * Contains {@link Codec}s that provide a more friendly format for end users. They allow specifying only the necessary
  * details in a simple format. Also has utility methods for quickly using codecs.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CodecUtils {
     public static final Codec<FluidVariant> FLUID_VARIANT = FluidVariant.CODEC;
 

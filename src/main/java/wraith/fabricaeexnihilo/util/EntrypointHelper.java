@@ -29,7 +29,6 @@ import wraith.fabricaeexnihilo.modules.strainer.StrainerBlock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class EntrypointHelper {
     public static final Map<ItemConvertible, List<ResourceCondition>> CONDITIONS = Maps.newIdentityHashMap();

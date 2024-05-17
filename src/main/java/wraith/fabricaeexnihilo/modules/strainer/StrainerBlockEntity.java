@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.modules.strainer;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
@@ -22,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
-import wraith.fabricaeexnihilo.config.StrainerConfig;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
 import wraith.fabricaeexnihilo.modules.ModLootContextTypes;
 import wraith.fabricaeexnihilo.modules.base.BaseBlockEntity;
@@ -31,12 +29,9 @@ import java.util.stream.IntStream;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-@SuppressWarnings("UnstableApiUsage")
 public class StrainerBlockEntity extends BaseBlockEntity {
 
-    public static final BlockEntityType<StrainerBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
+    public static final BlockEntityType<StrainerBlockEntity> TYPE = BlockEntityType.Builder.create(
             StrainerBlockEntity::new,
             ModBlocks.STRAINERS.values().toArray(StrainerBlock[]::new)
     ).build(null);
@@ -91,7 +86,7 @@ public class StrainerBlockEntity extends BaseBlockEntity {
                 if (loot.isEmpty())
                     break;
                 if (strainer.inventory.get(i).isEmpty()) {
-                    strainer.inventory.set(i, loot.remove(0));
+                    strainer.inventory.set(i, loot.removeFirst());
                 }
             }
             var config = FabricaeExNihilo.CONFIG.get().strainers();

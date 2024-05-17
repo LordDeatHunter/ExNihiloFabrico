@@ -58,7 +58,7 @@ public class BarrelCategory implements DisplayCategory<BarrelDisplay> {
                     .entries(genericOutputs.get(i))
                     .markOutput());
         }
-        if (genericOutputs.size() > 0) {
+        if (!genericOutputs.isEmpty()) {
             var arrowPos = getPoint(4, 1, bounds);
             arrowPos.translate(-6, -1);
             widgets.add(Widgets.createArrow(arrowPos));
