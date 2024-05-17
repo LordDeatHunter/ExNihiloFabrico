@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:raw_silkworm"
-            ]
+            "items": "fabricaeexnihilo:raw_silkworm"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_silkworm",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_silkworm"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:silkworm_cooked"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

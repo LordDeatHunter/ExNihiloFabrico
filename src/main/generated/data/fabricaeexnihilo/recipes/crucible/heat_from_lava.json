@@ -1,5 +1,8 @@
 {
   "type": "fabricaeexnihilo:crucible_heat",
-  "block": "minecraft:lava",
+  "block": {
+    "id": "minecraft:lava",
+    "states": {}
+  },
   "heat": 4
 }

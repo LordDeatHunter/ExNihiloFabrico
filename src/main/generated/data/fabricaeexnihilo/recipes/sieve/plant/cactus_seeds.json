@@ -2,6 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
       "values": [
         "fabricaeexnihilo:cactus_seeds"
       ]
@@ -13,7 +14,7 @@
   },
   "result": {
     "count": 1,
-    "item": "fabricaeexnihilo:cactus_seeds"
+    "id": "fabricaeexnihilo:cactus_seeds"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

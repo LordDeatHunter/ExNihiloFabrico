@@ -1,18 +1,23 @@
 package wraith.fabricaeexnihilo.modules.witchwater;
 
+import java.util.Optional;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.ShulkerBulletEntity;
 import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -52,7 +57,7 @@ public class WitchWaterBlock extends FluidBlock {
             return false;
         }
         var changePos = witchPos.offset(Direction.DOWN) == otherPos ? otherPos : witchPos;
-        world.setBlockState(changePos, recipe.get().getResult().choose(world.random).getDefaultState());
+        world.setBlockState(changePos, recipe.get().value().getResult().choose(world.random).getDefaultState());
         world.playSound(null, changePos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.7f, 0.8f + world.random.nextFloat() * 0.2f);
         return true;
     }
@@ -63,7 +68,7 @@ public class WitchWaterBlock extends FluidBlock {
     }
 
     public static void markEntity(LivingEntity entity) {
-        applyStatusEffect(entity, ModEffects.WITCH_WATERED.getInstance());
+        applyStatusEffect(entity, WitchWaterStatusEffect.getInstance());
     }
 
     public static boolean receiveNeighborFluids(World world, BlockPos pos) {
@@ -106,7 +111,7 @@ public class WitchWaterBlock extends FluidBlock {
             livingEntity.setHealth(livingEntity.getMaxHealth() * toKill.getHealth() / toKill.getMaxHealth());
 
             if (livingEntity instanceof MobEntity mob && world instanceof ServerWorld serverWorld) {
-                mob.initialize(serverWorld, world.getLocalDifficulty(mob.getBlockPos()), SpawnReason.CONVERSION, null, null);
+                mob.initialize(serverWorld, world.getLocalDifficulty(mob.getBlockPos()), SpawnReason.CONVERSION, null);
             }
         }
         replaceMob(world, toKill, toSpawn);
@@ -140,16 +145,14 @@ public class WitchWaterBlock extends FluidBlock {
             }
             if (livingEntity instanceof PlayerEntity player && !player.isCreative()) {
                 FabricaeExNihilo.CONFIG.get().witchwater().effects().forEach((effect) -> {
-                            var type = Registries.STATUS_EFFECT.get(effect.type());
-                            if (type != null) {
-                                applyStatusEffect(player, new StatusEffectInstance(type, effect.duration(), effect.amplifier()));
-                            }
-                        });
+                    var type = Registries.STATUS_EFFECT.getEntry(effect.type()).orElseThrow();
+                    applyStatusEffect(player, new StatusEffectInstance(type, effect.duration(), effect.amplifier()));
+                });
                 return;
             }
             var recipe = WitchWaterEntityRecipe.find(entity, world);
             if (recipe.isPresent()) {
-                replaceMob(world, livingEntity, recipe.get().getResult());
+                replaceMob(world, livingEntity, recipe.get().value().getResult());
                 return;
             }
             markEntity(livingEntity);

@@ -11,6 +11,7 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
@@ -46,8 +47,9 @@ public class BarrelDisplay implements Display {
     float compostAmount;
     final List<EntryIngredient> outputs = new ArrayList<>();
 
-    public BarrelDisplay(BarrelRecipe recipe) {
-        id = recipe.getId();
+    public BarrelDisplay(RecipeEntry<BarrelRecipe> recipeEntry) {
+        var recipe = recipeEntry.value();
+        id = recipeEntry.id();
         duration = recipe.getDuration() * FabricaeExNihilo.CONFIG.get().barrels().tickRate() / 20;
         triggerItem = getTriggerItem(recipe);
 

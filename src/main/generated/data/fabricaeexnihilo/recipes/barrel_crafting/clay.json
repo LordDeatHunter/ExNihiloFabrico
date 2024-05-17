@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:clay"
+        "id": "minecraft:clay"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#fabricaeexnihilo:true_water"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:clay",
   "trigger": {
     "type": "insert_item",

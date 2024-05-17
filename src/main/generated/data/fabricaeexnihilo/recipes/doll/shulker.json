@@ -24,7 +24,7 @@
     "cbc"
   ],
   "result": {
-    "item": "fabricaeexnihilo:doll_shulker"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:doll_shulker"
+  }
 }

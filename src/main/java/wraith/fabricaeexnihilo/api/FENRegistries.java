@@ -1,7 +1,5 @@
 package wraith.fabricaeexnihilo.api;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.TallPlantBlock;
@@ -229,32 +227,32 @@ public interface FENRegistries {
     /**
      * Provides default item settings that all FEN items are based on.
      */
-    FabricItemSettings defaultItemSettings();
+    Item.Settings defaultItemSettings();
 
     /**
      * Provides wooden block settings that all wooden FEN blocks are based on.
      */
-    FabricBlockSettings woodenBlockSettings();
+    AbstractBlock.Settings woodenBlockSettings();
 
     /**
      * Provides stone block settings that all stone FEN blocks are based on.
      */
-    FabricBlockSettings stoneBlockSettings();
+    AbstractBlock.Settings stoneBlockSettings();
 
     /**
      * Provides sandy block settings that all sand-like FEN blocks use.
      */
-    FabricBlockSettings sandyBlockSettings();
+    AbstractBlock.Settings sandyBlockSettings();
 
     /**
      * Provides gravely block settings that all gravel-like FEN blocks use.
      */
-    FabricBlockSettings gravelyBlockSettings();
+    AbstractBlock.Settings gravelyBlockSettings();
 
     /**
      * Provides infested leaves block settings that all infested leaves are based on.
      */
-    FabricBlockSettings infestedLeavesBlockSettings();
+    AbstractBlock.Settings infestedLeavesBlockSettings();
 
     /**
      * A container for blocks of a wood type. Used as return value of {@link #registerWood}

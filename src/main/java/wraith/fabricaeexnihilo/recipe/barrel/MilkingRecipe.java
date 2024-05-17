@@ -1,13 +1,21 @@
 package wraith.fabricaeexnihilo.recipe.barrel;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
@@ -26,15 +34,14 @@ public class MilkingRecipe extends BaseRecipe<MilkingRecipe.Context> {
     private final long amount;
     private final int cooldown;
 
-    public MilkingRecipe(Identifier id, EntityType<?> entity, FluidVariant fluid, long amount, int cooldown) {
-        super(id);
+    public MilkingRecipe(EntityType<?> entity, FluidVariant fluid, long amount, int cooldown) {
         this.entity = entity;
         this.fluid = fluid;
         this.amount = amount;
         this.cooldown = cooldown;
     }
 
-    public static Optional<MilkingRecipe> find(EntityType<?> entity, @Nullable World world) {
+    public static Optional<RecipeEntry<MilkingRecipe>> find(EntityType<?> entity, @Nullable World world) {
         if (world == null) {
             return Optional.empty();
         }
@@ -78,33 +85,31 @@ public class MilkingRecipe extends BaseRecipe<MilkingRecipe.Context> {
     }
 
     public static class Serializer implements RecipeSerializer<MilkingRecipe> {
+        public static final MapCodec<MilkingRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        Registries.ENTITY_TYPE.getCodec().fieldOf("entity").forGetter(recipe -> recipe.entity),
+                        FluidVariant.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
+                        Codec.LONG.fieldOf("amount").forGetter(recipe -> recipe.amount),
+                        Codec.INT.fieldOf("cooldown").forGetter(recipe -> recipe.cooldown)
+                ).apply(instance, MilkingRecipe::new)
+        );
+
+        public static final PacketCodec<RegistryByteBuf, MilkingRecipe> PACKET_CODEC = PacketCodec.tuple(
+                PacketCodecs.registryValue(RegistryKeys.ENTITY_TYPE), MilkingRecipe::getEntity,
+                FluidVariant.PACKET_CODEC, MilkingRecipe::getFluid,
+                PacketCodecs.VAR_LONG, MilkingRecipe::getAmount,
+                PacketCodecs.VAR_INT, MilkingRecipe::getCooldown,
+                MilkingRecipe::new
+        );
 
         @Override
-        public MilkingRecipe read(Identifier id, JsonObject json) {
-            var entity = Registries.ENTITY_TYPE.get(new Identifier(JsonHelper.getString(json, "entity")));
-            var fluid = CodecUtils.fromJson(CodecUtils.FLUID_VARIANT, JsonHelper.getElement(json, "fluid"));
-            var amount = JsonHelper.getLong(json, "amount");
-            var cooldown = JsonHelper.getInt(json, "cooldown");
-
-            return new MilkingRecipe(id, entity, fluid, amount, cooldown);
+        public MapCodec<MilkingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public MilkingRecipe read(Identifier id, PacketByteBuf buf) {
-            var entity = Registries.ENTITY_TYPE.get(buf.readIdentifier());
-            var fluid = CodecUtils.fromPacket(CodecUtils.FLUID_VARIANT, buf);
-            var amount = buf.readLong();
-            var cooldown = buf.readInt();
-
-            return new MilkingRecipe(id, entity, fluid, amount, cooldown);
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, MilkingRecipe recipe) {
-            buf.writeIdentifier(Registries.ENTITY_TYPE.getId(recipe.entity));
-            CodecUtils.toPacket(CodecUtils.FLUID_VARIANT, recipe.fluid, buf);
-            buf.writeLong(recipe.amount);
-            buf.writeInt(recipe.cooldown);
+        public PacketCodec<RegistryByteBuf, MilkingRecipe> packetCodec() {
+            return PACKET_CODEC;
         }
     }
 

@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:jungle_sapling"
+    "id": "minecraft:jungle_sapling"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.recipe.RecipeEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import wraith.fabricaeexnihilo.modules.tools.CrookItem;
@@ -19,7 +20,7 @@ public abstract class BlockHarvestMixin {
     @ModifyReturnValue(method = "getDroppedStacks", at = @At("RETURN"))
     public List<ItemStack> fabricaeexnihilo$applyToolRecipes(List<ItemStack> original, BlockState state, LootContextParameterSet.Builder builder) {
         ItemStack tool = builder.get(LootContextParameters.TOOL);
-        List<ToolRecipe> recipes;
+        List<RecipeEntry<ToolRecipe>> recipes;
         if (CrookItem.isCrook(tool))
             recipes = ToolRecipe.find(ToolRecipe.ToolType.CROOK, state, builder.getWorld());
         else if (HammerItem.isHammer(tool))
@@ -27,6 +28,7 @@ public abstract class BlockHarvestMixin {
         else return original;
 
         return recipes.stream()
+                .map(RecipeEntry::value)
                 .map(ToolRecipe::getResult)
                 .map(loot -> loot.createStack(builder.getWorld().random))
                 .toList();

@@ -4,26 +4,20 @@
     "clay_crook_broken": {
       "conditions": {
         "item": {
-          "items": [
-            "fabricaeexnihilo:clay_crook"
-          ]
+          "items": "fabricaeexnihilo:clay_crook"
         }
       },
       "trigger": "minecraft:item_durability_changed"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.clay_crook_broken.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:clay_crook",
-      "nbt": "{Damage:0}"
+      "count": 1,
+      "id": "fabricaeexnihilo:clay_crook"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.clay_crook_broken.title"
     }

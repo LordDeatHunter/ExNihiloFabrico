@@ -3,16 +3,27 @@ package wraith.fabricaeexnihilo.recipe.witchwater;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.command.argument.NbtPathArgumentType;
+import net.minecraft.command.argument.NbtPathArgumentType.NbtPath;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
@@ -20,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
 import wraith.fabricaeexnihilo.recipe.RecipeContext;
+import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
 
 import java.util.Optional;
 
@@ -28,14 +40,13 @@ public class WitchWaterEntityRecipe extends BaseRecipe<WitchWaterEntityRecipe.Co
     private final NbtPathArgumentType.NbtPath nbt;
     private final EntityType<?> result;
 
-    public WitchWaterEntityRecipe(Identifier id, EntityType<?> target, NbtPathArgumentType.NbtPath nbt, EntityType<?> result) {
-        super(id);
+    public WitchWaterEntityRecipe(EntityType<?> target, NbtPathArgumentType.NbtPath nbt, EntityType<?> result) {
         this.target = target;
         this.nbt = nbt;
         this.result = result;
     }
 
-    public static Optional<WitchWaterEntityRecipe> find(Entity entity, @Nullable World world) {
+    public static Optional<RecipeEntry<WitchWaterEntityRecipe>> find(Entity entity, @Nullable World world) {
         if (world == null) {
             return Optional.empty();
         }
@@ -77,37 +88,27 @@ public class WitchWaterEntityRecipe extends BaseRecipe<WitchWaterEntityRecipe.Co
         return result;
     }
 
-    protected record Context(Entity entity) implements RecipeContext {
+    public record Context(Entity entity) implements RecipeContext {
     }
 
     public static class Serializer implements RecipeSerializer<WitchWaterEntityRecipe> {
+        public static final MapCodec<WitchWaterEntityRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        Registries.ENTITY_TYPE.getCodec().fieldOf("target").forGetter(recipe -> recipe.target),
+                        Codec.STRING.xmap(Serializer::parseNbtPath, NbtPathArgumentType.NbtPath::toString)
+                                .fieldOf("nbt").forGetter(recipe -> recipe.nbt),
+                        Registries.ENTITY_TYPE.getCodec().fieldOf("result").forGetter(recipe -> recipe.result)
+                ).apply(instance, WitchWaterEntityRecipe::new)
+        );
 
-        @Override
-        public WitchWaterEntityRecipe read(Identifier id, JsonObject json) {
-            var target = Registries.ENTITY_TYPE.get(new Identifier(JsonHelper.getString(json, "target")));
-            var result = Registries.ENTITY_TYPE.get(new Identifier(JsonHelper.getString(json, "result")));
-            var nbt = parseNbtPath(JsonHelper.getString(json, "nbt", "{}"));
+        private static final PacketCodec<RegistryByteBuf, WitchWaterEntityRecipe> PACKET_CODEC = PacketCodec.tuple(
+                PacketCodecs.registryValue(RegistryKeys.ENTITY_TYPE), WitchWaterEntityRecipe::getTarget,
+                PacketCodecs.STRING.xmap(Serializer::parseNbtPath, NbtPath::toString), WitchWaterEntityRecipe::getNbt,
+                PacketCodecs.registryValue(RegistryKeys.ENTITY_TYPE), WitchWaterEntityRecipe::getResult,
+                WitchWaterEntityRecipe::new
+        );
 
-            return new WitchWaterEntityRecipe(id, target, nbt, result);
-        }
-
-        @Override
-        public WitchWaterEntityRecipe read(Identifier id, PacketByteBuf buf) {
-            var target = Registries.ENTITY_TYPE.get(buf.readIdentifier());
-            var nbt = parseNbtPath(buf.readString());
-            var result = Registries.ENTITY_TYPE.get(buf.readIdentifier());
-
-            return new WitchWaterEntityRecipe(id, target, nbt, result);
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, WitchWaterEntityRecipe recipe) {
-            buf.writeIdentifier(Registries.ENTITY_TYPE.getId(recipe.target));
-            buf.writeString(recipe.nbt.toString()); // toString returns original string
-            buf.writeIdentifier(Registries.ENTITY_TYPE.getId(recipe.result));
-        }
-
-        private static NbtPathArgumentType.NbtPath parseNbtPath(String string) {
+        public static NbtPathArgumentType.NbtPath parseNbtPath(String string) {
             NbtPathArgumentType.NbtPath nbt;
             try {
                 var reader = new StringReader(string);
@@ -120,6 +121,16 @@ public class WitchWaterEntityRecipe extends BaseRecipe<WitchWaterEntityRecipe.Co
                 throw new IllegalStateException("Invalid nbt filter", e);
             }
             return nbt;
+        }
+
+        @Override
+        public MapCodec<WitchWaterEntityRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, WitchWaterEntityRecipe> packetCodec() {
+            return PACKET_CODEC;
         }
     }
 }

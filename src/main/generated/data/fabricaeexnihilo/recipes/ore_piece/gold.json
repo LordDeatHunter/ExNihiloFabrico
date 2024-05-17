@@ -16,6 +16,7 @@
     }
   ],
   "result": {
-    "item": "minecraft:raw_gold"
+    "count": 1,
+    "id": "minecraft:raw_gold"
   }
 }

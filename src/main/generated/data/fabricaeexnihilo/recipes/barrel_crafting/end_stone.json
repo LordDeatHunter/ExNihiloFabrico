@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:end_stone"
+        "id": "minecraft:end_stone"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#fabricaeexnihilo:true_lava"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:end_stone",
   "trigger": {
     "type": "insert_item",

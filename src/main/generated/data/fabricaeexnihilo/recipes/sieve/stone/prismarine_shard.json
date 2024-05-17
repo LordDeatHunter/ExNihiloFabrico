@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:prismarine_shard"
+    "id": "minecraft:prismarine_shard"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

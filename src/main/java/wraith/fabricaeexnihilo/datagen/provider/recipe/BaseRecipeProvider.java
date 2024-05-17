@@ -2,18 +2,19 @@ package wraith.fabricaeexnihilo.datagen.provider.recipe;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import wraith.fabricaeexnihilo.compatibility.*;
 import wraith.fabricaeexnihilo.modules.ModTags;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 import static wraith.fabricaeexnihilo.datagen.DatagenItems.*;
@@ -26,16 +27,16 @@ import static wraith.fabricaeexnihilo.modules.ModTools.HAMMERS;
  * Provider for all recipes using vanilla recipe types
  */
 public class BaseRecipeProvider extends FabricRecipeProvider {
-    public BaseRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public BaseRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
-        var mythicMetalsExporter = withConditions(exporter, DefaultResourceConditions.allModsLoaded("mythicmetals"));
-        var indrevExporter = withConditions(exporter, DefaultResourceConditions.allModsLoaded("indrev"));
-        var modernIndustrializationExporter = withConditions(exporter, DefaultResourceConditions.allModsLoaded("modern_industrialization"));
-        var techRebornExporter = withConditions(exporter, DefaultResourceConditions.allModsLoaded("techreborn"));
+    public void generate(RecipeExporter exporter) {
+        var mythicMetalsExporter = withConditions(exporter, ResourceConditions.allModsLoaded("mythicmetals"));
+        var indrevExporter = withConditions(exporter, ResourceConditions.allModsLoaded("indrev"));
+        var modernIndustrializationExporter = withConditions(exporter, ResourceConditions.allModsLoaded("modern_industrialization"));
+        var techRebornExporter = withConditions(exporter, ResourceConditions.allModsLoaded("techreborn"));
 
         offerDollRecipes(exporter);
         offerWoodRecipes(exporter, techRebornExporter);
@@ -52,7 +53,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
         return "Crafting Recipes";
     }
 
-    private static void offerDollRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private static void offerDollRecipes(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, DOLLS.get(id("doll")))
                 .pattern("xyx")
                 .pattern(" x ")
@@ -80,7 +81,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_doll", conditionsFromItem(DOLLS.get(id("doll"))));
     }
 
-    private static void offerWoodRecipes(Consumer<RecipeJsonProvider> exporter, Consumer<RecipeJsonProvider> techRebornExporter) {
+    private static void offerWoodRecipes(RecipeExporter exporter, RecipeExporter techRebornExporter) {
         offerWoodSetRecipes(Items.ACACIA_LOG, Items.ACACIA_PLANKS, Items.ACACIA_SLAB, "acacia", exporter);
         offerWoodSetRecipes(Items.BIRCH_LOG, Items.BIRCH_PLANKS, Items.BIRCH_SLAB, "birch", exporter);
         offerWoodSetRecipes(Items.CRIMSON_STEM, Items.CRIMSON_PLANKS, Items.CRIMSON_SLAB, "crimson", exporter);
@@ -95,7 +96,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
         offerWoodSetRecipes(getDummyItem(TR_RUBBER_LOG_ID), getDummyItem(TR_RUBBER_PLANKS_ID), getDummyItem(TR_RUBBER_SLAB_ID), "rubber", techRebornExporter);
     }
 
-    private static void offerWoodSetRecipes(Item log, Item planks, Item slab, String name, Consumer<RecipeJsonProvider> exporter) {
+    private static void offerWoodSetRecipes(Item log, Item planks, Item slab, String name, RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, BARRELS.get(id(name + "_barrel")))
                 .group("fabricaeexnihilo:barrel")
                 .pattern("# #")
@@ -140,7 +141,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
 
     }
 
-    private static void offerCrookRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private static void offerCrookRecipes(RecipeExporter exporter) {
         createCrookRecipe(PEBBLES.get(id("andesite_pebble")), CROOKS.get(id("andesite_crook"))).offerTo(exporter, id("crook/andesite"));
         createCrookRecipe(PEBBLES.get(id("basalt_pebble")), CROOKS.get(id("basalt_crook"))).offerTo(exporter, id("crook/basalt"));
         createCrookRecipe(PEBBLES.get(id("blackstone_pebble")), CROOKS.get(id("blackstone_crook"))).offerTo(exporter, id("crook/blackstone"));
@@ -169,7 +170,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_material", conditionsFromItem(material));
     }
 
-    private static void offerHammerRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private static void offerHammerRecipes(RecipeExporter exporter) {
         createHammerRecipe(ItemTags.PLANKS, HAMMERS.get(id("wooden_hammer"))).offerTo(exporter, id("hammer/wood"));
         createHammerRecipe(Items.COBBLESTONE, HAMMERS.get(id("stone_hammer"))).offerTo(exporter, id("hammer/stone"));
         createHammerRecipe(Items.IRON_INGOT, HAMMERS.get(id("iron_hammer"))).offerTo(exporter, id("hammer/iron"));
@@ -200,7 +201,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_material", conditionsFromTag(material));
     }
 
-    private static void offerMeshRecipes(Consumer<RecipeJsonProvider> exporter, Consumer<RecipeJsonProvider> mythicMetalsExporter) {
+    private static void offerMeshRecipes(RecipeExporter exporter, RecipeExporter mythicMetalsExporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, DefaultApiModule.INSTANCE.stringMesh)
                 .input('#', Items.STRING)
                 .pattern("###")
@@ -232,7 +233,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_previous", conditionsFromItem(previous));
     }
 
-    private static void offerPebbleToRockRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private static void offerPebbleToRockRecipes(RecipeExporter exporter) {
         createPebbleToRockRecipe(PEBBLES.get(id("andesite_pebble")), Items.ANDESITE).offerTo(exporter, id("pebble_to_rock/andesite"));
         createPebbleToRockRecipe(PEBBLES.get(id("basalt_pebble")), Items.BASALT).offerTo(exporter, id("pebble_to_rock/basalt"));
         createPebbleToRockRecipe(PEBBLES.get(id("blackstone_pebble")), Items.BLACKSTONE).offerTo(exporter, id("pebble_to_rock/blackstone"));
@@ -253,11 +254,11 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_pebble", conditionsFromItem(pebble));
     }
 
-    private static void offerOrePieceRecipes(Consumer<RecipeJsonProvider> exporter,
-                                             Consumer<RecipeJsonProvider> mythicMetalsExporter,
-                                             Consumer<RecipeJsonProvider> indrevExporter,
-                                             Consumer<RecipeJsonProvider> modernIndustrializationExporter,
-                                             Consumer<RecipeJsonProvider> techRebornExporter) {
+    private static void offerOrePieceRecipes(RecipeExporter exporter,
+                                             RecipeExporter mythicMetalsExporter,
+                                             RecipeExporter indrevExporter,
+                                             RecipeExporter modernIndustrializationExporter,
+                                             RecipeExporter techRebornExporter) {
         createOrePieceRecipe(DefaultApiModule.INSTANCE.copperPiece, Items.RAW_COPPER).offerTo(exporter, id("ore_piece/copper"));
         createOrePieceRecipe(DefaultApiModule.INSTANCE.goldPiece, Items.RAW_GOLD).offerTo(exporter, id("ore_piece/gold"));
         createOrePieceRecipe(DefaultApiModule.INSTANCE.ironPiece, Items.RAW_IRON).offerTo(exporter, id("ore_piece/iron"));
@@ -307,7 +308,7 @@ public class BaseRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_piece", conditionsFromItem(piece));
     }
 
-    private static void offerMiscRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private static void offerMiscRecipes(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.FOOD, END_CAKE)
                 .pattern("###")
                 .pattern("#C#")

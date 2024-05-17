@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:string_mesh"
-            ]
+            "items": "fabricaeexnihilo:string_mesh"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_previous",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_previous"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:mesh/flint"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

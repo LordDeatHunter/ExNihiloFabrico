@@ -1,10 +1,10 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancement.criterion.CriterionConditions;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -16,8 +16,6 @@ import wraith.fabricaeexnihilo.recipe.ToolRecipe;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 import wraith.fabricaeexnihilo.recipe.util.Loot;
 import wraith.fabricaeexnihilo.util.CodecUtils;
-
-import java.util.function.Consumer;
 
 public class ToolRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final ToolRecipe.ToolType tool;
@@ -47,7 +45,7 @@ public class ToolRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, CriterionConditions conditions) {
+    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
         throw new UnsupportedOperationException();
     }
 
@@ -63,51 +61,17 @@ public class ToolRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
     @Deprecated
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
+    public void offerTo(RecipeExporter exporter) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
+    public void offerTo(RecipeExporter exporter, String recipePath) {
         offerTo(exporter, new Identifier(recipePath));
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        exporter.accept(new Provider(tool, block, result, recipeId));
-    }
-
-    private record Provider(ToolRecipe.ToolType tool,
-                            BlockIngredient block,
-                            Loot result,
-                            Identifier id) implements RecipeJsonProvider {
-
-        @Override
-        public void serialize(JsonObject json) {
-            json.add("block", block.toJson());
-            json.add("result", CodecUtils.toJson(Loot.CODEC, result));
-        }
-
-        @Override
-        public Identifier getRecipeId() {
-            return id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getSerializer() {
-            return tool.serializer;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject toAdvancementJson() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Identifier getAdvancementId() {
-            return null;
-        }
+    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        exporter.accept(recipeId, new ToolRecipe(tool, block, result), null);
     }
 }

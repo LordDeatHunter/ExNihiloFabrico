@@ -2,16 +2,23 @@ package wraith.fabricaeexnihilo.recipe.barrel;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.modules.barrels.BarrelBlockEntity;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
@@ -21,7 +28,6 @@ import wraith.fabricaeexnihilo.recipe.RecipeContext;
 import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage")
 public final class BarrelRecipe extends BaseRecipe<BarrelRecipe.Context> {
     private final BarrelRecipeTrigger trigger;
     private final List<BarrelRecipeCondition> conditions;
@@ -30,8 +36,7 @@ public final class BarrelRecipe extends BaseRecipe<BarrelRecipe.Context> {
 
     private final Item icon;
 
-    private BarrelRecipe(Identifier id, BarrelRecipeTrigger trigger, int duration, List<BarrelRecipeAction> actions, List<BarrelRecipeCondition> conditions, Item icon) {
-        super(id);
+    public BarrelRecipe(BarrelRecipeTrigger trigger, int duration, List<BarrelRecipeAction> actions, List<BarrelRecipeCondition> conditions, Item icon) {
         this.trigger = trigger;
         this.duration = duration;
         this.actions = actions;
@@ -39,14 +44,14 @@ public final class BarrelRecipe extends BaseRecipe<BarrelRecipe.Context> {
         this.icon = icon;
     }
 
-    public static Optional<BarrelRecipe> findTick(BarrelBlockEntity barrel) {
+    public static Optional<RecipeEntry<BarrelRecipe>> findTick(BarrelBlockEntity barrel) {
         var world = barrel.getWorld();
         if (world == null) return Optional.empty();
         var recipes = world.getRecipeManager().getAllMatches(ModRecipes.BARREL, new Context(barrel, Optional.empty()), world);
         return !recipes.isEmpty() ? Optional.of(recipes.get(world.random.nextInt(recipes.size()))) : Optional.empty();
     }
 
-    public static Optional<BarrelRecipe> findInsert(BarrelBlockEntity barrel, ItemVariant inserted) {
+    public static Optional<RecipeEntry<BarrelRecipe>> findInsert(BarrelBlockEntity barrel, ItemVariant inserted) {
         var world = barrel.getWorld();
         if (world == null) return Optional.empty();
         var recipes = world.getRecipeManager().getAllMatches(ModRecipes.BARREL, new Context(barrel, Optional.of(inserted)), world);
@@ -119,46 +124,33 @@ public final class BarrelRecipe extends BaseRecipe<BarrelRecipe.Context> {
     }
 
     public static final class Serializer implements RecipeSerializer<BarrelRecipe> {
-        @Override
-        public BarrelRecipe read(Identifier id, JsonObject json) {
-            var trigger = BarrelRecipeTrigger.fromJson(JsonHelper.getObject(json, "trigger"));
-            var duration = JsonHelper.getInt(json, "duration", 0);
-            var actions = JsonHelper.getArray(json, "actions")
-                    .asList()
-                    .stream()
-                    .map(element -> JsonHelper.asObject(element, "action"))
-                    .map(BarrelRecipeAction::fromJson)
-                    .toList();
-            var conditions = JsonHelper.getArray(json, "conditions", new JsonArray())
-                    .asList()
-                    .stream()
-                    .map(element -> JsonHelper.asObject(element, "condition"))
-                    .map(BarrelRecipeCondition::fromJson)
-                    .toList();
-            var icon = Registries.ITEM.get(new Identifier(JsonHelper.getString(json, "icon")));
+        public static final MapCodec<BarrelRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        BarrelRecipeTrigger.CODEC.fieldOf("trigger").forGetter(recipe -> recipe.trigger),
+                        Codec.INT.fieldOf("duration").forGetter(recipe -> recipe.duration),
+                        BarrelRecipeAction.CODEC.listOf().fieldOf("actions").forGetter(recipe -> recipe.actions),
+                        BarrelRecipeCondition.CODEC.listOf().fieldOf("conditions").forGetter(recipe -> recipe.conditions),
+                        Registries.ITEM.getCodec().fieldOf("icon").forGetter(recipe -> recipe.icon)
+                ).apply(instance, BarrelRecipe::new)
+        );
 
-            return new BarrelRecipe(id, trigger, duration, actions, conditions, icon);
+        public static final PacketCodec<RegistryByteBuf, BarrelRecipe> PACKET_CODEC = PacketCodec.tuple(
+                BarrelRecipeTrigger.PACKET_CODEC, recipe -> recipe.trigger,
+                PacketCodecs.INTEGER, recipe -> recipe.duration,
+                BarrelRecipeAction.PACKET_CODEC.collect(PacketCodecs.toList()), recipe -> recipe.actions,
+                BarrelRecipeCondition.PACKET_CODEC.collect(PacketCodecs.toList()), recipe -> recipe.conditions,
+                PacketCodecs.registryValue(RegistryKeys.ITEM), recipe -> recipe.icon,
+                BarrelRecipe::new
+        );
+
+        @Override
+        public MapCodec<BarrelRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public BarrelRecipe read(Identifier id, PacketByteBuf buf) {
-            var trigger = BarrelRecipeTrigger.fromPacket(buf);
-            var duration = buf.readVarInt();
-            var actions = buf.readList(BarrelRecipeAction::fromPacket);
-            var conditions = buf.readList(BarrelRecipeCondition::fromPacket);
-            var icon = buf.readRegistryValue(Registries.ITEM);
-
-            return new BarrelRecipe(id, trigger, duration, actions, conditions, icon);
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, BarrelRecipe recipe) {
-            recipe.trigger.toPacket(buf);
-            buf.writeVarInt(recipe.duration);
-            buf.writeCollection(recipe.actions, (buf1, action) -> action.toPacket(buf1));
-            buf.writeCollection(recipe.conditions, (buf1, condition) -> condition.toPacket(buf1));
-            buf.writeRegistryValue(Registries.ITEM, recipe.icon);
+        public PacketCodec<RegistryByteBuf, BarrelRecipe> packetCodec() {
+            return PACKET_CODEC;
         }
     }
-
 }

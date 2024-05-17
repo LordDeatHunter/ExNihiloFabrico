@@ -2,28 +2,29 @@ package wraith.fabricaeexnihilo.datagen.provider.recipe;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import wraith.fabricaeexnihilo.compatibility.DefaultApiModule;
 import wraith.fabricaeexnihilo.modules.ModItems;
 import wraith.fabricaeexnihilo.modules.ModTags;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 import static wraith.fabricaeexnihilo.datagen.builder.recipe.ToolRecipeJsonBuilder.crooking;
 import static wraith.fabricaeexnihilo.datagen.builder.recipe.ToolRecipeJsonBuilder.hammering;
 
 public class ToolRecipeProvider extends FabricRecipeProvider {
-    public ToolRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public ToolRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         crooking(Blocks.ACACIA_LEAVES, Items.ACACIA_SAPLING, 0.25).offerTo(exporter, "crooking/acacia_sapling");
         crooking(Blocks.BIRCH_LEAVES, Items.BIRCH_SAPLING, 0.25).offerTo(exporter, "crooking/birch_sapling");
         crooking(Blocks.DARK_OAK_LEAVES, Items.DARK_OAK_SAPLING, 0.25).offerTo(exporter, "crooking/dark_oak_sapling");
@@ -67,7 +68,7 @@ public class ToolRecipeProvider extends FabricRecipeProvider {
         hammering(BlockTags.WOOL, Items.STRING, 1, 1, 1, 1).offerTo(exporter, "hammering/wool_to_string");
     }
 
-    private void offerCoralHammeringRecipes(Block block, Block coral, Block fan, String id, Consumer<RecipeJsonProvider> exporter) {
+    private void offerCoralHammeringRecipes(Block block, Block coral, Block fan, String id, RecipeExporter exporter) {
         hammering(block, coral, 1, 1, 0.5, 0.1).offerTo(exporter, "hammering/coral/" + id + "_block");
         hammering(coral, fan, 1, 0.5).offerTo(exporter, "hammering/coral/" + id);
     }

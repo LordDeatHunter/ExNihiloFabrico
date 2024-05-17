@@ -2,7 +2,7 @@ package wraith.fabricaeexnihilo.datagen.provider.loot_tables;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
@@ -12,17 +12,19 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.registry.RegistryWrapper;
 import wraith.fabricaeexnihilo.loot.CopyEnchantmentsLootFunction;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
 import wraith.fabricaeexnihilo.util.EntrypointHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class BlockLootTableProvider extends FabricBlockLootTableProvider {
 
-    public BlockLootTableProvider(FabricDataOutput generator) {
-        super(generator);
+    public BlockLootTableProvider(FabricDataOutput generator, CompletableFuture<RegistryWrapper.WrapperLookup> lookup) {
+        super(generator, lookup);
     }
 
     @Override
@@ -38,9 +40,9 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
 
     // Currently not possible without internal api. Waiting on api update
     @SuppressWarnings("UnstableApiUsage")
-    private LootTable.Builder addConditions(LootTable.Builder builder, List<ConditionJsonProvider> conditions) {
+    private LootTable.Builder addConditions(LootTable.Builder builder, List<ResourceCondition> conditions) {
         if (!conditions.isEmpty())
-            FabricDataGenHelper.addConditions(builder, conditions.toArray(ConditionJsonProvider[]::new));
+            FabricDataGenHelper.addConditions(builder, conditions.toArray(ResourceCondition[]::new));
         return builder;
     }
 

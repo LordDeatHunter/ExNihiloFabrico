@@ -4,6 +4,6 @@
   "cooldown": 20,
   "entity": "minecraft:witch",
   "fluid": {
-    "type": "fabricaeexnihilo:witchwater"
+    "fluid": "fabricaeexnihilo:witchwater"
   }
 }

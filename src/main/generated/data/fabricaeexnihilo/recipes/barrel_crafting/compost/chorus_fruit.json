@@ -6,10 +6,12 @@
       "increment": 0.0625,
       "result": {
         "count": 1,
-        "item": "minecraft:end_stone"
+        "id": "minecraft:end_stone"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:end_stone",
   "trigger": {
     "type": "insert_item",

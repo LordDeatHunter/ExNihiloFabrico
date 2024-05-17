@@ -8,12 +8,17 @@
     },
     {
       "type": "convert_block",
-      "filter": "minecraft:stone_bricks",
+      "filter": {
+        "id": "minecraft:stone_bricks",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:mossy_stone_bricks"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:mossy_stone_bricks",
   "trigger": {
     "type": "tick",

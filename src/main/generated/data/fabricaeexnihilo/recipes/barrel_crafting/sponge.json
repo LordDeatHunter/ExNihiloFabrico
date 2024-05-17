@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:wet_sponge"
+        "id": "minecraft:wet_sponge"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#c:brine"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:wet_sponge",
   "trigger": {
     "type": "insert_item",

@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:fire_coral_block"
+        "id": "minecraft:fire_coral_block"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#c:brine"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:fire_coral_block",
   "trigger": {
     "type": "insert_item",

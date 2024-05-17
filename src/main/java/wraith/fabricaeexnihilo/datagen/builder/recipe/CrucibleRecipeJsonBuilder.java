@@ -1,24 +1,19 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
-import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.advancement.criterion.CriterionConditions;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import wraith.fabricaeexnihilo.recipe.ModRecipes;
-import wraith.fabricaeexnihilo.util.CodecUtils;
+import wraith.fabricaeexnihilo.recipe.crucible.CrucibleRecipe;
 
-import java.util.function.Consumer;
-
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final Ingredient input;
     private final long amount;
@@ -58,7 +53,7 @@ public class CrucibleRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, CriterionConditions conditions) {
+    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
         throw new UnsupportedOperationException();
     }
 
@@ -69,58 +64,11 @@ public class CrucibleRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
     @Override
     public Item getOutputItem() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Deprecated
-    @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
-        throw new UnsupportedOperationException();
+        return Items.AIR;
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
-        offerTo(exporter, new Identifier(recipePath));
-    }
-
-    @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        exporter.accept(new Provider(input, amount, fluid, requiresFireproofCrucible, recipeId));
-    }
-
-    private record Provider(Ingredient input,
-                            long amount,
-                            FluidVariant fluid,
-                            boolean requiresFireproofCrucible,
-                            Identifier id) implements RecipeJsonProvider {
-        @Override
-        public void serialize(JsonObject json) {
-            json.add("input", input.toJson());
-            json.addProperty("amount", amount);
-            json.add("fluid", CodecUtils.toJson(CodecUtils.FLUID_VARIANT, fluid));
-            json.addProperty("requiresFireproofCrucible", requiresFireproofCrucible);
-        }
-
-        @Override
-        public Identifier getRecipeId() {
-            return id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getSerializer() {
-            return ModRecipes.CRUCIBLE_SERIALIZER;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject toAdvancementJson() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Identifier getAdvancementId() {
-            return null;
-        }
+    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        exporter.accept(recipeId, new CrucibleRecipe(input, amount, fluid, requiresFireproofCrucible), null);
     }
 }

@@ -1,14 +1,12 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.advancement.criterion.CriterionConditions;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -17,12 +15,11 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import wraith.fabricaeexnihilo.recipe.ModRecipes;
+import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipe;
 import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipeAction;
 import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipeCondition;
 import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipeTrigger;
@@ -32,9 +29,7 @@ import wraith.fabricaeexnihilo.recipe.util.FluidIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-@SuppressWarnings("UnstableApiUsage")
 public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final BarrelRecipeTrigger trigger;
     private final List<BarrelRecipeCondition> conditions = new ArrayList<>();
@@ -92,6 +87,9 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     public BarrelRecipeJsonBuilder above(Block block) {
         return above(BlockIngredient.single(block));
     }
+    public BarrelRecipeJsonBuilder above(RegistryEntry.Reference<Block> block) {
+        return above(BlockIngredient.single(block));
+    }
 
     public BarrelRecipeJsonBuilder above(FluidIngredient fluid) {
         conditions.add(new BarrelRecipeCondition.FluidAbove(fluid));
@@ -112,6 +110,9 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     }
 
     public BarrelRecipeJsonBuilder below(Block block) {
+        return below(BlockIngredient.single(block));
+    }
+    public BarrelRecipeJsonBuilder below(RegistryEntry.Reference<Block> block) {
         return below(BlockIngredient.single(block));
     }
 
@@ -194,6 +195,9 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     public BarrelRecipeJsonBuilder convertBlock(Block from, Block to) {
         return convertBlock(BlockIngredient.single(from), to.getDefaultState());
     }
+    public BarrelRecipeJsonBuilder convertBlock(RegistryEntry.Reference<Block> from, Block to) {
+        return convertBlock(BlockIngredient.single(from), to.getDefaultState());
+    }
 
     public BarrelRecipeJsonBuilder fillCompost(ItemStack item, float amount) {
         if (hasStateCondition) throw new IllegalStateException("Multiple state conditions are not a good idea");
@@ -213,7 +217,7 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, CriterionConditions conditions) {
+    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
         throw new UnsupportedOperationException();
     }
 
@@ -229,70 +233,22 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
     @Deprecated
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
+    public void offerTo(RecipeExporter exporter) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
+    public void offerTo(RecipeExporter exporter, String recipePath) {
         offerTo(exporter, new Identifier(recipePath));
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
+    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
         if (duration == -1) throw new IllegalStateException("Duration not set");
         if (actions.size() == 0) throw new IllegalStateException("No actions set");
         if (icon == null) throw new IllegalStateException("No icon set");
         if (!hasStateCondition) throw new IllegalStateException("No state condition set, this recipe could trigger on all kinds of barrels");
 
-        exporter.accept(new Provider(duration, icon, trigger, actions, conditions, recipeId));
-    }
-
-    private record Provider(int duration,
-                            Item icon,
-                            BarrelRecipeTrigger trigger,
-                            List<BarrelRecipeAction> actions,
-                            List<BarrelRecipeCondition> conditions,
-                            Identifier id) implements RecipeJsonProvider {
-
-        @Override
-        public void serialize(JsonObject json) {
-            json.add("trigger", trigger.toJson());
-
-            var actions = new JsonArray();
-            this.actions.forEach(action -> actions.add(action.toJson()));
-            json.add("actions", actions);
-
-            if (!conditions.isEmpty()) {
-                var conditions = new JsonArray();
-                this.conditions.forEach(action -> conditions.add(action.toJson()));
-                json.add("conditions", conditions);
-            }
-
-            if (duration != 0) json.addProperty("duration", duration);
-            json.addProperty("icon", Registries.ITEM.getId(icon).toString());
-        }
-
-        @Override
-        public Identifier getRecipeId() {
-            return id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getSerializer() {
-            return ModRecipes.BARREL_SERIALIZER;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject toAdvancementJson() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Identifier getAdvancementId() {
-            return null;
-        }
+        exporter.accept(recipeId, new BarrelRecipe(trigger, duration, actions, conditions, icon), null);
     }
 }

@@ -2,6 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
       "values": [
         "fabricaeexnihilo:mycelium_seeds"
       ]
@@ -13,7 +14,7 @@
       "type": "store_fluid",
       "amount": 81000,
       "fluid": {
-        "type": "fabricaeexnihilo:witchwater"
+        "fluid": "fabricaeexnihilo:witchwater"
       }
     }
   ],
@@ -23,6 +24,7 @@
       "fluid": "#fabricaeexnihilo:true_water"
     }
   ],
+  "duration": 0,
   "icon": "fabricaeexnihilo:witchwater_bucket",
   "trigger": {
     "type": "insert_item",

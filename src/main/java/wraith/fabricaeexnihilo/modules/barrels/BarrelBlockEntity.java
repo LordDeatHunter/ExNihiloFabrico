@@ -17,12 +17,16 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
@@ -34,11 +38,10 @@ import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipe;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-@SuppressWarnings("UnstableApiUsage")
 public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlockEntity {
     public static final Identifier BLOCK_ENTITY_ID = id("barrel");
 
-    public static final BlockEntityType<BarrelBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
+    public static final BlockEntityType<BarrelBlockEntity> TYPE = BlockEntityType.Builder.create(
             BarrelBlockEntity::new,
             ModBlocks.BARRELS.values().toArray(new BarrelBlock[0])
     ).build(null);
@@ -59,7 +62,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     private long fluidAmount = 0;
     private ItemStack stack = ItemStack.EMPTY; // Should only be non-empty in the item or compost state
     private float compostLevel = 0;
-    private BarrelRecipe recipe = null;
+    private RecipeEntry<BarrelRecipe> recipe = null;
     private float recipeProgress = 0;
 
     public BarrelBlockEntity(BlockPos pos, BlockState state) {
@@ -71,13 +74,13 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                 : world.random.nextInt(FabricaeExNihilo.CONFIG.get().barrels().tickRate());
     }
 
-    public ActionResult activate(@Nullable PlayerEntity player, @Nullable Hand hand) {
+    public ItemActionResult activate(@Nullable PlayerEntity player, @Nullable Hand hand) {
         if (world == null || player == null || hand == null || isCrafting()) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         if (state == BarrelState.ITEM) {
             dropInventoryAtPlayer(player);
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
         return insertFromHand(player, hand);
     }
@@ -102,12 +105,12 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         return enchantments;
     }
 
-    public ActionResult insertFromHand(PlayerEntity player, Hand hand) {
+    public ItemActionResult insertFromHand(PlayerEntity player, Hand hand) {
         if (world == null)
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
         var held = player.getStackInHand(hand);
-        if (held.isEmpty()) return ActionResult.PASS;
+        if (held.isEmpty()) return ItemActionResult.SUCCESS;
 
         try (Transaction t = Transaction.openOuter()) {
             var inserted = (int) itemStorage.insert(ItemVariant.of(held), held.getCount(), t);
@@ -116,12 +119,12 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
                     held.decrement(inserted);
                 }
                 t.commit();
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
         }
 
         var bucketFluidStorage = FluidStorage.ITEM.find(held, ContainerItemContext.ofPlayerHand(player, hand));
-        if (bucketFluidStorage == null) return ActionResult.PASS;
+        if (bucketFluidStorage == null) return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
         try (Transaction t = Transaction.openOuter()) {
             var amount = StorageUtil.findExtractableContent(bucketFluidStorage, t);
@@ -146,36 +149,44 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             }
             if (moved != 0) {
                 t.commit();
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
         }
-        return ActionResult.PASS;
+        return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
     public boolean isFireproof() {
         return getCachedState().getBlock() instanceof BarrelBlock barrel && barrel.isFireproof();
     }
 
+    public static NbtElement fluidToNbt(FluidVariant variant, RegistryWrapper.WrapperLookup lookup) {
+        return FluidVariant.CODEC.encodeStart(lookup.getOps(NbtOps.INSTANCE), variant).getOrThrow();
+    }
+
+    public static FluidVariant nbtToFluid(RegistryWrapper.WrapperLookup lookup, NbtElement element) {
+        return FluidVariant.CODEC.decode(lookup.getOps(NbtOps.INSTANCE), element).getOrThrow().getFirst();
+    }
+
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.put("enchantments", enchantments.writeNbt());
         nbt.putString("state", state.getId());
-        nbt.put("fluid", fluid.toNbt());
+        nbt.put("fluid", fluidToNbt(fluid, registryLookup));
         nbt.putLong("fluidAmount", fluidAmount);
-        nbt.put("stack", stack.writeNbt(new NbtCompound()));
+        nbt.put("stack", stack.encodeAllowEmpty(registryLookup));
         nbt.putFloat("compostLevel", compostLevel);
         if (recipe != null)
-            nbt.putString("recipe", recipe.getId().toString());
+            nbt.putString("recipe", recipe.id().toString());
         nbt.putFloat("recipeProgress", recipeProgress);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         enchantments.readNbt(nbt.getCompound("enchantments"));
         state = BarrelState.byId(nbt.getString("state"));
-        fluid = FluidVariant.fromNbt(nbt.getCompound("fluid"));
+        fluid = nbtToFluid(registryLookup, nbt.getCompound("fluid"));
         fluidAmount = nbt.getLong("fluidAmount");
-        stack = ItemStack.fromNbt(nbt.getCompound("stack"));
+        stack = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("stack"));
         compostLevel = nbt.getFloat("compostLevel");
         lazeRecipeId = nbt.contains("recipe") ? Identifier.tryParse(nbt.getString("recipe")) : null;
         recipeProgress = nbt.getFloat("recipeProgress");
@@ -206,13 +217,14 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         if (world == null/* || world.isClient*/) return;
 
         if (getRecipe() != null) {
-            if (!getRecipe().canContinue(world, this)) {
+            BarrelRecipe currentRecipe = getRecipe().value();
+            if (!currentRecipe.canContinue(world, this)) {
                 recipe = null;
                 recipeProgress = 0;
                 return;
             }
 
-            var duration = getRecipe().getDuration();
+            var duration = currentRecipe.getDuration();
             recipeProgress += 1f / duration * getEfficiencyMultiplier();
             if (recipeProgress >= 1) {
                 finishRecipe();
@@ -226,7 +238,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
             case EMPTY, FLUID -> {
                 BarrelRecipe.findTick(this).ifPresent(recipe -> {
                     this.recipe = recipe;
-                    if (recipe.getDuration() == 0) {
+                    if (recipe.value().getDuration() == 0) {
                         finishRecipe(); // instant recipe
                     }
                     markDirty();
@@ -308,13 +320,13 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         return recipeProgress > 0;
     }
 
-    void beginRecipe(BarrelRecipe recipe) {
+    void beginRecipe(RecipeEntry<BarrelRecipe> recipe) {
         this.recipe = recipe;
     }
 
     private void finishRecipe() {
         if (world instanceof ServerWorld serverWorld) {
-            getRecipe().apply(serverWorld, this);
+            getRecipe().value().apply(serverWorld, this);
         }
         recipe = null;
         recipeProgress = 0;
@@ -328,9 +340,12 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         markForUpdate();
     }
 
-    private BarrelRecipe getRecipe() {
+    @SuppressWarnings("unchecked")
+    private RecipeEntry<BarrelRecipe> getRecipe() {
         if (lazeRecipeId != null && world != null) {
-            recipe = world.getRecipeManager().get(lazeRecipeId).orElse(null) instanceof BarrelRecipe barrelRecipe ? barrelRecipe : null;
+            var recipeEntry = world.getRecipeManager().get(lazeRecipeId).orElse(null);
+            recipe = recipeEntry != null && recipeEntry.value() instanceof BarrelRecipe ?
+                    (RecipeEntry<BarrelRecipe>) recipeEntry : null;
             lazeRecipeId = null;
         }
         return recipe;
@@ -350,7 +365,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         private final long fluidAmount;
         private final ItemStack stack;
         private final float compostLevel;
-        private final BarrelRecipe recipe;
+        private final RecipeEntry<BarrelRecipe> recipe;
         private final float recipeProgress;
 
         public Snapshot() {

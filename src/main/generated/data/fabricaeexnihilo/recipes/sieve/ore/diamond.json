@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:diamond"
+    "id": "minecraft:diamond"
   },
   "rolls": {
     "fabricaeexnihilo:diamond_mesh": [

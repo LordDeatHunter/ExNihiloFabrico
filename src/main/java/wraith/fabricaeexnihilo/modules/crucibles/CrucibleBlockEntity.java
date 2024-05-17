@@ -21,11 +21,16 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +46,7 @@ import wraith.fabricaeexnihilo.util.CodecUtils;
 import java.util.Iterator;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
+
 
 @SuppressWarnings("UnstableApiUsage")
 public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableBlockEntity {
@@ -75,13 +81,13 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
                 : world.random.nextInt(FabricaeExNihilo.CONFIG.get().crucibles().tickRate());
     }
 
-    public ActionResult activate(@Nullable PlayerEntity player, @Nullable Hand hand) {
+    public ItemActionResult activate(@Nullable PlayerEntity player, @Nullable Hand hand) {
         if (world == null || player == null) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         var held = player.getStackInHand(hand == null ? player.getActiveHand() : hand);
         if (held == null || held.isEmpty()) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
 
         var bucketFluidStorage = FluidStorage.ITEM.find(held, ContainerItemContext.ofPlayerHand(player, hand));
@@ -89,7 +95,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
             var amount = StorageUtil.move(fluidStorage, bucketFluidStorage, fluid -> true, Long.MAX_VALUE, null);
             if (amount > 0) {
                 markDirty();
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
         }
 
@@ -101,11 +107,11 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
                     held.decrement((int) amount);
                 }
                 markDirty();
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
         }
 
-        return ActionResult.PASS;
+        return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
     public long getContained() {
@@ -154,18 +160,18 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         if (nbt == null) {
             FabricaeExNihilo.LOGGER.warn("A crucible at {} is missing data.", pos);
             return;
         }
-        readNbtWithoutWorldInfo(nbt);
+        readNbtWithoutWorldInfo(nbt, registryLookup);
     }
 
-    private void readNbtWithoutWorldInfo(NbtCompound nbt) {
-        renderStack = ItemStack.fromNbt(nbt.getCompound("render"));
-        fluid = CodecUtils.fromNbt(CodecUtils.FLUID_VARIANT, nbt.get("fluid"));
+    private void readNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        renderStack = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("render"));
+        fluid = FluidVariant.CODEC.decode(registryLookup.getOps(NbtOps.INSTANCE), nbt.getCompound("fluid")).getOrThrow().getFirst();
         contained = nbt.getLong("contained");
         queued = nbt.getLong("queued");
         heat = nbt.getInt("heat");
@@ -193,7 +199,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
         }
         var oldHeat = heat;
         var state = world.getBlockState(pos.down());
-        heat = CrucibleHeatRecipe.find(state, world).map(CrucibleHeatRecipe::getHeat).orElse(0);
+        heat = CrucibleHeatRecipe.find(state, world).map(RecipeEntry::value).map(CrucibleHeatRecipe::getHeat).orElse(0);
         if (state.getBlock() instanceof FluidBlock) {
             heat = (int) (heat * state.getFluidState().getHeight());
         }
@@ -208,14 +214,14 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
      */
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        writeNbtWithoutWorldInfo(nbt);
+    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        writeNbtWithoutWorldInfo(nbt, registryLookup);
     }
 
-    private void writeNbtWithoutWorldInfo(NbtCompound nbt) {
-        nbt.put("render", renderStack.writeNbt(new NbtCompound()));
-        nbt.put("fluid", CodecUtils.toNbt(CodecUtils.FLUID_VARIANT, fluid));
+    private void writeNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        nbt.put("render", renderStack.encodeAllowEmpty(registryLookup));
+        nbt.put("fluid", FluidVariant.CODEC.encodeStart(registryLookup.getOps(NbtOps.INSTANCE), fluid).getOrThrow());
         nbt.putLong("contained", contained);
         nbt.putLong("queued", queued);
         nbt.putInt("heat", heat);
@@ -298,7 +304,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
 
         @Override
         public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-            var recipeOptional = CrucibleRecipe.find(resource.toStack(), isFireproof(), world);
+            var recipeOptional = CrucibleRecipe.find(resource.toStack(), isFireproof(), world).map(RecipeEntry::value);
             if (recipeOptional.isEmpty()) return 0;
             var recipe = recipeOptional.get();
             if (!recipe.getFluid().equals(fluid) && !fluid.isBlank()) return 0;

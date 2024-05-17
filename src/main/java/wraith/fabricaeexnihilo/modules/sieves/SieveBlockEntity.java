@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.modules.sieves;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -14,11 +13,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -35,9 +32,10 @@ import java.util.*;
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 import static wraith.fabricaeexnihilo.modules.sieves.SieveBlock.WATERLOGGED;
 
+
 public class SieveBlockEntity extends BaseBlockEntity {
 
-    public static final BlockEntityType<SieveBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
+    public static final BlockEntityType<SieveBlockEntity> TYPE = BlockEntityType.Builder.create(
             SieveBlockEntity::new,
             ModBlocks.SIEVES.values().toArray(new SieveBlock[0])
     ).build(null);
@@ -51,34 +49,34 @@ public class SieveBlockEntity extends BaseBlockEntity {
         super(TYPE, pos, state);
     }
 
-    public ActionResult activate(BlockState state, PlayerEntity player, Hand hand) {
+    public ItemActionResult activate(BlockState state, PlayerEntity player, ItemStack stack) {
         if (world == null || player == null) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
 
-        var held = player.getStackInHand(hand == null ? player.getActiveHand() : hand);
+        var held = stack;
         if (held == null) {
             held = ItemStack.EMPTY;
         }
 
         if (held.getItem() instanceof BucketItem) {
-            return ActionResult.PASS; // Done for fluid logging
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION; // Done for fluid logging
         }
 
         var sieves = getConnectedSieves();
         // Make Progress
         if (!contents.isEmpty()) {
             sieves.forEach(sieve -> sieve.doProgress(player));
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
 
         var item = held.getItem();
         // Removing mesh
-        if (!mesh.isEmpty() && player.getStackInHand(hand).isEmpty() && player.isSneaking()) {
+        if (!mesh.isEmpty() && held.isEmpty() && player.isSneaking()) {
             player.getInventory().offerOrDrop(mesh.copy());
             mesh = ItemStack.EMPTY;
             markDirty();
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else if (mesh.isEmpty() && isValidMesh(item)) {
             // Add mesh
             mesh = ItemUtils.ofSize(held, 1);
@@ -86,16 +84,16 @@ public class SieveBlockEntity extends BaseBlockEntity {
                 held.decrement(1);
             }
             markDirty();
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
 
         // Add a block
         if (held.isEmpty() || SieveRecipe.find(held.getItem(), state.get(WATERLOGGED), Registries.ITEM.getId(mesh.getItem()), world).isEmpty()) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         var finalHeld = held;
         sieves.forEach(sieve -> sieve.setContents(finalHeld, !player.isCreative()));
-        return ActionResult.SUCCESS;
+        return ItemActionResult.SUCCESS;
     }
 
     private boolean isValidMesh(Item item) {
@@ -103,7 +101,7 @@ public class SieveBlockEntity extends BaseBlockEntity {
         return world.getRecipeManager()
                 .listAllOfType(ModRecipes.SIEVE)
                 .stream()
-                .anyMatch(recipe -> recipe.getRolls().containsKey(Registries.ITEM.getId(item)));
+                .anyMatch(recipe -> recipe.value().getRolls().containsKey(Registries.ITEM.getId(item)));
     }
 
     public void doProgress(PlayerEntity player) {
@@ -220,18 +218,18 @@ public class SieveBlockEntity extends BaseBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         if (nbt == null) {
             FabricaeExNihilo.LOGGER.warn("A sieve at {} is missing data.", this.pos);
             return;
         }
-        readNbtWithoutWorldInfo(nbt);
+        readNbtWithoutWorldInfo(nbt, registryLookup);
     }
 
-    public void readNbtWithoutWorldInfo(NbtCompound nbt) {
-        mesh = ItemStack.fromNbt(nbt.getCompound("mesh"));
-        contents = ItemStack.fromNbt(nbt.getCompound("contents"));
+    public void readNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        mesh = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("mesh"));
+        contents = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("contents"));
         progress = nbt.getDouble("progress");
     }
 
@@ -253,14 +251,14 @@ public class SieveBlockEntity extends BaseBlockEntity {
      */
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        writeNbtWithoutWorldInfo(nbt);
+    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        writeNbtWithoutWorldInfo(nbt, registryLookup);
     }
 
-    public void writeNbtWithoutWorldInfo(NbtCompound nbt) {
-        nbt.put("mesh", mesh.writeNbt(new NbtCompound()));
-        nbt.put("contents", contents.writeNbt(new NbtCompound()));
+    public void writeNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        nbt.put("mesh", mesh.encodeAllowEmpty(registryLookup));
+        nbt.put("contents", contents.encodeAllowEmpty(registryLookup));
         nbt.putDouble("progress", progress);
     }
 }

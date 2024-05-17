@@ -6,6 +6,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
 import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
@@ -22,11 +23,12 @@ public final class MilkingDisplay implements Display {
     public final EntryIngredient result;
     private final Identifier id;
 
-    public MilkingDisplay(MilkingRecipe recipe) {
+    public MilkingDisplay(RecipeEntry<MilkingRecipe> recipeEntry) {
+        var recipe = recipeEntry.value();
         this.entity = EntryIngredients.ofItems(Stream.<ItemConvertible>ofNullable(SpawnEggItem.forEntity(recipe.getEntity())).toList());
         this.amount = recipe.getAmount();
         this.result = EntryIngredients.of(recipe.getFluid().getFluid(), amount);
-        this.id = recipe.getId();
+        this.id = recipeEntry.id();
     }
 
     @Override

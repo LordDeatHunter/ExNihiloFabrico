@@ -1,18 +1,29 @@
 package wraith.fabricaeexnihilo;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.mattidragon.configloader.api.ConfigManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
+import net.fabricmc.fabric.impl.resource.conditions.DefaultResourceConditionTypes;
+import net.fabricmc.fabric.impl.resource.conditions.ResourceConditionsImpl;
+import net.fabricmc.fabric.impl.resource.conditions.conditions.RegistryContainsResourceCondition;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.registry.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.config.FabricaeExNihiloConfig;
 import wraith.fabricaeexnihilo.loot.CopyEnchantmentsLootFunction;
 import wraith.fabricaeexnihilo.modules.*;
@@ -23,6 +34,9 @@ import wraith.fabricaeexnihilo.recipe.ModRecipes;
 import wraith.fabricaeexnihilo.util.BonusEnchantingManager;
 import wraith.fabricaeexnihilo.util.EntrypointHelper;
 import wraith.fabricaeexnihilo.util.ItemUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class FabricaeExNihilo implements ModInitializer {
     public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
@@ -61,36 +75,70 @@ public class FabricaeExNihilo implements ModInitializer {
         return new Identifier("fabricaeexnihilo", path);
     }
 
+    public record RegistryContainsItemsCondition(List<Identifier> entries) implements ResourceCondition {
+        public static final MapCodec<RegistryContainsItemsCondition> CODEC = Identifier.CODEC.listOf().fieldOf("values").xmap(RegistryContainsItemsCondition::new, RegistryContainsItemsCondition::entries);
+
+        public RegistryContainsItemsCondition(Identifier... entries) {
+            this(List.of(entries));
+        }
+
+        @SafeVarargs
+        public RegistryContainsItemsCondition(RegistryKey<Item>... entries) {
+            this(Arrays.stream(entries).map(RegistryKey::getValue).toList());
+        }
+
+        public static final ResourceConditionType<RegistryContainsItemsCondition> TYPE = ResourceConditionType.create(id("all_items_present"), CODEC);
+
+        @Override
+        public ResourceConditionType<?> getType() {
+            return TYPE;
+        }
+
+        @SuppressWarnings("UnstableApiUsage")
+        @Override
+        public boolean test(@Nullable RegistryWrapper.WrapperLookup registryLookup) {
+            return ResourceConditionsImpl.registryContains(registryLookup, RegistryKeys.ITEM.getValue(), this.entries());
+        }
+    }
+
+    public record RegistryContainsBlocksCondition(List<Identifier> entries) implements ResourceCondition {
+        public static final MapCodec<RegistryContainsBlocksCondition> CODEC = Identifier.CODEC.listOf().fieldOf("values").xmap(RegistryContainsBlocksCondition::new, RegistryContainsBlocksCondition::entries);
+
+        public RegistryContainsBlocksCondition(Identifier... entries) {
+            this(List.of(entries));
+        }
+
+        @SafeVarargs
+        public RegistryContainsBlocksCondition(RegistryKey<Block>... entries) {
+            this(Arrays.stream(entries).map(RegistryKey::getValue).toList());
+        }
+
+        public static final ResourceConditionType<RegistryContainsBlocksCondition> TYPE = ResourceConditionType.create(id("all_blocks_present"), CODEC);
+
+        @Override
+        public ResourceConditionType<?> getType() {
+            return TYPE;
+        }
+
+        @SuppressWarnings("UnstableApiUsage")
+        @Override
+        public boolean test(@Nullable RegistryWrapper.WrapperLookup registryLookup) {
+            return ResourceConditionsImpl.registryContains(registryLookup, RegistryKeys.BLOCK.getValue(), this.entries());
+        }
+    }
+
     @Override
     public void onInitialize() {
         EntrypointHelper.callEntrypoints();
 
         ModLootContextTypes.register();
-        ResourceConditions.register(id("all_items_present"), json -> {
-            var values = JsonHelper.getArray(json, "values");
-
-            for (var value : values) {
-                if (!Registries.ITEM.containsId(new Identifier(value.getAsString()))) {
-                    return false;
-                }
-            }
-            return true;
-        });
-        ResourceConditions.register(id("all_blocks_present"), json -> {
-            var values = JsonHelper.getArray(json, "values");
-
-            for (var value : values) {
-                if (!Registries.BLOCK.containsId(new Identifier(value.getAsString()))) {
-                    return false;
-                }
-            }
-            return true;
-        });
+        ResourceConditions.register(RegistryContainsItemsCondition.TYPE);
+        ResourceConditions.register(RegistryContainsBlocksCondition.TYPE);
         Registry.register(Registries.LOOT_FUNCTION_TYPE, id("copy_enchantments"), CopyEnchantmentsLootFunction.TYPE);
         Registry.register(Registries.ITEM_GROUP, id("general"), ITEM_GROUP);
 
         LOGGER.debug("Registering Status Effects");
-        ModEffects.registerEffects();
+        ModEffects.init();
 
         LOGGER.debug("Registering Fluids");
         ModFluids.registerFluids();

@@ -16,7 +16,7 @@
     "#S#"
   ],
   "result": {
-    "item": "fabricaeexnihilo:jungle_barrel"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:jungle_barrel"
+  }
 }

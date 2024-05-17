@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:netherrack"
+        "id": "minecraft:netherrack"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#fabricaeexnihilo:true_lava"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:netherrack",
   "trigger": {
     "type": "insert_item",

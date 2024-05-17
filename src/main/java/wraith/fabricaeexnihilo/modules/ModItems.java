@@ -1,8 +1,7 @@
 package wraith.fabricaeexnihilo.modules;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.component.type.FoodComponents;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.FoodComponents;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -17,7 +16,7 @@ import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
 public final class ModItems {
 
-    public static final FabricItemSettings BASE_SETTINGS = new FabricItemSettings();
+    public static final Item.Settings BASE_SETTINGS = new Item.Settings();
     public static final Item COOKED_SILKWORM;
     public static final Map<Identifier, Item> DOLLS = new LinkedHashMap<>();
     public static final Map<Identifier, MeshItem> MESHES = new LinkedHashMap<>();
@@ -45,8 +44,8 @@ public final class ModItems {
         PORCELAIN = new Item(BASE_SETTINGS);
         UNFIRED_PORCELAIN_CRUCIBLE = new Item(BASE_SETTINGS);
         SALT_BOTTLE = new Item(BASE_SETTINGS);
-        RAW_SILKWORM = new SilkWormItem(new FabricItemSettings().maxCount(64).food(FoodComponents.COD));
-        COOKED_SILKWORM = new Item(new FabricItemSettings().maxCount(64).food(FoodComponents.COOKED_COD));
+        RAW_SILKWORM = new SilkWormItem(new Item.Settings().maxCount(64).food(FoodComponents.COD));
+        COOKED_SILKWORM = new Item(new  Item.Settings().maxCount(64).food(FoodComponents.COOKED_COD));
 
         DOLLS.put(id("doll"), new Item(BASE_SETTINGS));
         DOLLS.put(id("doll_blaze"), new Item(BASE_SETTINGS));
@@ -68,7 +67,7 @@ public final class ModItems {
         PEBBLES.forEach((identifier, item) -> Registry.register(Registries.ITEM, identifier, item));
         DOLLS.forEach((identifier, item) -> Registry.register(Registries.ITEM, identifier, item));
         ORE_PIECES.forEach((identifier, item) -> Registry.register(Registries.ITEM, identifier, item));
-        Registry.register(Registries.ITEM, id("end_cake"), new BlockItem(ModBlocks.END_CAKE, new FabricItemSettings().maxCount(1)));
+        Registry.register(Registries.ITEM, id("end_cake"), new BlockItem(ModBlocks.END_CAKE, new Item.Settings().maxCount(1)));
         ModFluids.registerBuckets();
     }
 

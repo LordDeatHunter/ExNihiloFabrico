@@ -6,5 +6,7 @@
   "ingredient": {
     "item": "fabricaeexnihilo:raw_silkworm"
   },
-  "result": "fabricaeexnihilo:cooked_silkworm"
+  "result": {
+    "id": "fabricaeexnihilo:cooked_silkworm"
+  }
 }

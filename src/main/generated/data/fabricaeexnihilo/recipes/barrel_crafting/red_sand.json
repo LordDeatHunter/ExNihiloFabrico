@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:red_sand"
+        "id": "minecraft:red_sand"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#c:blood"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:red_sand",
   "trigger": {
     "type": "insert_item",

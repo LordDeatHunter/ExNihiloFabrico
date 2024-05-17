@@ -6,11 +6,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -82,14 +84,19 @@ public class SieveBlock extends Block implements BlockEntityProvider, Waterlogga
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        return onUseWithItem(ItemStack.EMPTY, state, world, pos, player, player.getActiveHand(), hit).toActionResult();
+    }
+
+    @Override
+    public ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
         if (pos == null) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         if (world.getBlockEntity(pos) instanceof SieveBlockEntity sieve) {
-            return sieve.activate(state, player, hand);
+            return sieve.activate(state, player, stack);
         }
-        return ActionResult.PASS;
+        return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Nullable

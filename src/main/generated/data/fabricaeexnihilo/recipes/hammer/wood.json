@@ -15,7 +15,7 @@
     "/  "
   ],
   "result": {
-    "item": "fabricaeexnihilo:wooden_hammer"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:wooden_hammer"
+  }
 }

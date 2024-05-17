@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.minecraft.client.render.RenderLayer;
 import wraith.fabricaeexnihilo.modules.ModFluids;
 import wraith.fabricaeexnihilo.modules.base.AbstractFluid;
+import wraith.fabricaeexnihilo.modules.base.FluidSettings;
 
 public class FluidRenderManager {
     public static void setupClient() {

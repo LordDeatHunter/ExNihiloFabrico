@@ -4,6 +4,7 @@ import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.recipe.RecipeEntry;
 import wraith.fabricaeexnihilo.compatibility.emi.EmiIngredientUtil;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiPlugin;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiTextures;
@@ -15,12 +16,12 @@ public class EmiWitchWaterWorldRecipe extends BasicEmiRecipe {
     private static final int HEIGHT = 3 * 18;
     private final EmiIngredient target;
 
-    public EmiWitchWaterWorldRecipe(WitchWaterWorldRecipe recipe) {
-        super(FENEmiPlugin.WITCH_WATER_WORLD_CATEGORY, recipe.getId(), WIDTH, HEIGHT);
+    public EmiWitchWaterWorldRecipe(RecipeEntry<WitchWaterWorldRecipe> recipe) {
+        super(FENEmiPlugin.WITCH_WATER_WORLD_CATEGORY, recipe.id(), WIDTH, HEIGHT);
         catalysts.add(EmiIngredient.of(WitchWaterFluid.TAG));
-        target = EmiIngredientUtil.ingredientOf(recipe.getTarget());
+        target = EmiIngredientUtil.ingredientOf(recipe.value().getTarget());
         catalysts.add(target);
-        outputs.addAll(EmiIngredientUtil.stacksOf(recipe.getResult()));
+        outputs.addAll(EmiIngredientUtil.stacksOf(recipe.value().getResult()));
     }
 
     @Override

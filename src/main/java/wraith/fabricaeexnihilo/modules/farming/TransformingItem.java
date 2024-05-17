@@ -1,17 +1,18 @@
 package wraith.fabricaeexnihilo.modules.farming;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.util.Lazy;
 
 public class TransformingItem extends Item {
     private final Lazy<Block> from;
     private final Lazy<Block> to;
 
-    public TransformingItem(Lazy<Block> from, Lazy<Block> to, FabricItemSettings settings) {
+    public TransformingItem(Lazy<Block> from, Lazy<Block> to,  Item.Settings settings) {
         super(settings);
         this.from = from;
         this.to = to;

@@ -5,14 +5,14 @@
       "type": "store_fluid",
       "amount": 81000,
       "fluid": {
-        "type": "fabricaeexnihilo:brine"
+        "fluid": "fabricaeexnihilo:brine"
       }
     },
     {
       "type": "drop_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:glass_bottle"
+        "id": "minecraft:glass_bottle"
       }
     }
   ],
@@ -22,6 +22,7 @@
       "fluid": "#fabricaeexnihilo:true_water"
     }
   ],
+  "duration": 0,
   "icon": "fabricaeexnihilo:brine_bucket",
   "trigger": {
     "type": "insert_item",

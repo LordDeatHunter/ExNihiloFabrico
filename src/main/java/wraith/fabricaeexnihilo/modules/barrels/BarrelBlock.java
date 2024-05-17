@@ -1,5 +1,10 @@
 package wraith.fabricaeexnihilo.modules.barrels;
 
+import java.util.Optional;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
@@ -19,8 +24,10 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +41,6 @@ import wraith.fabricaeexnihilo.modules.ModEffects;
 import wraith.fabricaeexnihilo.modules.fluids.BloodFluid;
 import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
 
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class BarrelBlock extends BlockWithEntity {
     private static final VoxelShape SHAPE = createCuboidShape(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
 
@@ -56,6 +62,18 @@ public class BarrelBlock extends BlockWithEntity {
         return SHAPE;
     }
 
+    public static final MapCodec<BarrelBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    createSettingsCodec(),
+                    Codec.BOOL.fieldOf("isFireproof").forGetter(block -> block.isFireproof)
+            ).apply(instance, BarrelBlock::new)
+    );
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
+    }
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
@@ -75,7 +93,7 @@ public class BarrelBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BarrelBlockEntity.TYPE, (world1, blockPos, blockState, barrelEntity) -> barrelEntity.tick());
+        return validateTicker(type, BarrelBlockEntity.TYPE, (world1, blockPos, blockState, barrelEntity) -> barrelEntity.tick());
     }
 
     public boolean isFireproof() {
@@ -85,7 +103,7 @@ public class BarrelBlock extends BlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.getBlockEntity(pos) instanceof BarrelBlockEntity barrelEntity) {
-            EnchantmentHelper.get(itemStack).forEach((enchantment, level) -> barrelEntity.getEnchantmentContainer().setEnchantmentLevel(enchantment, level));
+            EnchantmentHelper.getEnchantments(itemStack).getEnchantmentsMap().forEach((e) -> barrelEntity.getEnchantmentContainer().setEnchantmentLevel(e.getKey().value(), e.getIntValue()));
         }
     }
 
@@ -115,7 +133,7 @@ public class BarrelBlock extends BlockWithEntity {
                 }
             }
             if (!(livingEntity instanceof PlayerEntity) && !livingEntity.hasStatusEffect(ModEffects.MILKED) && FabricaeExNihilo.CONFIG.get().barrels().milking()) {
-                var recipe = MilkingRecipe.find(livingEntity.getType(), world);
+                var recipe = MilkingRecipe.find(livingEntity.getType(), world).map(RecipeEntry::value);
                 if (recipe.isPresent()) {
                     long inserted;
                     try (Transaction t = Transaction.openOuter()) {
@@ -132,14 +150,14 @@ public class BarrelBlock extends BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+    public ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
         if (world == null || pos == null) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         var blockEntity = world.getBlockEntity(pos);
         return blockEntity instanceof BarrelBlockEntity barrelBlock
                 ? barrelBlock.activate(player, hand)
-                : ActionResult.PASS;
+                : ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
 }

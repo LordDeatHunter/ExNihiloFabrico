@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:flint"
+    "id": "minecraft:flint"
   },
   "rolls": {
     "fabricaeexnihilo:flint_mesh": [

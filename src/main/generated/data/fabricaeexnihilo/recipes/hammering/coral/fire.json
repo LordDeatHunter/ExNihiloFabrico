@@ -1,6 +1,9 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:fire_coral",
+  "block": {
+    "id": "minecraft:fire_coral",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0,
@@ -8,7 +11,7 @@
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:fire_coral_fan"
+      "id": "minecraft:fire_coral_fan"
     }
   }
 }

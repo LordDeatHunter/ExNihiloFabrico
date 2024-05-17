@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:redstone"
+    "id": "minecraft:redstone"
   },
   "rolls": {
     "fabricaeexnihilo:diamond_mesh": [

@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:coal"
+    "id": "minecraft:coal"
   },
   "rolls": {
     "fabricaeexnihilo:diamond_mesh": [

@@ -8,12 +8,17 @@
     },
     {
       "type": "convert_block",
-      "filter": "minecraft:cobblestone",
+      "filter": {
+        "id": "minecraft:cobblestone",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:mossy_cobblestone"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:mossy_cobblestone",
   "trigger": {
     "type": "tick",

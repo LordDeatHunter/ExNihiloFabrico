@@ -16,7 +16,7 @@
     "#S#"
   ],
   "result": {
-    "item": "fabricaeexnihilo:oak_barrel"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:oak_barrel"
+  }
 }

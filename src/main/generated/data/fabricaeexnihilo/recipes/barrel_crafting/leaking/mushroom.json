@@ -8,12 +8,17 @@
     },
     {
       "type": "convert_block",
-      "filter": "#minecraft:small_flowers",
+      "filter": {
+        "id": "#minecraft:small_flowers",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:brown_mushroom"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:brown_mushroom",
   "trigger": {
     "type": "tick",

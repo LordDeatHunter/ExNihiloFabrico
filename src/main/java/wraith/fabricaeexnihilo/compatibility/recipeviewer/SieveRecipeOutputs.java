@@ -7,6 +7,7 @@ import wraith.fabricaeexnihilo.recipe.SieveRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 public record SieveRecipeOutputs(HashMultimap<ItemStack, Double> outputs) {
     public static SieveRecipeOutputs of(SieveRecipe recipe, Identifier mesh) {

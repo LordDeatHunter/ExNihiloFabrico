@@ -1,11 +1,14 @@
 package wraith.fabricaeexnihilo.modules.farming;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.util.Lazy;
 
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ import java.util.List;
 public class PlantableItem extends Item {
     private final Lazy<Block[]> plants;
 
-    public PlantableItem(Lazy<Block[]> plants, FabricItemSettings settings) {
+    public PlantableItem(Lazy<Block[]> plants,  Item.Settings settings) {
         super(settings);
         this.plants = plants;
     }

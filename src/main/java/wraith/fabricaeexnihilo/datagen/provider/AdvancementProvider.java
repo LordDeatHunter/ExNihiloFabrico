@@ -3,14 +3,16 @@ package wraith.fabricaeexnihilo.datagen.provider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementCriterion;
+import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.advancement.criterion.CriterionConditions;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.advancement.criterion.ItemDurabilityChangedCriterion;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.DefaultApiModule;
@@ -22,18 +24,20 @@ import wraith.fabricaeexnihilo.modules.fluids.BloodFluid;
 import wraith.fabricaeexnihilo.modules.fluids.BrineFluid;
 import wraith.fabricaeexnihilo.modules.witchwater.WitchWaterFluid;
 
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
 public class AdvancementProvider extends FabricAdvancementProvider {
 
-    public AdvancementProvider(FabricDataOutput generator) {
-        super(generator);
+    public AdvancementProvider(FabricDataOutput generator, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(generator, registriesFuture);
     }
 
     @Override
-    public void generateAdvancement(Consumer<Advancement> exporter) {
+    public void generateAdvancement(RegistryWrapper.WrapperLookup lookup, Consumer<AdvancementEntry> exporter) {
         var root = Advancement.Builder.create()
                 .display(DefaultApiModule.INSTANCE.oakBlocks.sieve(),
                         Text.translatable("advancements.fabricaeexnihilo.root.title"),
@@ -79,7 +83,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 "clay_crook_broken",
                 clay,
                 "clay_crook_broken",
-                ItemDurabilityChangedCriterion.Conditions.create(ItemPredicate.Builder.create().items(ModTools.CROOKS.get(id("clay_crook"))).build(), NumberRange.IntRange.ANY),
+                ItemDurabilityChangedCriterion.Conditions.create(Optional.of(ItemPredicate.Builder.create().items(ModTools.CROOKS.get(id("clay_crook"))).build()), NumberRange.IntRange.ANY),
                 exporter);
 
         var crook = task(ModTools.CROOKS.get(id("wooden_crook")),
@@ -248,7 +252,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 exporter);
     }
 
-    private Advancement task(ItemConvertible icon, String name, Advancement parent, String criterionName, CriterionConditions criterionConditions, Consumer<Advancement> exporter) {
+    private AdvancementEntry task(ItemConvertible icon, String name, AdvancementEntry parent, String criterionName, AdvancementCriterion<?> criterionConditions, Consumer<AdvancementEntry> exporter) {
         return Advancement.Builder.create()
                 .display(icon,
                         Text.translatable("advancements.fabricaeexnihilo." + name + ".title"),
@@ -261,7 +265,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 .build(exporter, "fabricaeexnihilo:" + name);
     }
 
-    private Advancement goal(ItemConvertible icon, String name, Advancement parent, String criterionName, CriterionConditions criterionConditions, Consumer<Advancement> exporter) {
+    private AdvancementEntry goal(ItemConvertible icon, String name, AdvancementEntry parent, String criterionName, AdvancementCriterion<?> criterionConditions, Consumer<AdvancementEntry> exporter) {
         return Advancement.Builder.create()
                 .display(icon,
                         Text.translatable("advancements.fabricaeexnihilo." + name + ".title"),

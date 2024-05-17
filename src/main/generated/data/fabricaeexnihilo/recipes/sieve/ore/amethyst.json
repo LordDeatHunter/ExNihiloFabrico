@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:amethyst_shard"
+    "id": "minecraft:amethyst_shard"
   },
   "rolls": {
     "fabricaeexnihilo:diamond_mesh": [

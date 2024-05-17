@@ -1,19 +1,15 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
-import com.google.gson.JsonObject;
-import net.minecraft.advancement.criterion.CriterionConditions;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import org.jetbrains.annotations.Nullable;
-import wraith.fabricaeexnihilo.recipe.ModRecipes;
-
-import java.util.function.Consumer;
+import wraith.fabricaeexnihilo.recipe.witchwater.WitchWaterEntityRecipe;
 
 public class WitchWaterEntityRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final EntityType<?> target;
@@ -27,7 +23,7 @@ public class WitchWaterEntityRecipeJsonBuilder implements CraftingRecipeJsonBuil
     }
 
     public static WitchWaterEntityRecipeJsonBuilder of(EntityType<?> from, EntityType<?> to) {
-        return new WitchWaterEntityRecipeJsonBuilder(from, null, to);
+        return new WitchWaterEntityRecipeJsonBuilder(from, "", to);
     }
 
     public static WitchWaterEntityRecipeJsonBuilder villager(VillagerProfession from, EntityType<?> to) {
@@ -35,7 +31,7 @@ public class WitchWaterEntityRecipeJsonBuilder implements CraftingRecipeJsonBuil
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, CriterionConditions conditions) {
+    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
         throw new UnsupportedOperationException();
     }
 
@@ -51,48 +47,17 @@ public class WitchWaterEntityRecipeJsonBuilder implements CraftingRecipeJsonBuil
 
     @Deprecated
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
+    public void offerTo(RecipeExporter exporter) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
+    public void offerTo(RecipeExporter exporter, String recipePath) {
         offerTo(exporter, new Identifier(recipePath));
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        exporter.accept(new Provider(target, nbt, result, recipeId));
-    }
-
-    private record Provider(EntityType<?> target, String nbt, EntityType<?> result, Identifier id) implements RecipeJsonProvider {
-        @Override
-        public void serialize(JsonObject json) {
-            json.addProperty("target", Registries.ENTITY_TYPE.getId(target).toString());
-            json.addProperty("result", Registries.ENTITY_TYPE.getId(result).toString());
-            if (nbt != null) json.addProperty("nbt", nbt);
-        }
-
-        @Override
-        public Identifier getRecipeId() {
-            return id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getSerializer() {
-            return ModRecipes.WITCH_WATER_ENTITY_SERIALIZER;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject toAdvancementJson() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Identifier getAdvancementId() {
-            return null;
-        }
+    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        exporter.accept(recipeId, new WitchWaterEntityRecipe(target, WitchWaterEntityRecipe.Serializer.parseNbtPath(nbt), result), null);
     }
 }

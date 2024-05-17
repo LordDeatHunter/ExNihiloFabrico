@@ -3,23 +3,24 @@ package wraith.fabricaeexnihilo.datagen.provider.recipe;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.entity.EntityType;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import wraith.fabricaeexnihilo.datagen.builder.recipe.WitchWaterEntityRecipeJsonBuilder;
 import wraith.fabricaeexnihilo.datagen.builder.recipe.WitchWaterWorldRecipeJsonBuilder;
 import wraith.fabricaeexnihilo.modules.ModTags;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 public class WitchWaterRecipeProvider extends FabricRecipeProvider {
-    public WitchWaterRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public WitchWaterRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         WitchWaterEntityRecipeJsonBuilder.of(EntityType.SPIDER, EntityType.CAVE_SPIDER).offerTo(exporter, "entity/cave_spider");
         WitchWaterEntityRecipeJsonBuilder.of(EntityType.SQUID, EntityType.GHAST).offerTo(exporter, "entity/ghast");
         WitchWaterEntityRecipeJsonBuilder.of(EntityType.PUFFERFISH, EntityType.GUARDIAN).offerTo(exporter, "entity/guardian");
@@ -90,7 +91,7 @@ public class WitchWaterRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "world/brine");
     }
 
-    private void offerVillagerRecipe(VillagerProfession profession, EntityType<?> result, Consumer<RecipeJsonProvider> exporter) {
+    private void offerVillagerRecipe(VillagerProfession profession, EntityType<?> result, RecipeExporter exporter) {
         WitchWaterEntityRecipeJsonBuilder.villager(profession, result).offerTo(exporter, "entity/villager_" + profession.id());
     }
 

@@ -15,7 +15,7 @@
     "/  "
   ],
   "result": {
-    "item": "fabricaeexnihilo:golden_hammer"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:golden_hammer"
+  }
 }

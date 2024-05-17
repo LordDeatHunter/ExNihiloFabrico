@@ -1,5 +1,6 @@
 package wraith.fabricaeexnihilo.compatibility.jade;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -7,6 +8,8 @@ import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.impl.ui.ItemStackElement;
 import wraith.fabricaeexnihilo.modules.barrels.BarrelBlockEntity;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
@@ -16,7 +19,7 @@ public class BarrelProvider implements IBlockComponentProvider {
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         if (!(blockAccessor.getBlockEntity() instanceof BarrelBlockEntity barrel)) return;
-        var helper = tooltip.getElementHelper();
+
 
         if (barrel.isCrafting()) {
             tooltip.add(Text.translatable("fabricaeexnihilo.hud.barrel.alchemy.processing", (int) (100.0 * barrel.getRecipeProgress())));
@@ -32,7 +35,7 @@ public class BarrelProvider implements IBlockComponentProvider {
                 tooltip.add(Text.translatable("fabricaeexnihilo.hud.fluid_content", name, barrel.getFluidAmount() / 81, 1000));
             }
             case ITEM -> {
-                tooltip.add(helper.item(barrel.getItem()));
+                tooltip.add(ItemStackElement.of(barrel.getItem()));
             }
             case COMPOST -> {
                 if (barrel.getCompostLevel() < 1) {

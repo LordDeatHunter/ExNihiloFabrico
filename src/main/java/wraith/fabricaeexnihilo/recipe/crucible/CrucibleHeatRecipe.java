@@ -1,16 +1,19 @@
 package wraith.fabricaeexnihilo.recipe.crucible;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
@@ -25,13 +28,12 @@ public class CrucibleHeatRecipe extends BaseRecipe<CrucibleHeatRecipe.Context> {
     private final BlockIngredient block;
     private final int heat;
 
-    public CrucibleHeatRecipe(Identifier id, BlockIngredient block, int heat) {
-        super(id);
+    public CrucibleHeatRecipe(BlockIngredient block, int heat) {
         this.block = block;
         this.heat = heat;
     }
 
-    public static Optional<CrucibleHeatRecipe> find(BlockState state, @Nullable World world) {
+    public static Optional<RecipeEntry<CrucibleHeatRecipe>> find(BlockState state, @Nullable World world) {
         if (world == null) {
             return Optional.empty();
         }
@@ -75,29 +77,30 @@ public class CrucibleHeatRecipe extends BaseRecipe<CrucibleHeatRecipe.Context> {
     }
 
     public static class Serializer implements RecipeSerializer<CrucibleHeatRecipe> {
-        @Override
-        public CrucibleHeatRecipe read(Identifier id, JsonObject json) {
-            var block = BlockIngredient.fromJson(JsonHelper.getElement(json, "block"));
-            var heat = JsonHelper.getInt(json, "heat");
+        public static final MapCodec<CrucibleHeatRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        BlockIngredient.CODEC.fieldOf("block").forGetter(recipe -> recipe.block),
+                        Codec.INT.fieldOf("heat").forGetter(recipe -> recipe.heat)
+                ).apply(instance, CrucibleHeatRecipe::new)
+        );
 
-            return new CrucibleHeatRecipe(id, block, heat);
+        @Override
+        public MapCodec<CrucibleHeatRecipe> codec() {
+            return CODEC;
         }
 
-        @Override
-        public CrucibleHeatRecipe read(Identifier id, PacketByteBuf buf) {
-            var block = BlockIngredient.fromPacket(buf);
-            var heat = buf.readInt();
-
-            return new CrucibleHeatRecipe(id, block, heat);
-        }
+        public static final PacketCodec<RegistryByteBuf, CrucibleHeatRecipe> PACKET_CODEC = PacketCodec.tuple(
+                BlockIngredient.PACKET_CODEC, recipe -> recipe.block,
+                PacketCodecs.INTEGER, recipe -> recipe.heat,
+                CrucibleHeatRecipe::new
+        );
 
         @Override
-        public void write(PacketByteBuf buf, CrucibleHeatRecipe recipe) {
-            recipe.block.toPacket(buf);
-            buf.writeInt(recipe.heat);
+        public PacketCodec<RegistryByteBuf, CrucibleHeatRecipe> packetCodec() {
+            return PACKET_CODEC;
         }
     }
 
-    protected record Context(BlockState state) implements RecipeContext {
+    public record Context(BlockState state) implements RecipeContext {
     }
 }

@@ -7,7 +7,8 @@
     "item": "fabricaeexnihilo:diamond_mesh"
   },
   "result": {
-    "item": "fabricaeexnihilo:netherite_mesh"
+    "count": 1,
+    "id": "fabricaeexnihilo:netherite_mesh"
   },
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

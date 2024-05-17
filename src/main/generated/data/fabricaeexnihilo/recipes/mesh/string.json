@@ -12,7 +12,7 @@
     "###"
   ],
   "result": {
-    "item": "fabricaeexnihilo:string_mesh"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:string_mesh"
+  }
 }

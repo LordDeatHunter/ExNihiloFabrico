@@ -3,16 +3,18 @@ package wraith.fabricaeexnihilo.compatibility.recipeviewer;
 import com.google.common.collect.HashMultimap;
 import net.minecraft.recipe.RecipeManager;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
-
+import wraith.fabricaeexnihilo.recipe.SieveRecipe;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class SieveRecipeCombiner {
     public static void combineRecipes(RecipeManager recipeManager, int maxOutputs, RecipeConsumer consumer) {
         var sieveRecipes = recipeManager.listAllOfType(ModRecipes.SIEVE);
         var map = new HashMap<SieveRecipeKey, SieveRecipeOutputs>();
         for (var recipe : sieveRecipes) {
-            for (var key : SieveRecipeKey.getKeys(recipe)) {
-                var outputs = SieveRecipeOutputs.of(recipe, key.meshKey());
+            for (var key : SieveRecipeKey.getKeys(recipe.value())) {
+                var outputs = SieveRecipeOutputs.of(recipe.value(), key.meshKey());
                 map.computeIfAbsent(key, __ -> new SieveRecipeOutputs(HashMultimap.create()))
                         .outputs().putAll(outputs.outputs());
             }

@@ -1,5 +1,6 @@
 package wraith.fabricaeexnihilo.compatibility.jade;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;

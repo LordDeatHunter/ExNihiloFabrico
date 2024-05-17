@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import wraith.fabricaeexnihilo.modules.ModTags;
 
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings("deprecation")
 public class BarrelFluidStorage extends SnapshotParticipant<BarrelBlockEntity.Snapshot> implements SingleSlotStorage<FluidVariant> {
     private final BarrelBlockEntity barrel;
 

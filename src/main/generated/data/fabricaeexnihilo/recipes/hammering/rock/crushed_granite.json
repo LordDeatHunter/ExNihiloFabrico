@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "fabricaeexnihilo:crushed_granite",
+  "block": {
+    "id": "fabricaeexnihilo:crushed_granite",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:red_sand"
+      "id": "minecraft:red_sand"
     }
   }
 }

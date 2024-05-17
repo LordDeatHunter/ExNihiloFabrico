@@ -1,5 +1,8 @@
 {
   "type": "fabricaeexnihilo:crucible_heat",
-  "block": "minecraft:campfire",
+  "block": {
+    "id": "minecraft:campfire",
+    "states": {}
+  },
   "heat": 4
 }

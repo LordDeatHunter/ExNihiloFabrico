@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:gravel",
+  "block": {
+    "id": "minecraft:gravel",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:sand"
+      "id": "minecraft:sand"
     }
   }
 }

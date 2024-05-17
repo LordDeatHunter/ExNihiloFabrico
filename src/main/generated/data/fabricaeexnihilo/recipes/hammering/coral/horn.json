@@ -1,6 +1,9 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:horn_coral",
+  "block": {
+    "id": "minecraft:horn_coral",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0,
@@ -8,7 +11,7 @@
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:horn_coral_fan"
+      "id": "minecraft:horn_coral_fan"
     }
   }
 }

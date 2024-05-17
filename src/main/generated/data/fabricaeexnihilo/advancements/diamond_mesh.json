@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:diamond_mesh"
-            ]
+            "items": "fabricaeexnihilo:diamond_mesh"
           }
         ]
       },
@@ -15,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.diamond_mesh.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:diamond_mesh"
+      "count": 1,
+      "id": "fabricaeexnihilo:diamond_mesh"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.diamond_mesh.title"
     }

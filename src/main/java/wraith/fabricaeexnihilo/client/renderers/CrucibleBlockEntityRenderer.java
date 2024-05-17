@@ -3,6 +3,7 @@ package wraith.fabricaeexnihilo.client.renderers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.MinecraftClient;
@@ -11,6 +12,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
@@ -19,7 +21,6 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.modules.crucibles.CrucibleBlockEntity;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleBlockEntityRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
 
     private static final float XZ_SCALE = 12.0F / 16.0F;
@@ -69,7 +70,7 @@ public class CrucibleBlockEntityRenderer implements BlockEntityRenderer<Crucible
         var emitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
         emitter.square(Direction.UP, X_MIN, Z_MIN, X_MAX, Z_MAX, 1 - MathHelper.lerp(level, Y_MIN, Y_MAX));
         emitter.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
-        vertexConsumers.getBuffer(RenderLayer.getTranslucent()).quad(matrices.peek(), emitter.toBakedQuad(sprite), r, g, b, light, overlay);
+        vertexConsumers.getBuffer(RenderLayer.getTranslucent()).quad(matrices.peek(), emitter.toBakedQuad(sprite), r, g, b, 1F, light, overlay);
     }
 
     public void renderQueued(ItemStack renderStack, float level, MatrixStack matrices, VertexConsumerProvider vertexConsumer, int light, int overlay, World world, int seed) {

@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:crook",
-  "block": "minecraft:jungle_leaves",
+  "block": {
+    "id": "minecraft:jungle_leaves",
+    "states": {}
+  },
   "result": {
     "chances": [
       0.25
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:jungle_sapling"
+      "id": "minecraft:jungle_sapling"
     }
   }
 }

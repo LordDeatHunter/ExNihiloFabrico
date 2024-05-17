@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:granite_pebble"
-            ]
+            "items": "fabricaeexnihilo:granite_pebble"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_material",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_material"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:crook/granite"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -2,17 +2,19 @@ package wraith.fabricaeexnihilo.datagen.provider.recipe;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalFluidTags;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalFluidTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.impl.resource.conditions.conditions.RegistryContainsResourceCondition;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
@@ -26,18 +28,17 @@ import wraith.fabricaeexnihilo.modules.fluids.MilkFluid;
 import wraith.fabricaeexnihilo.modules.witchwater.WitchWaterFluid;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-@SuppressWarnings("UnstableApiUsage")
 public class BarrelRecipeProvider extends FabricRecipeProvider {
-    public BarrelRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public BarrelRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         new MilkingRecipeJsonBuilder(EntityType.COW, FluidVariant.of(MilkFluid.STILL)).offerTo(exporter, "milking/cow");
         new MilkingRecipeJsonBuilder(EntityType.WITCH, FluidVariant.of(WitchWaterFluid.STILL)).offerTo(exporter, "milking/witch");
 
@@ -57,7 +58,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
         return "Barrel Recipes";
     }
 
-    private void offerCompostingRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerCompostingRecipes(RecipeExporter exporter) {
         BarrelRecipeJsonBuilder.itemTriggered(Items.CACTUS) // 0x00aa00
                 .instant()
                 .fillCompost(Items.DIRT, 0.0625f)
@@ -112,7 +113,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "compost/vegetables");
     }
 
-    private void offerLeakingRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerLeakingRecipes(RecipeExporter exporter) {
         float chance = 0.1f;
         BarrelRecipeJsonBuilder.tickTriggered(chance)
                 .instant()
@@ -161,7 +162,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "leaking/soul_soil");
     }
 
-    private void offerFluidTransformationRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerFluidTransformationRecipes(RecipeExporter exporter) {
         BarrelRecipeJsonBuilder.tickTriggered()
                 .fluid(ModTags.TRUE_WATER)
                 .below(Blocks.MYCELIUM)
@@ -177,7 +178,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "slime_block_from_transformation");
     }
 
-    private void offerFluidCombinationRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerFluidCombinationRecipes(RecipeExporter exporter) {
         BarrelRecipeJsonBuilder.tickTriggered()
                 .fluid(Fluids.WATER)
                 .above(ModTags.Common.BRINE)
@@ -198,7 +199,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "obsidian");
     }
 
-    private void offerMiscAlchemyRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerMiscAlchemyRecipes(RecipeExporter exporter) {
         BarrelRecipeJsonBuilder.itemTriggered(DefaultApiModule.INSTANCE.silt, DefaultApiModule.INSTANCE.dust)
                 .fluid(ModTags.TRUE_WATER)
                 .instant()
@@ -226,7 +227,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "sponge");
     }
 
-    private void offerRedSandstoneRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerRedSandstoneRecipes(RecipeExporter exporter) {
         BarrelRecipeJsonBuilder.itemTriggered(Items.SAND)
                 .fluid(ModTags.Common.BLOOD)
                 .instant()
@@ -254,19 +255,20 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "smooth_red_sandstone");
     }
 
-    private void offerFluidRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerFluidRecipes(RecipeExporter exporter) {
+        //noinspection deprecation
         BarrelRecipeJsonBuilder.itemTriggered(DefaultApiModule.INSTANCE.myceliumSeeds)
                 .fluid(ModTags.TRUE_WATER)
                 .instant()
                 .storeFluid(WitchWaterFluid.STILL)
                 .icon(WitchWaterFluid.BUCKET)
-                .offerTo(withConditions(exporter, DefaultResourceConditions.itemsRegistered(DefaultApiModule.INSTANCE.myceliumSeeds)), "witchwater_from_seed");
+                .offerTo(withConditions(exporter, ResourceConditions.registryContains(DefaultApiModule.INSTANCE.myceliumSeeds.getRegistryEntry().registryKey())), "witchwater_from_seed");
         BarrelRecipeJsonBuilder.itemTriggered(ModTags.Common.SALT)
                 .fluid(ModTags.TRUE_WATER)
                 .instant()
                 .storeFluid(BrineFluid.STILL)
                 .icon(BrineFluid.BUCKET)
-                .offerTo(withConditions(exporter, DefaultResourceConditions.tagsPopulated(ModTags.Common.SALT)), "brine");
+                .offerTo(withConditions(exporter, ResourceConditions.tagsPopulated(ModTags.Common.SALT)), "brine");
         BarrelRecipeJsonBuilder.itemTriggered(ModItems.SALT_BOTTLE)
                 .fluid(ModTags.TRUE_WATER)
                 .instant()
@@ -276,7 +278,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "brine_from_salt");
     }
 
-    private void offerCoralRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerCoralRecipes(RecipeExporter exporter) {
         offerCoralRecipe(exporter, Items.PINK_DYE, Items.BRAIN_CORAL_BLOCK, "brain");
         offerCoralRecipe(exporter, Items.MAGENTA_DYE, Items.BUBBLE_CORAL_BLOCK, "bubble");
         offerCoralRecipe(exporter, Items.RED_DYE, Items.FIRE_CORAL_BLOCK, "fire");
@@ -284,7 +286,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
         offerCoralRecipe(exporter, Items.BLUE_DYE, Items.TUBE_CORAL_BLOCK, "tube");
     }
 
-    private void offerCoralRecipe(Consumer<RecipeJsonProvider> exporter, Item dye, Item coralBlock, String name) {
+    private void offerCoralRecipe(RecipeExporter exporter, Item dye, Item coralBlock, String name) {
         BarrelRecipeJsonBuilder.itemTriggered(dye)
                 .fluid(ModTags.Common.BRINE)
                 .instant()
@@ -292,7 +294,7 @@ public class BarrelRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "coral/" + name);
     }
 
-    private void offerSummoningRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerSummoningRecipes(RecipeExporter  exporter) {
         BarrelRecipeJsonBuilder.itemTriggered(ModItems.DOLLS.get(id("doll_blaze")))
                 .fluid(ModTags.TRUE_LAVA)
                 .duration(20)

@@ -6,7 +6,9 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.NbtPathArgumentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiPlugin;
@@ -24,11 +26,11 @@ public class EmiWitchWaterEntityRecipe extends BasicEmiRecipe {
     private final EntityType<?> result;
     private final NbtPathArgumentType.NbtPath nbt;
 
-    public EmiWitchWaterEntityRecipe(WitchWaterEntityRecipe recipe) {
-        super(FENEmiPlugin.WITCH_WATER_ENTITY_CATEGORY, recipe.getId(), WIDTH, HEIGHT);
-        target = recipe.getTarget();
-        result = recipe.getResult();
-        nbt = recipe.getNbt();
+    public EmiWitchWaterEntityRecipe(RecipeEntry<WitchWaterEntityRecipe> recipe) {
+        super(FENEmiPlugin.WITCH_WATER_ENTITY_CATEGORY, recipe.id(), WIDTH, HEIGHT);
+        target = recipe.value().getTarget();
+        result = recipe.value().getResult();
+        nbt = recipe.value().getNbt();
     }
 
     @Override

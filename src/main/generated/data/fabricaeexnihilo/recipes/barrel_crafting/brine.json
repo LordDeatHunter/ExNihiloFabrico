@@ -2,6 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "fabric:tags_populated",
+      "registry": "minecraft:item",
       "values": [
         "c:salt"
       ]
@@ -13,7 +14,7 @@
       "type": "store_fluid",
       "amount": 81000,
       "fluid": {
-        "type": "fabricaeexnihilo:brine"
+        "fluid": "fabricaeexnihilo:brine"
       }
     }
   ],
@@ -23,6 +24,7 @@
       "fluid": "#fabricaeexnihilo:true_water"
     }
   ],
+  "duration": 0,
   "icon": "fabricaeexnihilo:brine_bucket",
   "trigger": {
     "type": "insert_item",

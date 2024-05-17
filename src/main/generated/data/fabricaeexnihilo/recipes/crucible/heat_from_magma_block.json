@@ -1,5 +1,8 @@
 {
   "type": "fabricaeexnihilo:crucible_heat",
-  "block": "minecraft:magma_block",
+  "block": {
+    "id": "minecraft:magma_block",
+    "states": {}
+  },
   "heat": 3
 }

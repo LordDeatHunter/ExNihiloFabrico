@@ -15,7 +15,7 @@
     "/  "
   ],
   "result": {
-    "item": "fabricaeexnihilo:stone_hammer"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:stone_hammer"
+  }
 }

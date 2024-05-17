@@ -1,9 +1,12 @@
 package wraith.fabricaeexnihilo.modules.materials;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 
 import java.util.function.Supplier;
 
@@ -16,22 +19,22 @@ public enum ModToolMaterials implements ToolMaterial {
     BLACKSTONE(ToolMaterials.STONE),
     BASALT(ToolMaterials.STONE),
     STONE(ToolMaterials.STONE),
-    BONE(1, 131, 4.0f, 1.0f, 5, () -> Ingredient.ofItems(Items.BONE)),
-    BLAZE(3, 1561, 6.0f, 2.0f, 22, () -> Ingredient.ofItems(Items.BLAZE_ROD)),
-    TERRACOTTA(1, 250, 6.0f, 2.0f, 14, () -> Ingredient.ofItems(Items.BRICK)),
-    CLAY(0, 1, 1.0f, 0.1f, 0, () -> Ingredient.ofItems(Items.CLAY_BALL)),
-    PURPUR(3, 1561, 8.0f, 3.0f, 10, () -> Ingredient.ofItems(Items.POPPED_CHORUS_FRUIT, Items.CHORUS_FRUIT)),
-    PRISMARINE(1, 131, 4.0f, 1.0f, 5, () -> Ingredient.ofItems(Items.PRISMARINE, Items.PRISMARINE_SHARD));
+    BONE(BlockTags.INCORRECT_FOR_WOODEN_TOOL, 131, 4.0f, 1.0f, 5, () -> Ingredient.ofItems(Items.BONE)),
+    BLAZE(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 6.0f, 2.0f, 22, () -> Ingredient.ofItems(Items.BLAZE_ROD)),
+    TERRACOTTA(BlockTags.INCORRECT_FOR_STONE_TOOL, 250, 6.0f, 2.0f, 14, () -> Ingredient.ofItems(Items.BRICK)),
+    CLAY(BlockTags.INCORRECT_FOR_WOODEN_TOOL, 1, 1.0f, 0.1f, 0, () -> Ingredient.ofItems(Items.CLAY_BALL)),
+    PURPUR(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 8.0f, 3.0f, 10, () -> Ingredient.ofItems(Items.POPPED_CHORUS_FRUIT, Items.CHORUS_FRUIT)),
+    PRISMARINE(BlockTags.INCORRECT_FOR_STONE_TOOL, 131, 4.0f, 1.0f, 5, () -> Ingredient.ofItems(Items.PRISMARINE, Items.PRISMARINE_SHARD));
 
-    private final int miningLevel;
+    private final TagKey<Block> inverseTag;
     private final int durability;
     private final float miningSpeed;
     private final float attackDamage;
     private final int enchantability;
     private final Supplier<Ingredient> repairIngredient;
 
-    ModToolMaterials(int miningLevel, int durability, float miningSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
-        this.miningLevel = miningLevel;
+    ModToolMaterials(TagKey<Block> inverseTag, int durability, float miningSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
+        this.inverseTag = inverseTag;
         this.durability = durability;
         this.miningSpeed = miningSpeed;
         this.attackDamage = attackDamage;
@@ -40,7 +43,7 @@ public enum ModToolMaterials implements ToolMaterial {
     }
 
     ModToolMaterials(ToolMaterials material) {
-        this(material.getMiningLevel(),
+        this(material.getInverseTag(),
                 material.getDurability(),
                 material.getMiningSpeedMultiplier(),
                 material.getAttackDamage(),
@@ -50,8 +53,8 @@ public enum ModToolMaterials implements ToolMaterial {
     }
 
     @Override
-    public int getMiningLevel() {
-        return this.miningLevel;
+    public TagKey<Block> getInverseTag() {
+        return inverseTag;
     }
 
     @Override

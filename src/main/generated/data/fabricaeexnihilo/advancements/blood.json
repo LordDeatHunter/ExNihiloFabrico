@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:blood_bucket"
-            ]
+            "items": "fabricaeexnihilo:blood_bucket"
           }
         ]
       },
@@ -15,16 +13,14 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.blood.description"
     },
     "frame": "goal",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:blood_bucket"
+      "count": 1,
+      "id": "fabricaeexnihilo:blood_bucket"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.blood.title"
     }

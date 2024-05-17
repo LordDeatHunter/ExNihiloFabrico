@@ -5,6 +5,7 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.entity.EntityType;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
 import wraith.fabricaeexnihilo.recipe.witchwater.WitchWaterEntityRecipe;
@@ -18,11 +19,12 @@ public class WitchWaterEntityDisplay implements Display {
     public final EntityType<?> target;
     private final Identifier id;
 
-    public WitchWaterEntityDisplay(WitchWaterEntityRecipe recipe) {
+    public WitchWaterEntityDisplay(RecipeEntry<WitchWaterEntityRecipe> recipeEntry) {
+        var recipe = recipeEntry.value();
         this.target = recipe.getTarget();
         this.result = recipe.getResult();
         this.nbt = recipe.getNbt();
-        this.id = recipe.getId();
+        this.id = recipeEntry.id();
     }
 
     @Override

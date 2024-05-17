@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:wheat_seeds"
+    "id": "minecraft:wheat_seeds"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

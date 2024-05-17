@@ -1,5 +1,8 @@
 package wraith.fabricaeexnihilo.modules.crucibles;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -10,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -17,8 +21,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import wraith.fabricaeexnihilo.modules.barrels.BarrelBlock;
 
-@SuppressWarnings("deprecation")
 public class CrucibleBlock extends BlockWithEntity {
     private static final VoxelShape SHAPE;
 
@@ -39,6 +43,17 @@ public class CrucibleBlock extends BlockWithEntity {
         this.isFireproof = fireproof;
     }
 
+    public static final MapCodec<CrucibleBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    createSettingsCodec(),
+                    Codec.BOOL.fieldOf("isFireproof").forGetter(block -> block.isFireproof)
+            ).apply(instance, CrucibleBlock::new)
+    );
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
+    }
 
     @Nullable
     @Override
@@ -59,7 +74,7 @@ public class CrucibleBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, CrucibleBlockEntity.TYPE, (world1, blockPos, blockState, crucibleEntity) -> crucibleEntity.tick());
+        return validateTicker(type, CrucibleBlockEntity.TYPE, (world1, blockPos, blockState, crucibleEntity) -> crucibleEntity.tick());
     }
 
     public boolean isFireproof() {
@@ -92,20 +107,20 @@ public class CrucibleBlock extends BlockWithEntity {
             return;
         }
         if (world.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible) {
-            EnchantmentHelper.get(itemStack).forEach(crucible.getEnchantments()::setEnchantmentLevel);
+            EnchantmentHelper.getEnchantments(itemStack).getEnchantmentsMap().forEach(e -> crucible.getEnchantments().setEnchantmentLevel(e.getKey().value(), e.getIntValue()));
             crucible.updateHeat();
         }
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
         if (world == null || pos == null) {
-            return ActionResult.PASS;
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         if (world.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible) {
             return crucible.activate(player, hand);
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUseWithItem(stack, state, world, pos, player, hand, hitResult);
     }
 
 }

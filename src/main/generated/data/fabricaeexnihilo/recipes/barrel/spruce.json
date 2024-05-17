@@ -16,7 +16,7 @@
     "#S#"
   ],
   "result": {
-    "item": "fabricaeexnihilo:spruce_barrel"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:spruce_barrel"
+  }
 }

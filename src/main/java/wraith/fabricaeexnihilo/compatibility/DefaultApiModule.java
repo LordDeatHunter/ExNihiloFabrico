@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
 import wraith.fabricaeexnihilo.api.FENApiModule;
 import wraith.fabricaeexnihilo.api.FENRegistries;
+import wraith.fabricaeexnihilo.config.SeedConfig;
 import wraith.fabricaeexnihilo.util.Color;
 
 public class DefaultApiModule implements FENApiModule {

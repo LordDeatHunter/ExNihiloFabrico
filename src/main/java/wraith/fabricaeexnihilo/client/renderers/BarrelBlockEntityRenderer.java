@@ -3,16 +3,21 @@ package wraith.fabricaeexnihilo.client.renderers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.TexturedRenderLayers;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -50,7 +55,6 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<BarrelBloc
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private void renderFluid(FluidVariant fluid, long amount, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlays) {
         var sprite = FluidVariantRendering.getSprite(fluid);
         var color = FluidVariantRendering.getColor(fluid);
@@ -66,7 +70,7 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<BarrelBloc
         var emitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
         emitter.square(Direction.UP, X_MIN, Z_MIN, X_MAX, Z_MAX, 1 - MathHelper.lerp(amount / (float) FluidConstants.BUCKET, Y_MIN, Y_MAX));
         emitter.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
-        vertexConsumers.getBuffer(RenderLayer.getTranslucent()).quad(matrices.peek(), emitter.toBakedQuad(sprite), r, g, b, light, overlays);
+        vertexConsumers.getBuffer(RenderLayer.getTranslucent()).quad(matrices.peek(), emitter.toBakedQuad(sprite), r, g, b, 1.0F, light, overlays);
     }
 
     private void renderItem(ItemStack stack, BlockPos pos, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlays, World world) {

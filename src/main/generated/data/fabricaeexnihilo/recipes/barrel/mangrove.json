@@ -16,7 +16,7 @@
     "#S#"
   ],
   "result": {
-    "item": "fabricaeexnihilo:mangrove_barrel"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:mangrove_barrel"
+  }
 }

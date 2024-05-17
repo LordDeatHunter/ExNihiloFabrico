@@ -11,7 +11,7 @@
     "##"
   ],
   "result": {
-    "item": "minecraft:basalt"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "minecraft:basalt"
+  }
 }

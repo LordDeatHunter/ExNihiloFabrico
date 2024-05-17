@@ -5,26 +5,29 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.modules.ModLootContextTypes;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
 public class StrainerLootTableProvider extends SimpleFabricLootTableProvider {
-
-    public StrainerLootTableProvider(FabricDataOutput generator) {
-        super(generator, ModLootContextTypes.STRAINER);
+    public StrainerLootTableProvider(FabricDataOutput generator, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+        super(generator, registryLookup, ModLootContextTypes.STRAINER);
     }
 
     @Override
-    public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
-        consumer.accept(id("gameplay/strainer"), LootTable.builder()
+    public void accept(RegistryWrapper.WrapperLookup registryLookup, BiConsumer<RegistryKey<LootTable>, LootTable.Builder> consumer) {
+        consumer.accept(RegistryKey.of(RegistryKeys.LOOT_TABLE, id("gameplay/strainer")), LootTable.builder()
                 .pool(LootPool.builder()
-                        .with(LootTableEntry.builder(new Identifier("gameplay/fishing/junk"))
+                        .with(LootTableEntry.builder(RegistryKey.of(RegistryKeys.LOOT_TABLE, new Identifier("gameplay/fishing/junk")))
                                 .weight(10))
-                        .with(LootTableEntry.builder(new Identifier("gameplay/fishing/fish"))
+                        .with(LootTableEntry.builder(RegistryKey.of(RegistryKeys.LOOT_TABLE, new Identifier("gameplay/fishing/fish")))
                                 .weight(85))
                 )
         );

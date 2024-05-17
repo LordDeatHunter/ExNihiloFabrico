@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:witchwater_bucket"
-            ]
+            "items": "fabricaeexnihilo:witchwater_bucket"
           }
         ]
       },
@@ -15,16 +13,14 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.witchwater.description"
     },
     "frame": "goal",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:witchwater_bucket"
+      "count": 1,
+      "id": "fabricaeexnihilo:witchwater_bucket"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.witchwater.title"
     }

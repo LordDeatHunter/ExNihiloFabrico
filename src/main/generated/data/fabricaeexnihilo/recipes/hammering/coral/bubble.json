@@ -1,6 +1,9 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:bubble_coral",
+  "block": {
+    "id": "minecraft:bubble_coral",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0,
@@ -8,7 +11,7 @@
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:bubble_coral_fan"
+      "id": "minecraft:bubble_coral_fan"
     }
   }
 }

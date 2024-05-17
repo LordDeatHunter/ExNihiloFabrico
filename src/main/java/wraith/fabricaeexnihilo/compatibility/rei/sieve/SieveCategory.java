@@ -3,12 +3,14 @@ package wraith.fabricaeexnihilo.compatibility.rei.sieve;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.fluid.Fluids;
@@ -20,6 +22,7 @@ import wraith.fabricaeexnihilo.compatibility.rei.GlyphWidget;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;

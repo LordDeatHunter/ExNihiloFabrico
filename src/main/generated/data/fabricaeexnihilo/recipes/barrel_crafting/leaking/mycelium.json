@@ -8,7 +8,10 @@
     },
     {
       "type": "convert_block",
-      "filter": "minecraft:podzol",
+      "filter": {
+        "id": "minecraft:podzol",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:mycelium",
         "Properties": {
@@ -17,6 +20,8 @@
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:mycelium",
   "trigger": {
     "type": "tick",

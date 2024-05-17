@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:oak_log"
-            ]
+            "items": "minecraft:oak_log"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_log",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_log"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:strainer/oak"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

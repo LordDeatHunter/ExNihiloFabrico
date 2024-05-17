@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
 import wraith.fabricaeexnihilo.util.Lazy;
-
 import java.util.HashMap;
 
 public final class InfestedHelper {

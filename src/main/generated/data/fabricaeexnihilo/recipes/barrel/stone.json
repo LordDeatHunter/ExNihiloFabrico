@@ -16,7 +16,7 @@
     "#S#"
   ],
   "result": {
-    "item": "fabricaeexnihilo:stone_barrel"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:stone_barrel"
+  }
 }

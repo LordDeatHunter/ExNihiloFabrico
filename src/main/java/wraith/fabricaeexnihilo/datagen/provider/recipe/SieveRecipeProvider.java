@@ -3,13 +3,13 @@ package wraith.fabricaeexnihilo.datagen.provider.recipe;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.DefaultApiModule;
@@ -17,17 +17,17 @@ import wraith.fabricaeexnihilo.datagen.builder.recipe.SieveRecipeJsonBuilder;
 import wraith.fabricaeexnihilo.modules.ModItems;
 
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
 public class SieveRecipeProvider extends FabricRecipeProvider {
-    public SieveRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public SieveRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         offerMiscRecipes(exporter);
         offerStoneRecipes(exporter);
         offerPlantRecipes(exporter);
@@ -35,7 +35,7 @@ public class SieveRecipeProvider extends FabricRecipeProvider {
         offerOreRecipes(exporter);
     }
 
-    private void offerMiscRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerMiscRecipes(RecipeExporter exporter) {
         SieveRecipeJsonBuilder.of(Items.BLAZE_POWDER)
                 .from(DefaultApiModule.INSTANCE.dust)
                 .flintMesh(0.1).copperMesh(0.2).goldMesh(0.3, 0.05).emeraldMesh(0.4, 0.1)
@@ -62,7 +62,7 @@ public class SieveRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "ghast_tear");
     }
 
-    private void offerStoneRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerStoneRecipes(RecipeExporter exporter) {
         SieveRecipeJsonBuilder.of(ModItems.PEBBLES.get(id("andesite_pebble")))
                 .from(Items.DIRT)
                 .stringMesh(0.75, 0.6, 0.33, 0.1).flintMesh(0.5, 0.5, 0.5, 0.5)
@@ -117,7 +117,7 @@ public class SieveRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "stone/dripstone_pebble");
     }
 
-    private void offerPlantRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerPlantRecipes(RecipeExporter exporter) {
         var plantRatesEmeraldPlus = Map.of(DefaultApiModule.INSTANCE.emeraldMesh, new double[]{0.3, 0.3});
         var plantRatesGoldPlus = ImmutableMap.<Item, double[]>builder().putAll(plantRatesEmeraldPlus).put(DefaultApiModule.INSTANCE.goldMesh, new double[]{0.2}).build();
         var plantRatesCopperPlus = ImmutableMap.<Item, double[]>builder().putAll(plantRatesGoldPlus).put(DefaultApiModule.INSTANCE.copperMesh, new double[]{0.12}).build();
@@ -256,7 +256,7 @@ public class SieveRecipeProvider extends FabricRecipeProvider {
 
     }
 
-    private void offerSaplingRecipe(Consumer<RecipeJsonProvider> exporter) {
+    private void offerSaplingRecipe(RecipeExporter exporter) {
         SieveRecipeJsonBuilder.of(Items.ACACIA_SAPLING)
                 .from(Items.ACACIA_LEAVES)
                 .flintMesh(0.1, 0.08).copperMesh(0.2, 0.1).goldMesh(0.05, 0.05, 0.05, 0.05).emeraldMesh(0.3, 0.3, 0.1)
@@ -307,7 +307,7 @@ public class SieveRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "plant/sapling/cherry");
     }
 
-    private void offerOreRecipes(Consumer<RecipeJsonProvider> exporter) {
+    private void offerOreRecipes(RecipeExporter exporter) {
         SieveRecipeJsonBuilder.of(Items.AMETHYST_SHARD)
                 .from(DefaultApiModule.INSTANCE.crushedCalcite)
                 .flintMesh(0.1).ironMesh(0.25).diamondMesh(0.3, 0.1).netheriteMesh(0.4, 0.2)
@@ -372,8 +372,8 @@ public class SieveRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, "ore/redstone");
     }
 
-    private Consumer<RecipeJsonProvider> requireItem(Consumer<RecipeJsonProvider> exporter, ItemConvertible required) {
-        return withConditions(exporter, DefaultResourceConditions.itemsRegistered(required));
+    private RecipeExporter requireItem(RecipeExporter exporter, Item required) {
+        return withConditions(exporter, ResourceConditions.registryContains(required.getRegistryEntry().registryKey()));
     }
 
     @Override

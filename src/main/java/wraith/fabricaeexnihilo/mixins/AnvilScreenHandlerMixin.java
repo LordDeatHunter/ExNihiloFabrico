@@ -2,6 +2,7 @@ package wraith.fabricaeexnihilo.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.ForgingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
