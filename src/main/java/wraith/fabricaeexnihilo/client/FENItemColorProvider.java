@@ -14,7 +14,7 @@ public final class FENItemColorProvider implements ItemColorProvider {
 
     @Override
     public int getColor(ItemStack stack, int tintIndex) {
-        return stack.getItem() instanceof Colored colored ? colored.getColor(tintIndex) : Color.WHITE.toIntIgnoreAlpha();
+        return stack.getItem() instanceof Colored colored ? colored.getColor(tintIndex) : Color.WHITE.toIntAlphaOne();
     }
 
 }
