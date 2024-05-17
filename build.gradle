@@ -89,6 +89,7 @@ dependencies {
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version"
     modCompileOnly "dev.architectury:architectury-fabric:$architectury_version"
     modCompileOnly "dev.emi:emi-fabric:$emi_version:api"
+    modApi "me.shedaniel.cloth:basic-math:0.6.1"
     modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
 
     modImplementation include("dev.isxander:yet-another-config-lib:$yacl_version")
@@ -100,7 +101,6 @@ dependencies {
     if (settings.rei) {
         modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
         modRuntimeOnly "dev.architectury:architectury-fabric:$architectury_version"
-        modApi "me.shedaniel.cloth:basic-math:0.6.1"
     }
     if (settings.emi) {
         modRuntimeOnly "dev.emi:emi-fabric:$emi_version"
