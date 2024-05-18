@@ -24,42 +24,8 @@ import wraith.fabricaeexnihilo.recipe.util.FluidIngredient;
 import java.util.Objects;
 
 public sealed interface BarrelRecipeAction {
-    default boolean canRun(BarrelRecipe recipe, BarrelBlockEntity barrel) {
-        return true;
-    }
-
-    void apply(ServerWorld world, BarrelBlockEntity barrel);
-
-    default void toPacket(RegistryByteBuf buf) {
-        buf.writeByte(getId());
-        writePacket(buf);
-    }
-
-    void writePacket(RegistryByteBuf buf);
-
-    static PacketCodec<RegistryByteBuf, BlockState> BLOCKSTATE_PACKET_CODEC = PacketCodecs.unlimitedRegistryCodec(BlockState.CODEC);
-
-    static BarrelRecipeAction fromPacket(RegistryByteBuf buf) {
-        var type = buf.readByte();
-        return switch (type) {
-            case SpawnEntity.ID -> new SpawnEntity(EntityStack.PACKET_CODEC.decode(buf));
-            case StoreItem.ID -> new StoreItem(ItemStack.PACKET_CODEC.decode(buf));
-            case StoreFluid.ID -> new StoreFluid(FluidVariant.PACKET_CODEC.decode(buf), buf.readVarLong());
-            case ConsumeFluid.ID -> new ConsumeFluid(FluidIngredient.fromPacket(buf), buf.readVarLong());
-            case ConvertBlock.ID -> new ConvertBlock(BlockIngredient.fromPacket(buf), BLOCKSTATE_PACKET_CODEC.decode(buf));
-            case DropItem.ID -> new DropItem(ItemStack.PACKET_CODEC.decode(buf));
-            case FillCompost.ID -> new FillCompost(buf);
-            default -> throw new JsonParseException("Unknown action type id: " + type);
-        };
-    }
-
-    PacketCodec<RegistryByteBuf, BarrelRecipeAction> PACKET_CODEC = PacketCodec.of(BarrelRecipeAction::toPacket, BarrelRecipeAction::fromPacket);
-
-    byte getId();
-
-    String getName();
     Codec<BarrelRecipeAction> CODEC = Codec.STRING.dispatch(BarrelRecipeAction::getName, BarrelRecipeAction::forType);
-    MapCodec<? extends BarrelRecipeAction> getCodec();
+    PacketCodec<RegistryByteBuf, BarrelRecipeAction> PACKET_CODEC = PacketCodecs.BYTE.<RegistryByteBuf>cast().dispatch(BarrelRecipeAction::getId, BarrelRecipeAction::forId);
 
     static MapCodec<? extends BarrelRecipeAction> forType(String name) {
         return switch (name) {
@@ -74,9 +40,45 @@ public sealed interface BarrelRecipeAction {
         };
     }
 
+    static PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> forId(byte id) {
+        return switch (id) {
+            case SpawnEntity.ID -> SpawnEntity.PACKET_CODEC;
+            case StoreItem.ID -> StoreItem.PACKET_CODEC;
+            case StoreFluid.ID -> StoreFluid.PACKET_CODEC;
+            case ConsumeFluid.ID -> ConsumeFluid.PACKET_CODEC;
+            case ConvertBlock.ID -> ConvertBlock.PACKET_CODEC;
+            case DropItem.ID -> DropItem.PACKET_CODEC;
+            case FillCompost.ID -> FillCompost.PACKET_CODEC;
+            default -> throw new IllegalArgumentException("Unknown action id: " + id);
+        };
+    }
+
+    default boolean canRun(BarrelRecipe recipe, BarrelBlockEntity barrel) {
+        return true;
+    }
+
+    void apply(ServerWorld world, BarrelBlockEntity barrel);
+
+    void writePacket(RegistryByteBuf buf);
+
+    byte getId();
+
+    String getName();
+
+    MapCodec<? extends BarrelRecipeAction> getCodec();
+
+    PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec();
+
     record SpawnEntity(EntityStack entities) implements BarrelRecipeAction {
         private static final String NAME = "spawn_entity";
         private static final byte ID = 0;
+
+        public static final MapCodec<SpawnEntity> CODEC = EntityStack.CODEC.fieldOf("entities").xmap(SpawnEntity::new, SpawnEntity::entities);
+        public static final PacketCodec<RegistryByteBuf, SpawnEntity> PACKET_CODEC = PacketCodec.of(SpawnEntity::writePacket, SpawnEntity::new);
+
+        public SpawnEntity(RegistryByteBuf buf) {
+            this(EntityStack.PACKET_CODEC.decode(buf));
+        }
 
         @Override
         public void apply(ServerWorld world, BarrelBlockEntity barrel) {
@@ -102,16 +104,28 @@ public sealed interface BarrelRecipeAction {
         public String getName() {
             return NAME;
         }
-        public static final MapCodec<SpawnEntity> CODEC = EntityStack.CODEC.fieldOf("entities").xmap(SpawnEntity::new, SpawnEntity::entities);
+
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
     record StoreItem(ItemStack stack) implements BarrelRecipeAction {
         private static final String NAME = "store_item";
         private static final byte ID = 1;
+
+        public static final MapCodec<StoreItem> CODEC = ItemStack.CODEC.fieldOf("stack").xmap(StoreItem::new, StoreItem::stack);
+        public static final PacketCodec<RegistryByteBuf, StoreItem> PACKET_CODEC = PacketCodec.of(StoreItem::writePacket, StoreItem::new);
+
+        public StoreItem(RegistryByteBuf buf) {
+            this(ItemStack.PACKET_CODEC.decode(buf));
+        }
 
         @Override
         public void apply(ServerWorld world, BarrelBlockEntity barrel) {
@@ -133,16 +147,32 @@ public sealed interface BarrelRecipeAction {
             return NAME;
         }
 
-        public static final MapCodec<StoreItem> CODEC = ItemStack.CODEC.fieldOf("stack").xmap(StoreItem::new, StoreItem::stack);
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
     record StoreFluid(FluidVariant fluid, long amount) implements BarrelRecipeAction {
         private static final String NAME = "store_fluid";
         private static final byte ID = 2;
+
+        public static final MapCodec<StoreFluid> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        FluidVariant.CODEC.fieldOf("fluid").forGetter(StoreFluid::fluid),
+                        Codec.LONG.fieldOf("amount").forGetter(StoreFluid::amount)
+                ).apply(instance, StoreFluid::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, StoreFluid> PACKET_CODEC = PacketCodec.of(StoreFluid::writePacket, StoreFluid::new);
+
+        public StoreFluid(RegistryByteBuf buf) {
+            this(FluidVariant.PACKET_CODEC.decode(buf), buf.readVarLong());
+        }
 
         @Override
         public void apply(ServerWorld world, BarrelBlockEntity barrel) {
@@ -165,22 +195,32 @@ public sealed interface BarrelRecipeAction {
             return NAME;
         }
 
-        public static final MapCodec<StoreFluid> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                        FluidVariant.CODEC.fieldOf("fluid").forGetter(StoreFluid::fluid),
-                        Codec.LONG.fieldOf("amount").forGetter(StoreFluid::amount)
-                ).apply(instance, StoreFluid::new)
-        );
-
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
     record ConsumeFluid(FluidIngredient fluid, long amount) implements BarrelRecipeAction {
         private static final String NAME = "consume_fluid";
         private static final byte ID = 3;
+
+        public static final MapCodec<ConsumeFluid> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        FluidIngredient.CODEC.fieldOf("fluid").forGetter(ConsumeFluid::fluid),
+                        Codec.LONG.fieldOf("amount").forGetter(ConsumeFluid::amount)
+                ).apply(instance, ConsumeFluid::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, ConsumeFluid> PACKET_CODEC = PacketCodec.of(ConsumeFluid::writePacket, ConsumeFluid::new);
+
+        public ConsumeFluid(RegistryByteBuf buf) {
+            this(FluidIngredient.fromPacket(buf), buf.readVarLong());
+        }
 
         @Override
         public boolean canRun(BarrelRecipe recipe, BarrelBlockEntity barrel) {
@@ -209,22 +249,34 @@ public sealed interface BarrelRecipeAction {
             return NAME;
         }
 
-        public static final MapCodec<ConsumeFluid> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                        FluidIngredient.CODEC.fieldOf("fluid").forGetter(ConsumeFluid::fluid),
-                        Codec.LONG.fieldOf("amount").forGetter(ConsumeFluid::amount)
-                ).apply(instance, ConsumeFluid::new)
-        );
-
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
     record ConvertBlock(BlockIngredient filter, BlockState result) implements BarrelRecipeAction {
         private static final String NAME = "convert_block";
         private static final byte ID = 4;
+        private static final PacketCodec<RegistryByteBuf, BlockState> BLOCKSTATE_PACKET_CODEC = PacketCodecs.unlimitedRegistryCodec(BlockState.CODEC);
+
+        public static MapCodec<ConvertBlock> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        BlockIngredient.CODEC.fieldOf("filter").forGetter(ConvertBlock::filter),
+                        BlockState.CODEC.fieldOf("result").forGetter(ConvertBlock::result)
+                ).apply(instance, ConvertBlock::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, ConvertBlock> PACKET_CODEC = PacketCodec.of(ConvertBlock::writePacket, ConvertBlock::new);
+
+        public ConvertBlock(RegistryByteBuf buf) {
+            this(BlockIngredient.fromPacket(buf), BLOCKSTATE_PACKET_CODEC.decode(buf));
+        }
+
         @Override
         public boolean canRun(BarrelRecipe recipe, BarrelBlockEntity barrel) {
             var world = Objects.requireNonNull(barrel.getWorld(), "world is null");
@@ -264,21 +316,28 @@ public sealed interface BarrelRecipeAction {
         public String getName() {
             return NAME;
         }
-        public static MapCodec<ConvertBlock> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                        BlockIngredient.CODEC.fieldOf("filter").forGetter(ConvertBlock::filter),
-                        BlockState.CODEC.fieldOf("result").forGetter(ConvertBlock::result)
-                ).apply(instance, ConvertBlock::new)
-        );
+
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
     record DropItem(ItemStack stack) implements BarrelRecipeAction {
         private static final String NAME = "drop_item";
         private static final byte ID = 5;
+
+        public static final MapCodec<? extends BarrelRecipeAction> CODEC = ItemStack.CODEC.fieldOf("stack").xmap(DropItem::new, DropItem::stack);
+        public static final PacketCodec<RegistryByteBuf, DropItem> PACKET_CODEC = PacketCodec.of(DropItem::writePacket, DropItem::new);
+
+        public DropItem(RegistryByteBuf buf) {
+            this(ItemStack.PACKET_CODEC.decode(buf));
+        }
 
         @Override
         public void apply(ServerWorld world, BarrelBlockEntity barrel) {
@@ -301,12 +360,14 @@ public sealed interface BarrelRecipeAction {
             return NAME;
         }
 
-        public static final MapCodec<? extends BarrelRecipeAction> CODEC = ItemStack.CODEC.fieldOf("stack")
-                .xmap(DropItem::new, DropItem::stack);
-
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
@@ -314,6 +375,13 @@ public sealed interface BarrelRecipeAction {
         private static final String NAME = "fill_compost";
         private static final byte ID = 6;
 
+        public static MapCodec<FillCompost> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        ItemStack.CODEC.fieldOf("result").forGetter(FillCompost::result),
+                        Codec.FLOAT.fieldOf("increment").forGetter(FillCompost::increment)
+                ).apply(instance, FillCompost::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, FillCompost> PACKET_CODEC = PacketCodec.of(FillCompost::writePacket, FillCompost::new);
 
         public FillCompost(RegistryByteBuf buf) {
             this(ItemStack.PACKET_CODEC.decode(buf), buf.readFloat());
@@ -345,16 +413,14 @@ public sealed interface BarrelRecipeAction {
             return NAME;
         }
 
-        public static MapCodec<FillCompost> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                        ItemStack.CODEC.fieldOf("result").forGetter(FillCompost::result),
-                        Codec.FLOAT.fieldOf("increment").forGetter(FillCompost::increment)
-                ).apply(instance, FillCompost::new)
-        );
-
         @Override
         public MapCodec<? extends BarrelRecipeAction> getCodec() {
             return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeAction> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 }

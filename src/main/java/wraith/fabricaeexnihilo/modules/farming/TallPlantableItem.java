@@ -16,7 +16,7 @@ public class TallPlantableItem extends Item {
 
     private final Lazy<TallPlantBlock[]> plants;
 
-    public TallPlantableItem(Lazy<TallPlantBlock[]> plants,  Item.Settings settings) {
+    public TallPlantableItem(Lazy<TallPlantBlock[]> plants, Item.Settings settings) {
         super(settings);
         this.plants = plants;
     }

@@ -43,13 +43,12 @@ public class StrainerBlock extends BlockWithEntity implements Waterloggable {
             )
     );
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final MapCodec<StrainerBlock> CODEC = createCodec(StrainerBlock::new);
 
     public StrainerBlock(Settings settings) {
         super(settings.nonOpaque());
         setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, false));
     }
-
-    public static final MapCodec<StrainerBlock> CODEC = createCodec(StrainerBlock::new);
 
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {

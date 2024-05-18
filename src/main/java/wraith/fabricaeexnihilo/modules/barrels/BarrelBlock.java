@@ -41,6 +41,13 @@ import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
 public class BarrelBlock extends BlockWithEntity {
     private static final VoxelShape SHAPE = createCuboidShape(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
 
+    public static final MapCodec<BarrelBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    createSettingsCodec(),
+                    Codec.BOOL.fieldOf("isFireproof").forGetter(block -> block.isFireproof)
+            ).apply(instance, BarrelBlock::new)
+    );
+
     private final boolean isFireproof;
 
     public BarrelBlock(Settings settings, boolean isFireproof) {
@@ -58,13 +65,6 @@ public class BarrelBlock extends BlockWithEntity {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
-
-    public static final MapCodec<BarrelBlock> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(
-                    createSettingsCodec(),
-                    Codec.BOOL.fieldOf("isFireproof").forGetter(block -> block.isFireproof)
-            ).apply(instance, BarrelBlock::new)
-    );
 
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {

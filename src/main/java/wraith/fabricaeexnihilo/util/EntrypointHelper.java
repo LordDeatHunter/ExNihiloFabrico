@@ -1,7 +1,6 @@
 package wraith.fabricaeexnihilo.util;
 
 import com.google.common.collect.Maps;
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.loader.api.FabricLoader;
@@ -112,18 +111,6 @@ public class EntrypointHelper {
         @Override
         public Block registerCrushedBlock(String name, AbstractBlock.Settings settings) {
             var id = id(name, null, null);
-            class DummyFallingBlock extends FallingBlock {
-                private final MapCodec<? extends FallingBlock> CODEC = createCodec(DummyFallingBlock::new);
-
-                public DummyFallingBlock(Settings settings) {
-                    super(settings);
-                }
-
-                @Override
-                protected MapCodec<? extends FallingBlock> getCodec() {
-                    return CODEC;
-                }
-            }
             var block = ModBlocks.CRUSHED.computeIfAbsent(id, __ -> new DummyFallingBlock(settings));
             if (condition != null)
                 CONDITIONS.computeIfAbsent(block, __ -> new ArrayList<>()).add(condition);

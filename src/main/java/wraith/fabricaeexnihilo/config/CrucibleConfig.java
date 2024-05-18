@@ -2,6 +2,7 @@ package wraith.fabricaeexnihilo.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.mattidragon.configloader.api.AlwaysSerializedOptionalFieldCodec;
 import io.github.mattidragon.configloader.api.GenerateMutable;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
@@ -11,12 +12,12 @@ public record CrucibleConfig(int stoneProcessingRate, int woodProcessingRate, in
                              int tickRate) implements MutableCrucibleConfig.Source {
     public static final CrucibleConfig DEFAULT = new CrucibleConfig((int) (FluidConstants.BUCKET / 100), (int) (FluidConstants.BUCKET / 60), 4, 1, true, true, 20);
     public static final Codec<CrucibleConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.INT.optionalFieldOf("fireproofProcessingRate", CrucibleConfig.DEFAULT.stoneProcessingRate).forGetter(CrucibleConfig::stoneProcessingRate),
-            Codec.INT.optionalFieldOf("woodProcessingRate", CrucibleConfig.DEFAULT.woodProcessingRate).forGetter(CrucibleConfig::woodProcessingRate),
-            Codec.INT.optionalFieldOf("stoneVolume", CrucibleConfig.DEFAULT.stoneVolume).forGetter(CrucibleConfig::stoneVolume),
-            Codec.INT.optionalFieldOf("woodVolume", CrucibleConfig.DEFAULT.woodVolume).forGetter(CrucibleConfig::woodVolume),
-            Codec.BOOL.optionalFieldOf( "efficiency", CrucibleConfig.DEFAULT.efficiency).forGetter(CrucibleConfig::efficiency),
-            Codec.BOOL.optionalFieldOf( "fireAspect", CrucibleConfig.DEFAULT.fireAspect).forGetter(CrucibleConfig::fireAspect),
-            Codec.INT.optionalFieldOf("tickRate", CrucibleConfig.DEFAULT.tickRate).forGetter(CrucibleConfig::tickRate)
+            AlwaysSerializedOptionalFieldCodec.create(Codec.INT, "fireproofProcessingRate", CrucibleConfig.DEFAULT.stoneProcessingRate).forGetter(CrucibleConfig::stoneProcessingRate),
+            AlwaysSerializedOptionalFieldCodec.create(Codec.INT, "woodProcessingRate", CrucibleConfig.DEFAULT.woodProcessingRate).forGetter(CrucibleConfig::woodProcessingRate),
+            AlwaysSerializedOptionalFieldCodec.create(Codec.INT, "stoneVolume", CrucibleConfig.DEFAULT.stoneVolume).forGetter(CrucibleConfig::stoneVolume),
+            AlwaysSerializedOptionalFieldCodec.create(Codec.INT, "woodVolume", CrucibleConfig.DEFAULT.woodVolume).forGetter(CrucibleConfig::woodVolume),
+            AlwaysSerializedOptionalFieldCodec.create(Codec.BOOL,  "efficiency", CrucibleConfig.DEFAULT.efficiency).forGetter(CrucibleConfig::efficiency),
+            AlwaysSerializedOptionalFieldCodec.create(Codec.BOOL,  "fireAspect", CrucibleConfig.DEFAULT.fireAspect).forGetter(CrucibleConfig::fireAspect),
+            AlwaysSerializedOptionalFieldCodec.create(Codec.INT, "tickRate", CrucibleConfig.DEFAULT.tickRate).forGetter(CrucibleConfig::tickRate)
     ).apply(instance, CrucibleConfig::new));
 }

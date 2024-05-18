@@ -10,7 +10,7 @@ public class TransformingItem extends Item {
     private final Lazy<Block> from;
     private final Lazy<Block> to;
 
-    public TransformingItem(Lazy<Block> from, Lazy<Block> to,  Item.Settings settings) {
+    public TransformingItem(Lazy<Block> from, Lazy<Block> to, Item.Settings settings) {
         super(settings);
         this.from = from;
         this.to = to;

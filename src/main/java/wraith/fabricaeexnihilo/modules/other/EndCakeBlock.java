@@ -44,10 +44,16 @@ public class EndCakeBlock extends CakeBlock {
         return ItemActionResult.SUCCESS;
     }
 
-    // assume empty hand for non-item use
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        return onUseWithItem(ItemStack.EMPTY, state, world, pos, player, Hand.MAIN_HAND, hit).toActionResult();
+        if (world.isClient) {
+            if (tryEat(world, pos, state, player).isAccepted()) {
+                return ActionResult.SUCCESS;
+            }
+            // empty stack assumed -- onUse is only called for empty hand interactions
+            return ActionResult.CONSUME;
+        }
+        return tryEat(world, pos, state, player).toActionResult();
     }
 
     @Override

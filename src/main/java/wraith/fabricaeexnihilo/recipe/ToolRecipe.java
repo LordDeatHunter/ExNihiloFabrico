@@ -11,6 +11,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
@@ -68,37 +69,32 @@ public class ToolRecipe extends BaseRecipe<ToolRecipe.Context> {
         return result;
     }
 
-    public enum ToolType {
-        HAMMER(ModRecipes.HAMMER, ModRecipes.HAMMER_SERIALIZER),
-        CROOK(ModRecipes.CROOK, ModRecipes.CROOK_SERIALIZER);
+    public enum ToolType implements StringIdentifiable {
+        HAMMER("hammer", ModRecipes.HAMMER, ModRecipes.HAMMER_SERIALIZER),
+        CROOK("crook", ModRecipes.CROOK, ModRecipes.CROOK_SERIALIZER);
 
+        public static final Codec<ToolType> CODEC = StringIdentifiable.createCodec(ToolType::values);
+
+        public final String id;
         public final RecipeType<ToolRecipe> type;
         public final RecipeSerializer<?> serializer;
 
-        ToolType(RecipeType<ToolRecipe> type, RecipeSerializer<?> serializer) {
+        ToolType(String name, RecipeType<ToolRecipe> type, RecipeSerializer<?> serializer) {
+            this.id = "fabricaeexnihilo:" + name;
             this.type = type;
             this.serializer = serializer;
         }
 
-        public static ToolType fromRecipeType(String type) {
-            return switch (type) {
-                case "fabricaeexnihilo:hammer" -> HAMMER;
-                case "fabricaeexnihilo:crook" -> CROOK;
-                default -> throw new IllegalStateException("Tried to find tool type for unknown recipe type: " + type);
-            };
-        }
-        public static String toRecipeType(ToolType type) {
-            return switch (type) {
-                case HAMMER -> "fabricaeexnihilo:hammer";
-                case CROOK -> "fabricaeexnihilo:crook";
-            };
+        @Override
+        public String asString() {
+            return id;
         }
     }
 
     public static class Serializer implements RecipeSerializer<ToolRecipe> {
         public static final MapCodec<ToolRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(
-                        Codec.STRING.fieldOf("type").xmap(ToolType::fromRecipeType, ToolType::toRecipeType).forGetter(recipe -> recipe.tool),
+                        ToolType.CODEC.fieldOf("type").forGetter(recipe -> recipe.tool),
                         BlockIngredient.CODEC.fieldOf("block").forGetter(recipe -> recipe.block),
                         Loot.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
                 ).apply(instance, ToolRecipe::new)

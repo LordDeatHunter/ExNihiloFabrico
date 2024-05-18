@@ -16,8 +16,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryWrapper;
@@ -34,6 +32,7 @@ import wraith.fabricaeexnihilo.modules.base.BaseBlockEntity;
 import wraith.fabricaeexnihilo.modules.base.EnchantableBlockEntity;
 import wraith.fabricaeexnihilo.modules.base.EnchantmentContainer;
 import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipe;
+import wraith.fabricaeexnihilo.util.CodecUtils;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
@@ -158,19 +157,11 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         return getCachedState().getBlock() instanceof BarrelBlock barrel && barrel.isFireproof();
     }
 
-    public static NbtElement fluidToNbt(FluidVariant variant, RegistryWrapper.WrapperLookup lookup) {
-        return FluidVariant.CODEC.encodeStart(lookup.getOps(NbtOps.INSTANCE), variant).getOrThrow();
-    }
-
-    public static FluidVariant nbtToFluid(RegistryWrapper.WrapperLookup lookup, NbtElement element) {
-        return FluidVariant.CODEC.decode(lookup.getOps(NbtOps.INSTANCE), element).getOrThrow().getFirst();
-    }
-
     @Override
     public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.put("enchantments", enchantments.writeNbt());
         nbt.putString("state", state.getId());
-        nbt.put("fluid", fluidToNbt(fluid, registryLookup));
+        nbt.put("fluid", CodecUtils.toNbt(FluidVariant.CODEC, fluid, registryLookup));
         nbt.putLong("fluidAmount", fluidAmount);
         nbt.put("stack", stack.encodeAllowEmpty(registryLookup));
         nbt.putFloat("compostLevel", compostLevel);
@@ -183,7 +174,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         enchantments.readNbt(nbt.getCompound("enchantments"));
         state = BarrelState.byId(nbt.getString("state"));
-        fluid = nbtToFluid(registryLookup, nbt.getCompound("fluid"));
+        fluid = CodecUtils.fromNbt(FluidVariant.CODEC, nbt.getCompound("fluid"), registryLookup);
         fluidAmount = nbt.getLong("fluidAmount");
         stack = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("stack"));
         compostLevel = nbt.getFloat("compostLevel");
@@ -234,16 +225,14 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         }
 
         switch (state) {
-            case EMPTY, FLUID -> {
-                BarrelRecipe.findTick(this).ifPresent(recipe -> {
-                    this.recipe = recipe;
-                    if (recipe.value().getDuration() == 0) {
-                        finishRecipe(); // instant recipe
-                    }
-                    markDirty();
+            case EMPTY, FLUID -> BarrelRecipe.findTick(this).ifPresent(recipe -> {
+                this.recipe = recipe;
+                if (recipe.value().getDuration() == 0) {
+                    finishRecipe(); // instant recipe
+                }
+                markDirty();
 //                    markForUpdate();
-                });
-            }
+            });
             case ITEM -> {}
             case COMPOST -> {
                 if (compostLevel < 1) break;
@@ -342,9 +331,8 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
     @SuppressWarnings("unchecked")
     private RecipeEntry<BarrelRecipe> getRecipe() {
         if (lazeRecipeId != null && world != null) {
-            var recipeEntry = world.getRecipeManager().get(lazeRecipeId).orElse(null);
-            recipe = recipeEntry != null && recipeEntry.value() instanceof BarrelRecipe ?
-                    (RecipeEntry<BarrelRecipe>) recipeEntry : null;
+            var recipeEntry = world.getRecipeManager().get(lazeRecipeId);
+            recipe = (RecipeEntry<BarrelRecipe>) recipeEntry.filter(r -> r.value() instanceof BarrelRecipe).orElse(null);
             lazeRecipeId = null;
         }
         return recipe;

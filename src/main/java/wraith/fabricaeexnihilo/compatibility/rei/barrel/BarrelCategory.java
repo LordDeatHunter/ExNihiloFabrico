@@ -19,7 +19,6 @@ import java.util.List;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-
 public class BarrelCategory implements DisplayCategory<BarrelDisplay> {
     public static final int MARGIN = 6;
     public static final Identifier GLYPHS = id("textures/gui/rei/glyphs.png");

@@ -24,6 +24,13 @@ import org.jetbrains.annotations.Nullable;
 public class CrucibleBlock extends BlockWithEntity {
     private static final VoxelShape SHAPE;
 
+    public static final MapCodec<CrucibleBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    createSettingsCodec(),
+                    Codec.BOOL.fieldOf("isFireproof").forGetter(block -> block.isFireproof)
+            ).apply(instance, CrucibleBlock::new)
+    );
+
     static {
         SHAPE = VoxelShapes.union(
                 createCuboidShape(0.0, 0.0, 0.0, 3.0, 3.0, 3.0),
@@ -40,13 +47,6 @@ public class CrucibleBlock extends BlockWithEntity {
         super(settings);
         this.isFireproof = fireproof;
     }
-
-    public static final MapCodec<CrucibleBlock> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(
-                    createSettingsCodec(),
-                    Codec.BOOL.fieldOf("isFireproof").forGetter(block -> block.isFireproof)
-            ).apply(instance, CrucibleBlock::new)
-    );
 
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {

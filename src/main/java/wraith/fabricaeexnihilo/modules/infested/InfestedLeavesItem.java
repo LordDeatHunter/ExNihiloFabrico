@@ -7,7 +7,7 @@ import wraith.fabricaeexnihilo.util.Color;
 
 public class InfestedLeavesItem extends BlockItem implements Colored {
 
-    public InfestedLeavesItem(InfestedLeavesBlock block,  Item.Settings settings) {
+    public InfestedLeavesItem(InfestedLeavesBlock block, Item.Settings settings) {
         super(block, settings);
     }
 

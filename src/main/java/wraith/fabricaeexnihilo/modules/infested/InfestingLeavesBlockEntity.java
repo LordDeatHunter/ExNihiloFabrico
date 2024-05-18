@@ -22,7 +22,6 @@ import java.util.Optional;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-
 public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Colored {
     public static final Identifier BLOCK_ENTITY_ID = id("infesting");
     private double progress = 0.0;

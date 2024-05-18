@@ -83,17 +83,16 @@ public class CrucibleHeatRecipe extends BaseRecipe<CrucibleHeatRecipe.Context> {
                         Codec.INT.fieldOf("heat").forGetter(recipe -> recipe.heat)
                 ).apply(instance, CrucibleHeatRecipe::new)
         );
-
-        @Override
-        public MapCodec<CrucibleHeatRecipe> codec() {
-            return CODEC;
-        }
-
         public static final PacketCodec<RegistryByteBuf, CrucibleHeatRecipe> PACKET_CODEC = PacketCodec.tuple(
                 BlockIngredient.PACKET_CODEC, recipe -> recipe.block,
                 PacketCodecs.INTEGER, recipe -> recipe.heat,
                 CrucibleHeatRecipe::new
         );
+
+        @Override
+        public MapCodec<CrucibleHeatRecipe> codec() {
+            return CODEC;
+        }
 
         @Override
         public PacketCodec<RegistryByteBuf, CrucibleHeatRecipe> packetCodec() {

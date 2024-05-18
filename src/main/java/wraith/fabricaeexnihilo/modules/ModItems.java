@@ -45,7 +45,7 @@ public final class ModItems {
         UNFIRED_PORCELAIN_CRUCIBLE = new Item(BASE_SETTINGS);
         SALT_BOTTLE = new Item(BASE_SETTINGS);
         RAW_SILKWORM = new SilkWormItem(new Item.Settings().maxCount(64).food(FoodComponents.COD));
-        COOKED_SILKWORM = new Item(new  Item.Settings().maxCount(64).food(FoodComponents.COOKED_COD));
+        COOKED_SILKWORM = new Item(new Item.Settings().maxCount(64).food(FoodComponents.COOKED_COD));
 
         DOLLS.put(id("doll"), new Item(BASE_SETTINGS));
         DOLLS.put(id("doll_blaze"), new Item(BASE_SETTINGS));

@@ -38,6 +38,7 @@ import wraith.fabricaeexnihilo.modules.base.EnchantableBlockEntity;
 import wraith.fabricaeexnihilo.modules.base.EnchantmentContainer;
 import wraith.fabricaeexnihilo.recipe.crucible.CrucibleHeatRecipe;
 import wraith.fabricaeexnihilo.recipe.crucible.CrucibleRecipe;
+import wraith.fabricaeexnihilo.util.CodecUtils;
 
 import java.util.Iterator;
 
@@ -165,7 +166,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
 
     private void readNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         renderStack = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("render"));
-        fluid = FluidVariant.CODEC.decode(registryLookup.getOps(NbtOps.INSTANCE), nbt.getCompound("fluid")).getOrThrow().getFirst();
+        fluid = CodecUtils.fromNbt(FluidVariant.CODEC, nbt.getCompound("fluid"), registryLookup);
         contained = nbt.getLong("contained");
         queued = nbt.getLong("queued");
         heat = nbt.getInt("heat");

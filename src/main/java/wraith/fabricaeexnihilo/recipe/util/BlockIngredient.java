@@ -29,9 +29,9 @@ public sealed abstract class BlockIngredient implements Predicate<BlockState> {
 
     private static BlockIngredient fromData(String id, Map<String, String> states,
                                             @Nullable RegistryEntryLookup<Block> blockLookup) {
-        if (id.startsWith("#"))
+        if (id.startsWith("#")) {
             return new Tag(TagKey.of(RegistryKeys.BLOCK, new Identifier(id.substring(1))), states);
-        else {
+        } else {
             if (blockLookup != null) {
                 var blockId = RegistryKey.of(RegistryKeys.BLOCK, new Identifier(id));
                 var block = blockLookup.getOrThrow(blockId);

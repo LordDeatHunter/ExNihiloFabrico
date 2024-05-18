@@ -63,7 +63,6 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
 
     public abstract void toPacket(PacketByteBuf buf);
 
-
     public abstract String toId();
 
     public abstract boolean isEmpty();

@@ -14,7 +14,7 @@ import java.util.List;
 public class PlantableItem extends Item {
     private final Lazy<Block[]> plants;
 
-    public PlantableItem(Lazy<Block[]> plants,  Item.Settings settings) {
+    public PlantableItem(Lazy<Block[]> plants, Item.Settings settings) {
         super(settings);
         this.plants = plants;
     }
