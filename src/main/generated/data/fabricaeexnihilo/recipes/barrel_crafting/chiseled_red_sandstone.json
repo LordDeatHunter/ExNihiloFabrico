@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:chiseled_red_sandstone"
+        "id": "minecraft:chiseled_red_sandstone"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#c:blood"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:chiseled_red_sandstone",
   "trigger": {
     "type": "insert_item",

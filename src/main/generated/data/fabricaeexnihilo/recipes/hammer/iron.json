@@ -15,7 +15,7 @@
     "/  "
   ],
   "result": {
-    "item": "fabricaeexnihilo:iron_hammer"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:iron_hammer"
+  }
 }

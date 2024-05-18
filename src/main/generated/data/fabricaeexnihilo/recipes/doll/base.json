@@ -15,7 +15,7 @@
     "x x"
   ],
   "result": {
-    "item": "fabricaeexnihilo:doll"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "fabricaeexnihilo:doll"
+  }
 }

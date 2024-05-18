@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:blackstone_pebble"
-            ]
+            "items": "fabricaeexnihilo:blackstone_pebble"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_material",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_material"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:crook/blackstone"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

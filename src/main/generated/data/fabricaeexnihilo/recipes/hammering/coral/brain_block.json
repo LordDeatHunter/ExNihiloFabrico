@@ -1,6 +1,9 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:brain_coral_block",
+  "block": {
+    "id": "minecraft:brain_coral_block",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0,
@@ -10,7 +13,7 @@
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:brain_coral"
+      "id": "minecraft:brain_coral"
     }
   }
 }

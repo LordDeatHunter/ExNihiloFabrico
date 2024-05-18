@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:carrot"
+    "id": "minecraft:carrot"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

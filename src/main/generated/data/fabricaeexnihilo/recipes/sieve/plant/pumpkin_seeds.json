@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:pumpkin_seeds"
+    "id": "minecraft:pumpkin_seeds"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

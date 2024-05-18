@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:diamond_hammer"
-            ]
+            "items": "fabricaeexnihilo:diamond_hammer"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_diamond_hammer",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_diamond_hammer"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:hammer/netherite"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

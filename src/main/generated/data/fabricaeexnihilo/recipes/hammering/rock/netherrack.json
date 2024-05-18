@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:netherrack",
+  "block": {
+    "id": "minecraft:netherrack",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0
     ],
     "stack": {
       "count": 1,
-      "item": "fabricaeexnihilo:crushed_netherrack"
+      "id": "fabricaeexnihilo:crushed_netherrack"
     }
   }
 }

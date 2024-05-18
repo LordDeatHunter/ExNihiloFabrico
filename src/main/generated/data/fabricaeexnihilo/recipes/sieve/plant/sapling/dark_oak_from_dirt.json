@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:dark_oak_sapling"
+    "id": "minecraft:dark_oak_sapling"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

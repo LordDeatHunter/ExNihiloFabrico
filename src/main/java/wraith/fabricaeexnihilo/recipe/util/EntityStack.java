@@ -2,11 +2,16 @@ package wraith.fabricaeexnihilo.recipe.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +30,12 @@ public class EntityStack {
                     .optionalFieldOf("data")
                     .forGetter(entityStack -> Optional.of(entityStack.getData()))
     ).apply(instance, (type, size, data) -> new EntityStack(type, size.orElse(1), data.orElse(new NbtCompound()))));
+    public static final PacketCodec<RegistryByteBuf, EntityStack> PACKET_CODEC = PacketCodec.tuple(
+            PacketCodecs.registryValue(RegistryKeys.ENTITY_TYPE), EntityStack::getType,
+            PacketCodecs.INTEGER, EntityStack::getSize,
+            PacketCodecs.UNLIMITED_NBT_COMPOUND, EntityStack::getData,
+            EntityStack::new
+    );
     public static final EntityStack EMPTY = new EntityStack(EntityType.PIG, 0);
     private EntityType<?> type;
     private int size;
@@ -73,7 +84,9 @@ public class EntityStack {
     }
 
     public Entity getEntity(ServerWorld world, BlockPos pos, SpawnReason spawnType) {
-        return type.create(world, data, null, pos, spawnType, true, true);
+        var entity = type.create(world, null, pos, spawnType, true, true);
+        NbtComponent.of(data).applyToEntity(entity);
+        return entity;
     }
 
     public Entity getEntity(ServerWorld world, BlockPos pos) {

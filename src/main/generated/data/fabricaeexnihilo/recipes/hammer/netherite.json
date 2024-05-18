@@ -7,7 +7,8 @@
     "item": "fabricaeexnihilo:diamond_hammer"
   },
   "result": {
-    "item": "fabricaeexnihilo:netherite_hammer"
+    "count": 1,
+    "id": "fabricaeexnihilo:netherite_hammer"
   },
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

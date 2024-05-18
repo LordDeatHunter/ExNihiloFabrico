@@ -1,5 +1,8 @@
 {
   "type": "fabricaeexnihilo:crucible_heat",
-  "block": "minecraft:glowstone",
+  "block": {
+    "id": "minecraft:glowstone",
+    "states": {}
+  },
   "heat": 2
 }

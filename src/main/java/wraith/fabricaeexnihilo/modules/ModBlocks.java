@@ -1,6 +1,6 @@
 package wraith.fabricaeexnihilo.modules;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
@@ -31,14 +31,15 @@ import java.util.Map;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
+
 public final class ModBlocks {
     public static final Map<Identifier, BarrelBlock> BARRELS = new LinkedHashMap<>();
     public static final Map<Identifier, CrucibleBlock> CRUCIBLES = new LinkedHashMap<>();
     public static final Map<Identifier, Block> CRUSHED = new LinkedHashMap<>();
-    public static final EndCakeBlock END_CAKE = new EndCakeBlock(FabricBlockSettings.copyOf(Blocks.CAKE));
+    public static final EndCakeBlock END_CAKE = new EndCakeBlock(AbstractBlock.Settings.copy(Blocks.CAKE));
     public static final Map<Identifier, InfestedLeavesBlock> INFESTED_LEAVES = new LinkedHashMap<>();
-    public static final FabricBlockSettings INFESTED_LEAVES_SETTINGS = FabricBlockSettings.create().mapColor(MapColor.WHITE).nonOpaque().suffocates((state, world, pos) -> false).allowsSpawning((state, world, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT).strength(0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS);
-    public static final InfestingLeavesBlock INFESTING_LEAVES = new InfestingLeavesBlock(FabricBlockSettings.copyOf(INFESTED_LEAVES_SETTINGS));
+    public static final AbstractBlock.Settings INFESTED_LEAVES_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.WHITE).nonOpaque().suffocates((state, world, pos) -> false).allowsSpawning((state, world, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT).strength(0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS);
+    public static final InfestingLeavesBlock INFESTING_LEAVES = new InfestingLeavesBlock(INFESTED_LEAVES_SETTINGS);
     public static final Map<Identifier, SieveBlock> SIEVES = new LinkedHashMap<>();
     public static final Map<Identifier, StrainerBlock> STRAINERS = new LinkedHashMap<>();
 

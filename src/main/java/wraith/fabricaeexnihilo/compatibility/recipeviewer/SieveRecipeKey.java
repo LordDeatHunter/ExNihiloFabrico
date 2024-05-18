@@ -7,7 +7,6 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.recipe.SieveRecipe;
 import wraith.fabricaeexnihilo.util.ItemUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

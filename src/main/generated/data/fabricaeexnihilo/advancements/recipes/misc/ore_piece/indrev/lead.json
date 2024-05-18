@@ -13,9 +13,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:raw_lead_piece"
-            ]
+            "items": "fabricaeexnihilo:raw_lead_piece"
           }
         ]
       },
@@ -30,14 +28,13 @@
   },
   "requirements": [
     [
-      "has_piece",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_piece"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:ore_piece/indrev/lead"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

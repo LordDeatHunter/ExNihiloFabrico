@@ -2,7 +2,7 @@
   "type": "fabricaeexnihilo:crucible",
   "amount": 20250,
   "fluid": {
-    "type": "minecraft:lava"
+    "fluid": "minecraft:lava"
   },
   "input": {
     "item": "minecraft:andesite"

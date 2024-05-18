@@ -10,7 +10,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 import wraith.fabricaeexnihilo.modules.strainer.StrainerBlockEntity;
-
 import java.util.Objects;
 
 public class StrainerBlockEntityRenderer implements BlockEntityRenderer<StrainerBlockEntity> {

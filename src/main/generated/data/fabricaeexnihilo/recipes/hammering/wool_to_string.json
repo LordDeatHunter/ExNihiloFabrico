@@ -1,6 +1,9 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "#minecraft:wool",
+  "block": {
+    "id": "#minecraft:wool",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0,
@@ -10,7 +13,7 @@
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:string"
+      "id": "minecraft:string"
     }
   }
 }

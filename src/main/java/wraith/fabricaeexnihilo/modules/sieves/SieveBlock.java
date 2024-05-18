@@ -6,11 +6,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -21,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("deprecation")
 public class SieveBlock extends Block implements BlockEntityProvider, Waterloggable {
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -82,14 +83,26 @@ public class SieveBlock extends Block implements BlockEntityProvider, Waterlogga
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (pos == null) {
             return ActionResult.PASS;
         }
         if (world.getBlockEntity(pos) instanceof SieveBlockEntity sieve) {
-            return sieve.activate(state, player, hand);
+            // called in non-item use function -> assume empty hand
+            return sieve.activate(state, player, ItemStack.EMPTY).toActionResult();
         }
         return ActionResult.PASS;
+    }
+
+    @Override
+    public ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        if (pos == null) {
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (world.getBlockEntity(pos) instanceof SieveBlockEntity sieve) {
+            return sieve.activate(state, player, stack);
+        }
+        return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Nullable

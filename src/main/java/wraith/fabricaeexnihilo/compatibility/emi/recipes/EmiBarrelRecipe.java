@@ -9,6 +9,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,6 @@ import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipeTrigger;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public class EmiBarrelRecipe implements EmiRecipe {
     private static final int WIDTH = 8 * 18;
     private static final int HEIGHT = 3 * 18;
@@ -48,8 +48,9 @@ public class EmiBarrelRecipe implements EmiRecipe {
     private float compostAmount;
     private final List<EmiStack> outputs = new ArrayList<>();
 
-    public EmiBarrelRecipe(BarrelRecipe recipe) {
-        id = recipe.getId();
+    public EmiBarrelRecipe(RecipeEntry<BarrelRecipe> recipeEntry) {
+        id = recipeEntry.id();
+        var recipe = recipeEntry.value();
         duration = recipe.getDuration() * FabricaeExNihilo.CONFIG.get().barrels().tickRate() / 20;
         triggerItem = getTriggerItem(recipe);
 

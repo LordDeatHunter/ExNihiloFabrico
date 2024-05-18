@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:slime_block"
+        "id": "minecraft:slime_block"
       }
     }
   ],
@@ -16,7 +16,10 @@
     },
     {
       "type": "block_below",
-      "block": "minecraft:mycelium"
+      "block": {
+        "id": "minecraft:mycelium",
+        "states": {}
+      }
     }
   ],
   "duration": 600,

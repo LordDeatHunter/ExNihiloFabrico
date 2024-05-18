@@ -1,6 +1,6 @@
 package wraith.fabricaeexnihilo.api;
 
-import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,10 +29,10 @@ public interface FENApiModule {
     /**
      * Override this if to provide a resource condition for assets generated for this module. Mostly used by included modules to disable assets for other mods.
      *
-     * @return A {@link ConditionJsonProvider} that corresponds with when this plugin is loaded, or {@code null} if there isn't a condition, or it isn't required for assets to follow it.
+     * @return A {@link ResourceCondition} that corresponds with when this plugin is loaded, or {@code null} if there isn't a condition, or it isn't required for assets to follow it.
      */
     @Nullable
-    default ConditionJsonProvider getResourceCondition() {
+    default ResourceCondition getResourceCondition() {
         return null;
     }
 }

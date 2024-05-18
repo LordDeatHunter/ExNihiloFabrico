@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:deepslate",
+  "block": {
+    "id": "minecraft:deepslate",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:cobbled_deepslate"
+      "id": "minecraft:cobbled_deepslate"
     }
   }
 }

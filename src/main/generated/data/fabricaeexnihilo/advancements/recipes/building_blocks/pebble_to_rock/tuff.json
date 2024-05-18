@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:tuff_pebble"
-            ]
+            "items": "fabricaeexnihilo:tuff_pebble"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_pebble",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_pebble"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:pebble_to_rock/tuff"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

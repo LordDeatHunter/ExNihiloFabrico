@@ -21,7 +21,6 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
 import wraith.fabricaeexnihilo.compatibility.recipeviewer.FireType;
-
 import java.util.stream.Stream;
 
 public class FireEntryDefinition implements EntryDefinition<FireType> {

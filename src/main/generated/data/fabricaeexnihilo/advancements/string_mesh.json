@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:string_mesh"
-            ]
+            "items": "fabricaeexnihilo:string_mesh"
           }
         ]
       },
@@ -15,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.string_mesh.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:string_mesh"
+      "count": 1,
+      "id": "fabricaeexnihilo:string_mesh"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.string_mesh.title"
     }

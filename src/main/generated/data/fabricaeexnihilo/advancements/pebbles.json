@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:stone_pebble"
-            ]
+            "items": "fabricaeexnihilo:stone_pebble"
           }
         ]
       },
@@ -15,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.pebbles.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:stone_pebble"
+      "count": 1,
+      "id": "fabricaeexnihilo:stone_pebble"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.pebbles.title"
     }

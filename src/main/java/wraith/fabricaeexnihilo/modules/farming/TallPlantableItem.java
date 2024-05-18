@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.modules.farming;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.item.Item;
@@ -17,7 +16,7 @@ public class TallPlantableItem extends Item {
 
     private final Lazy<TallPlantBlock[]> plants;
 
-    public TallPlantableItem(Lazy<TallPlantBlock[]> plants, FabricItemSettings settings) {
+    public TallPlantableItem(Lazy<TallPlantBlock[]> plants, Item.Settings settings) {
         super(settings);
         this.plants = plants;
     }

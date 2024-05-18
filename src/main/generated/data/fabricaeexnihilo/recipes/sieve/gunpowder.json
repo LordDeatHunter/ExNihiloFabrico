@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:gunpowder"
+    "id": "minecraft:gunpowder"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

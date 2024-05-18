@@ -4,6 +4,6 @@
   "cooldown": 20,
   "entity": "minecraft:cow",
   "fluid": {
-    "type": "fabricaeexnihilo:milk"
+    "fluid": "fabricaeexnihilo:milk"
   }
 }

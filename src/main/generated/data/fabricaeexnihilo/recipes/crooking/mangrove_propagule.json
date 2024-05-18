@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:crook",
-  "block": "minecraft:mangrove_leaves",
+  "block": {
+    "id": "minecraft:mangrove_leaves",
+    "states": {}
+  },
   "result": {
     "chances": [
       0.25
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:mangrove_propagule"
+      "id": "minecraft:mangrove_propagule"
     }
   }
 }

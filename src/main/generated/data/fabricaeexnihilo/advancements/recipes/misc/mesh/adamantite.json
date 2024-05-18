@@ -13,9 +13,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:diamond_mesh"
-            ]
+            "items": "fabricaeexnihilo:diamond_mesh"
           }
         ]
       },
@@ -30,14 +28,13 @@
   },
   "requirements": [
     [
-      "has_previous",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_previous"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:mesh/adamantite"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

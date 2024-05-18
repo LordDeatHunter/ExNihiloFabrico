@@ -26,7 +26,6 @@ import wraith.fabricaeexnihilo.modules.ModEffects;
 import wraith.fabricaeexnihilo.recipe.witchwater.WitchWaterEntityRecipe;
 import wraith.fabricaeexnihilo.recipe.witchwater.WitchWaterWorldRecipe;
 
-@SuppressWarnings("deprecation")
 public class WitchWaterBlock extends FluidBlock {
 
     public WitchWaterBlock(FlowableFluid fluid, Settings settings) {
@@ -52,7 +51,7 @@ public class WitchWaterBlock extends FluidBlock {
             return false;
         }
         var changePos = witchPos.offset(Direction.DOWN) == otherPos ? otherPos : witchPos;
-        world.setBlockState(changePos, recipe.get().getResult().choose(world.random).getDefaultState());
+        world.setBlockState(changePos, recipe.get().value().getResult().choose(world.random).getDefaultState());
         world.playSound(null, changePos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.7f, 0.8f + world.random.nextFloat() * 0.2f);
         return true;
     }
@@ -63,7 +62,7 @@ public class WitchWaterBlock extends FluidBlock {
     }
 
     public static void markEntity(LivingEntity entity) {
-        applyStatusEffect(entity, ModEffects.WITCH_WATERED.getInstance());
+        applyStatusEffect(entity, WitchWaterStatusEffect.getInstance());
     }
 
     public static boolean receiveNeighborFluids(World world, BlockPos pos) {
@@ -106,7 +105,7 @@ public class WitchWaterBlock extends FluidBlock {
             livingEntity.setHealth(livingEntity.getMaxHealth() * toKill.getHealth() / toKill.getMaxHealth());
 
             if (livingEntity instanceof MobEntity mob && world instanceof ServerWorld serverWorld) {
-                mob.initialize(serverWorld, world.getLocalDifficulty(mob.getBlockPos()), SpawnReason.CONVERSION, null, null);
+                mob.initialize(serverWorld, world.getLocalDifficulty(mob.getBlockPos()), SpawnReason.CONVERSION, null);
             }
         }
         replaceMob(world, toKill, toSpawn);
@@ -118,38 +117,40 @@ public class WitchWaterBlock extends FluidBlock {
             return;
         }
         if (entity instanceof LivingEntity livingEntity && !isMarked(livingEntity)) {
-            if (livingEntity instanceof CreeperEntity creeper) {
-                markEntity(livingEntity);
-                if (!creeper.isIgnited()) {
-                    var lightning = EntityType.LIGHTNING_BOLT.create(world);
-                    if (world instanceof ServerWorld serverWorld && lightning != null) {
-                        lightning.setPos(creeper.getPos().x, creeper.getPos().y, creeper.getPos().z);
-                        creeper.onStruckByLightning(serverWorld, lightning);
+            switch (livingEntity) {
+                case CreeperEntity creeper -> {
+                    markEntity(livingEntity);
+                    if (!creeper.isIgnited()) {
+                        var lightning = EntityType.LIGHTNING_BOLT.create(world);
+                        if (world instanceof ServerWorld serverWorld && lightning != null) {
+                            lightning.setPos(creeper.getPos().x, creeper.getPos().y, creeper.getPos().z);
+                            creeper.onStruckByLightning(serverWorld, lightning);
+                        }
                     }
+                    creeper.setHealth(creeper.getMaxHealth());
+                    return;
                 }
-                creeper.setHealth(creeper.getMaxHealth());
-                return;
-            }
-            if (livingEntity instanceof RabbitEntity rabbit) {
-                markEntity(rabbit);
-                // Killer Rabbit.
-                if (rabbit.getVariant() != RabbitEntity.RabbitType.EVIL) {
-                    rabbit.setVariant(RabbitEntity.RabbitType.EVIL);
+                case RabbitEntity rabbit -> {
+                    markEntity(rabbit);
+                    // Killer Rabbit.
+                    if (rabbit.getVariant() != RabbitEntity.RabbitType.EVIL) {
+                        rabbit.setVariant(RabbitEntity.RabbitType.EVIL);
+                    }
+                    return;
                 }
-                return;
-            }
-            if (livingEntity instanceof PlayerEntity player && !player.isCreative()) {
-                FabricaeExNihilo.CONFIG.get().witchwater().effects().forEach((effect) -> {
-                            var type = Registries.STATUS_EFFECT.get(effect.type());
-                            if (type != null) {
-                                applyStatusEffect(player, new StatusEffectInstance(type, effect.duration(), effect.amplifier()));
-                            }
-                        });
-                return;
+                case PlayerEntity player when !player.isCreative() -> {
+                    FabricaeExNihilo.CONFIG.get().witchwater().effects().forEach((effect) -> {
+                        var type = Registries.STATUS_EFFECT.getEntry(effect.type()).orElseThrow();
+                        applyStatusEffect(player, new StatusEffectInstance(type, effect.duration(), effect.amplifier()));
+                    });
+                    return;
+                }
+                default -> {
+                }
             }
             var recipe = WitchWaterEntityRecipe.find(entity, world);
             if (recipe.isPresent()) {
-                replaceMob(world, livingEntity, recipe.get().getResult());
+                replaceMob(world, livingEntity, recipe.get().value().getResult());
                 return;
             }
             markEntity(livingEntity);

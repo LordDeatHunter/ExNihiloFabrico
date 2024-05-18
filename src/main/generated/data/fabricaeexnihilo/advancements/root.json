@@ -4,9 +4,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:crafting_table"
-            ]
+            "items": "minecraft:crafting_table"
           }
         ]
       },
@@ -14,17 +12,14 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
     "description": {
       "translate": "advancements.fabricaeexnihilo.root.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:oak_sieve"
+      "count": 1,
+      "id": "fabricaeexnihilo:oak_sieve"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.root.title"
     }

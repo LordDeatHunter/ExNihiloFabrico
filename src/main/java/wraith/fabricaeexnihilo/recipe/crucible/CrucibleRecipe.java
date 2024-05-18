@@ -1,39 +1,40 @@
 package wraith.fabricaeexnihilo.recipe.crucible;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.recipe.BaseRecipe;
 import wraith.fabricaeexnihilo.recipe.ModRecipes;
 import wraith.fabricaeexnihilo.recipe.RecipeContext;
-import wraith.fabricaeexnihilo.util.CodecUtils;
 
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleRecipe extends BaseRecipe<CrucibleRecipe.Context> {
     private final Ingredient input;
     private final long amount;
     private final FluidVariant fluid;
     private final boolean requiresFireproofCrucible;
 
-    public CrucibleRecipe(Identifier id, Ingredient input, long amount, FluidVariant fluid, boolean requiresFireproofCrucible) {
-        super(id);
+    public CrucibleRecipe(Ingredient input, long amount, FluidVariant fluid, boolean requiresFireproofCrucible) {
         this.input = input;
         this.amount = amount;
         this.fluid = fluid;
         this.requiresFireproofCrucible = requiresFireproofCrucible;
     }
 
-    public static Optional<CrucibleRecipe> find(ItemStack input, boolean isFireproof, @Nullable World world) {
+    public static Optional<RecipeEntry<CrucibleRecipe>> find(ItemStack input, boolean isFireproof, @Nullable World world) {
         if (world == null) {
             return Optional.empty();
         }
@@ -48,6 +49,10 @@ public class CrucibleRecipe extends BaseRecipe<CrucibleRecipe.Context> {
     @Override
     public ItemStack getDisplayStack() {
         return fluid.getFluid().getBucketItem().getDefaultStack();
+    }
+
+    public static boolean requiresFireproofCrucible(RecipeEntry<CrucibleRecipe> entry) {
+        return entry.value().requiresFireproofCrucible;
     }
 
     public boolean requiresFireproofCrucible() {
@@ -77,36 +82,33 @@ public class CrucibleRecipe extends BaseRecipe<CrucibleRecipe.Context> {
     }
 
     public static class Serializer implements RecipeSerializer<CrucibleRecipe> {
+        public static final MapCodec<CrucibleRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        Ingredient.ALLOW_EMPTY_CODEC.fieldOf("input").forGetter(recipe -> recipe.input),
+                        Codec.LONG.fieldOf("amount").forGetter(recipe -> recipe.amount),
+                        FluidVariant.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
+                        Codec.BOOL.fieldOf("requiresFireproofCrucible").forGetter(recipe -> recipe.requiresFireproofCrucible)
+                ).apply(instance, CrucibleRecipe::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, CrucibleRecipe> PACKET_CODEC = PacketCodec.tuple(
+                Ingredient.PACKET_CODEC, recipe -> recipe.input,
+                PacketCodec.ofStatic(PacketByteBuf::writeLong, PacketByteBuf::readLong), recipe -> recipe.amount,
+                FluidVariant.PACKET_CODEC, recipe-> recipe.fluid,
+                PacketCodecs.BOOL, recipe -> recipe.requiresFireproofCrucible,
+                CrucibleRecipe::new
+        );
+
         @Override
-        public CrucibleRecipe read(Identifier id, JsonObject json) {
-            var input = Ingredient.fromJson(JsonHelper.getElement(json, "input"));
-            var amount = JsonHelper.getLong(json, "amount");
-            var fluid = CodecUtils.fromJson(CodecUtils.FLUID_VARIANT, JsonHelper.getElement(json, "fluid"));
-            var isFireproof = JsonHelper.getBoolean(json, "requiresFireproofCrucible"); // TODO: rename json field
-
-
-            return new CrucibleRecipe(id, input, amount, fluid, isFireproof);
+        public MapCodec<CrucibleRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public CrucibleRecipe read(Identifier id, PacketByteBuf buf) {
-            var input = Ingredient.fromPacket(buf);
-            var amount = buf.readLong();
-            var fluid = CodecUtils.fromPacket(CodecUtils.FLUID_VARIANT, buf);
-            var isFireproof = buf.readBoolean();
-
-            return new CrucibleRecipe(id, input, amount, fluid, isFireproof);
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, CrucibleRecipe recipe) {
-            recipe.input.write(buf);
-            buf.writeLong(recipe.amount);
-            CodecUtils.toPacket(CodecUtils.FLUID_VARIANT, recipe.fluid, buf);
-            buf.writeBoolean(recipe.requiresFireproofCrucible);
+        public PacketCodec<RegistryByteBuf, CrucibleRecipe> packetCodec() {
+            return PACKET_CODEC;
         }
     }
 
-    protected record Context(ItemStack input, boolean isFireproof) implements RecipeContext {
+    public record Context(ItemStack input, boolean isFireproof) implements RecipeContext {
     }
 }

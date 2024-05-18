@@ -2,7 +2,7 @@ package wraith.fabricaeexnihilo.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.mattidragon.configloader.api.DefaultedFieldCodec;
+import io.github.mattidragon.configloader.api.AlwaysSerializedOptionalFieldCodec;
 import io.github.mattidragon.configloader.api.GenerateMutable;
 import net.minecraft.util.Identifier;
 
@@ -18,7 +18,7 @@ public record WitchWaterConfig(List<StatusEffectStats> effects) implements Mutab
             new StatusEffectStats(new Identifier("wither"), 210, 0)
     ));
     public static final Codec<WitchWaterConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            DefaultedFieldCodec.of(StatusEffectStats.CODEC.listOf(), "effects", WitchWaterConfig.DEFAULT.effects).forGetter(WitchWaterConfig::effects)
+            AlwaysSerializedOptionalFieldCodec.create(StatusEffectStats.CODEC.listOf(),"effects", WitchWaterConfig.DEFAULT.effects).forGetter(WitchWaterConfig::effects)
     ).apply(instance, WitchWaterConfig::new));
 
     @GenerateMutable(useFancyMethodNames = true)

@@ -11,7 +11,6 @@ import wraith.fabricaeexnihilo.modules.crucibles.CrucibleBlockEntity;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleProvider implements IBlockComponentProvider {
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

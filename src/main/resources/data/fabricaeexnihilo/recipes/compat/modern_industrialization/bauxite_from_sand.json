@@ -11,7 +11,8 @@
   },
   "fabric:load_conditions": [
     {
-      "condition": "fabricaeexnihilo:all_items_present",
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
       "values": [
         "modern_industrialization:bauxite_tiny_dust"
       ]

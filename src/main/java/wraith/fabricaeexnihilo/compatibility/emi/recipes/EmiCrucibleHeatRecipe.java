@@ -4,6 +4,7 @@ import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import wraith.fabricaeexnihilo.compatibility.emi.EmiIngredientUtil;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiPlugin;
@@ -15,11 +16,11 @@ public class EmiCrucibleHeatRecipe extends BasicEmiRecipe {
     private final EmiIngredient block;
     private final int heat;
 
-    public EmiCrucibleHeatRecipe(CrucibleHeatRecipe recipe) {
-        super(FENEmiPlugin.CRUCIBLE_HEAT_CATEGORY, recipe.getId(), WIDTH, HEIGHT);
-        block = EmiIngredientUtil.ingredientOf(recipe.getBlock());
+    public EmiCrucibleHeatRecipe(RecipeEntry<CrucibleHeatRecipe> recipe) {
+        super(FENEmiPlugin.CRUCIBLE_HEAT_CATEGORY, recipe.id(), WIDTH, HEIGHT);
+        block = EmiIngredientUtil.ingredientOf(recipe.value().getBlock());
         catalysts.add(block);
-        heat = recipe.getHeat();
+        heat = recipe.value().getHeat();
     }
 
     @Override

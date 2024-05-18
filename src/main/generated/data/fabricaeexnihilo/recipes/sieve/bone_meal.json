@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:bone_meal"
+    "id": "minecraft:bone_meal"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

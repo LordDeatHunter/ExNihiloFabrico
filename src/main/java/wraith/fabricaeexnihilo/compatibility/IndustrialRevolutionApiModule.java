@@ -1,7 +1,7 @@
 package wraith.fabricaeexnihilo.compatibility;
 
-import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +29,7 @@ public class IndustrialRevolutionApiModule implements FENApiModule {
     }
 
     @Override
-    public @Nullable ConditionJsonProvider getResourceCondition() {
-        return DefaultResourceConditions.allModsLoaded("indrev");
+    public @Nullable ResourceCondition getResourceCondition() {
+        return ResourceConditions.allModsLoaded("indrev");
     }
 }

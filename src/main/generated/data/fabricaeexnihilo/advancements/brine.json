@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:brine_bucket"
-            ]
+            "items": "fabricaeexnihilo:brine_bucket"
           }
         ]
       },
@@ -15,16 +13,14 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.brine.description"
     },
     "frame": "goal",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:brine_bucket"
+      "count": 1,
+      "id": "fabricaeexnihilo:brine_bucket"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.brine.title"
     }

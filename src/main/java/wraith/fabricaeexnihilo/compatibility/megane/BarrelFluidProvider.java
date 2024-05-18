@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.modules.barrels.BarrelBlockEntity;
 import wraith.fabricaeexnihilo.modules.barrels.BarrelState;
 
-@SuppressWarnings("UnstableApiUsage")
 class BarrelFluidProvider extends FluidProvider<BarrelBlockEntity> {
     @Override
     public int getSlotCount() {

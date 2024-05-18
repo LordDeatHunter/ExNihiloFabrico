@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:porcelain"
-            ]
+            "items": "fabricaeexnihilo:porcelain"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_porcelain",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_porcelain"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:crucible/uporcelain"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

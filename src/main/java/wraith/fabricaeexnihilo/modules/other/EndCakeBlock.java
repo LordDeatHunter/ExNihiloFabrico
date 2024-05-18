@@ -9,6 +9,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,12 +21,12 @@ public class EndCakeBlock extends CakeBlock {
         super(settings);
     }
 
-    protected static ActionResult tryEat(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    protected static ItemActionResult tryEat(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getRegistryKey() == World.END) {
-            return ActionResult.FAIL;
+            return ItemActionResult.FAIL;
         }
         if (!(world instanceof ServerWorld serverWorld) || player.hasVehicle() || player.hasPassengers() || !player.canUsePortals()) {
-            return ActionResult.FAIL;
+            return ItemActionResult.FAIL;
         }
         int i = state.get(BITES);
         if (i < 6) {
@@ -37,21 +38,32 @@ public class EndCakeBlock extends CakeBlock {
         RegistryKey<World> registryKey = world.getRegistryKey() == World.END ? World.OVERWORLD : World.END;
         ServerWorld destination = serverWorld.getServer().getWorld(registryKey);
         if (destination == null) {
-            return ActionResult.FAIL;
+            return ItemActionResult.FAIL;
         }
         player.moveToWorld(destination);
-        return ActionResult.SUCCESS;
+        return ItemActionResult.SUCCESS;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             if (tryEat(world, pos, state, player).isAccepted()) {
                 return ActionResult.SUCCESS;
             }
-            if (itemStack.isEmpty()) {
-                return ActionResult.CONSUME;
+            // empty stack assumed -- onUse is only called for empty hand interactions
+            return ActionResult.CONSUME;
+        }
+        return tryEat(world, pos, state, player).toActionResult();
+    }
+
+    @Override
+    public ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        if (world.isClient) {
+            if (tryEat(world, pos, state, player).isAccepted()) {
+                return ItemActionResult.SUCCESS;
+            }
+            if (stack.isEmpty()) {
+                return ItemActionResult.CONSUME;
             }
         }
         return tryEat(world, pos, state, player);

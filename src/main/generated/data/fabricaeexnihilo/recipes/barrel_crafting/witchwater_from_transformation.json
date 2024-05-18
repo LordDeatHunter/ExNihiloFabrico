@@ -5,7 +5,7 @@
       "type": "store_fluid",
       "amount": 81000,
       "fluid": {
-        "type": "fabricaeexnihilo:witchwater"
+        "fluid": "fabricaeexnihilo:witchwater"
       }
     }
   ],
@@ -16,7 +16,10 @@
     },
     {
       "type": "block_below",
-      "block": "minecraft:mycelium"
+      "block": {
+        "id": "minecraft:mycelium",
+        "states": {}
+      }
     }
   ],
   "duration": 600,

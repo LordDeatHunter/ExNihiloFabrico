@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:salt_bottle"
-            ]
+            "items": "fabricaeexnihilo:salt_bottle"
           }
         ]
       },
@@ -15,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.salt.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:salt_bottle"
+      "count": 1,
+      "id": "fabricaeexnihilo:salt_bottle"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.salt.title"
     }

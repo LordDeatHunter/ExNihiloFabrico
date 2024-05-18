@@ -4,7 +4,8 @@
   "heat": 16,
   "fabric:load_conditions": [
     {
-      "condition": "fabricaeexnihilo:all_blocks_present",
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:block",
       "values": [
         "techreborn:nitro_diesel"
       ]

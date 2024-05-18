@@ -1,13 +1,16 @@
 {
   "type": "fabricaeexnihilo:hammer",
-  "block": "minecraft:blackstone",
+  "block": {
+    "id": "minecraft:blackstone",
+    "states": {}
+  },
   "result": {
     "chances": [
       1.0
     ],
     "stack": {
       "count": 1,
-      "item": "fabricaeexnihilo:crushed_blackstone"
+      "id": "fabricaeexnihilo:crushed_blackstone"
     }
   }
 }

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:cobblestone"
-            ]
+            "items": "minecraft:cobblestone"
           }
         ]
       },
@@ -15,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.cobblestone.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "minecraft:cobblestone"
+      "count": 1,
+      "id": "minecraft:cobblestone"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.cobblestone.title"
     }

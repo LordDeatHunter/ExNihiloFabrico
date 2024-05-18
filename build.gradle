@@ -87,7 +87,9 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:$fabric_version"
 
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version"
+    modCompileOnly "dev.architectury:architectury-fabric:$architectury_version"
     modCompileOnly "dev.emi:emi-fabric:$emi_version:api"
+    modApi "me.shedaniel.cloth:basic-math:0.6.1"
     modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
 
     modImplementation include("dev.isxander:yet-another-config-lib:$yacl_version")
@@ -188,7 +190,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    it.options.release.set(17)
+    it.options.release.set(21)
 }
 
 java {

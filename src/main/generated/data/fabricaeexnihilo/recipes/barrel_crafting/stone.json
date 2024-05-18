@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:stone"
+        "id": "minecraft:stone"
       }
     }
   ],
@@ -19,6 +19,7 @@
       "fluid": "minecraft:lava"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:stone",
   "trigger": {
     "type": "tick",

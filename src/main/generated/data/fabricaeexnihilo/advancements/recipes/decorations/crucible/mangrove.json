@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:mangrove_log"
-            ]
+            "items": "minecraft:mangrove_log"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_log",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_log"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:crucible/mangrove"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

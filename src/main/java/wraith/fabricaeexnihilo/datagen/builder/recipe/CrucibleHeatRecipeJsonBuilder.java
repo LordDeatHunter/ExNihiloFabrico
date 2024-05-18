@@ -1,18 +1,14 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
-import com.google.gson.JsonObject;
-import net.minecraft.advancement.criterion.CriterionConditions;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import wraith.fabricaeexnihilo.recipe.ModRecipes;
+import wraith.fabricaeexnihilo.recipe.crucible.CrucibleHeatRecipe;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
-
-import java.util.function.Consumer;
 
 public class CrucibleHeatRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final BlockIngredient block;
@@ -28,7 +24,7 @@ public class CrucibleHeatRecipeJsonBuilder implements CraftingRecipeJsonBuilder 
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, CriterionConditions conditions) {
+    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
         throw new UnsupportedOperationException();
     }
 
@@ -44,47 +40,17 @@ public class CrucibleHeatRecipeJsonBuilder implements CraftingRecipeJsonBuilder 
 
     @Deprecated
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
+    public void offerTo(RecipeExporter exporter) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
+    public void offerTo(RecipeExporter exporter, String recipePath) {
         offerTo(exporter, new Identifier(recipePath));
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        exporter.accept(new Provider(block, heat, recipeId));
-    }
-
-    private record Provider(BlockIngredient block, int heat, Identifier id) implements RecipeJsonProvider {
-        @Override
-        public void serialize(JsonObject json) {
-            json.add("block", block.toJson());
-            json.addProperty("heat", heat);
-        }
-
-        @Override
-        public Identifier getRecipeId() {
-            return id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getSerializer() {
-            return ModRecipes.CRUCIBLE_HEAT_SERIALIZER;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject toAdvancementJson() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Identifier getAdvancementId() {
-            return null;
-        }
+    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        exporter.accept(recipeId, new CrucibleHeatRecipe(block, heat), null);
     }
 }

@@ -1,13 +1,12 @@
 package wraith.fabricaeexnihilo.modules.infested;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 
 public class SilkWormItem extends Item {
 
-    public SilkWormItem(FabricItemSettings settings) {
+    public SilkWormItem(Item.Settings settings) {
         super(settings);
     }
 

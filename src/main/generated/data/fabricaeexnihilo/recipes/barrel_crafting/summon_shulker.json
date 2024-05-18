@@ -13,7 +13,7 @@
       "type": "store_fluid",
       "amount": 0,
       "fluid": {
-        "type": "minecraft:empty"
+        "fluid": "minecraft:empty"
       }
     }
   ],

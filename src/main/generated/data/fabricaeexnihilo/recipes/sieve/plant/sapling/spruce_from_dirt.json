@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:spruce_sapling"
+    "id": "minecraft:spruce_sapling"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

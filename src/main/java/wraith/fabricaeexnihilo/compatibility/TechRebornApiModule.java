@@ -1,7 +1,7 @@
 package wraith.fabricaeexnihilo.compatibility;
 
-import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -43,7 +43,7 @@ public class TechRebornApiModule implements FENApiModule {
 
     @Override
     @Nullable
-    public ConditionJsonProvider getResourceCondition() {
-        return DefaultResourceConditions.allModsLoaded("techreborn");
+    public ResourceCondition getResourceCondition() {
+        return ResourceConditions.allModsLoaded("techreborn");
     }
 }

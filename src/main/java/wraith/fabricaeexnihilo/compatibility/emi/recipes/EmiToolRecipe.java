@@ -4,6 +4,7 @@ import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.recipe.RecipeEntry;
 import wraith.fabricaeexnihilo.compatibility.emi.EmiIngredientUtil;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiPlugin;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiTextures;
@@ -15,9 +16,10 @@ public class EmiToolRecipe extends BasicEmiRecipe {
     private final EmiIngredient block;
     private final EmiTexture glyph;
 
-    public EmiToolRecipe(ToolRecipe recipe) {
-        super(recipe.getTool() == ToolRecipe.ToolType.HAMMER ? FENEmiPlugin.HAMMERING_CATEGORY : FENEmiPlugin.CROOKING_CATEGORY,
-                recipe.getId(), calcWidth(recipe), HEIGHT);
+    public EmiToolRecipe(RecipeEntry<ToolRecipe> recipeEntry) {
+        super(recipeEntry.value().getTool() == ToolRecipe.ToolType.HAMMER ? FENEmiPlugin.HAMMERING_CATEGORY : FENEmiPlugin.CROOKING_CATEGORY,
+                recipeEntry.id(), calcWidth(recipeEntry.value()), HEIGHT);
+        var recipe = recipeEntry.value();
         block = EmiIngredientUtil.ingredientOf(recipe.getBlock());
         inputs.add(block);
         outputs.addAll(EmiIngredientUtil.stacksOf(recipe.getResult()));

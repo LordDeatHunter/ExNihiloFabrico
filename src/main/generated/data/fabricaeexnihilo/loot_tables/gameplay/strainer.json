@@ -6,12 +6,12 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "name": "minecraft:gameplay/fishing/junk",
+          "value": "minecraft:gameplay/fishing/junk",
           "weight": 10
         },
         {
           "type": "minecraft:loot_table",
-          "name": "minecraft:gameplay/fishing/fish",
+          "value": "minecraft:gameplay/fishing/fish",
           "weight": 85
         }
       ],

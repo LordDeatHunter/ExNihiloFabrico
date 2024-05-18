@@ -6,10 +6,12 @@
       "increment": 0.125,
       "result": {
         "count": 1,
-        "item": "minecraft:dirt"
+        "id": "minecraft:dirt"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:dirt",
   "trigger": {
     "type": "insert_item",

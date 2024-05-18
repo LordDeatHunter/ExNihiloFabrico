@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:stone"
-            ]
+            "items": "minecraft:stone"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_stone",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_stone"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:barrel/stone"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

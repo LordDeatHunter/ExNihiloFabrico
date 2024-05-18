@@ -1,71 +1,61 @@
 package wraith.fabricaeexnihilo.recipe.barrel;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.world.World;
 import wraith.fabricaeexnihilo.modules.barrels.BarrelBlockEntity;
 import wraith.fabricaeexnihilo.modules.barrels.BarrelState;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 import wraith.fabricaeexnihilo.recipe.util.FluidIngredient;
 
-@SuppressWarnings("UnstableApiUsage")
 public sealed interface BarrelRecipeCondition {
+    Codec<BarrelRecipeCondition> CODEC = Codec.STRING.dispatch(BarrelRecipeCondition::getName, BarrelRecipeCondition::fromType);
+    PacketCodec<RegistryByteBuf, BarrelRecipeCondition> PACKET_CODEC = PacketCodecs.BYTE.<RegistryByteBuf>cast().dispatch(BarrelRecipeCondition::getId, BarrelRecipeCondition::fromId);
+
     boolean check(World world, BarrelBlockEntity barrel);
 
-    default void toPacket(PacketByteBuf buf) {
-        buf.writeByte(getId());
-        writePacket(buf);
-    }
-
-    default JsonObject toJson() {
-        var json = new JsonObject();
-        json.addProperty("type", getName());
-        writeJson(json);
-        return json;
-    }
-
-    void writePacket(PacketByteBuf buf);
-
-    void writeJson(JsonObject json);
+    void writePacket(RegistryByteBuf buf);
 
     byte getId();
 
     String getName();
 
-    static BarrelRecipeCondition fromJson(JsonObject json) {
-        var type = JsonHelper.getString(json, "type");
+    static MapCodec<? extends BarrelRecipeCondition> fromType(String type) {
         return switch (type) {
-            case FluidAbove.NAME -> new FluidAbove(json);
-            case BlockAbove.NAME -> new BlockAbove(json);
-            case BlockBelow.NAME -> new BlockBelow(json);
-            case FluidIn.NAME -> new FluidIn(json);
-            default -> throw new JsonParseException("Unknown condition type: " + type);
+            case FluidAbove.NAME -> FluidAbove.CODEC;
+            case BlockAbove.NAME -> BlockAbove.CODEC;
+            case BlockBelow.NAME -> BlockBelow.CODEC;
+            case FluidIn.NAME -> FluidIn.CODEC;
+            default -> throw new IllegalArgumentException("Unknown condition type: " + type);
         };
     }
 
-    static BarrelRecipeCondition fromPacket(PacketByteBuf buf) {
-        var type = buf.readByte();
-        return switch (type) {
-            case FluidAbove.ID -> new FluidAbove(buf);
-            case BlockAbove.ID -> new BlockAbove(buf);
-            case BlockBelow.ID -> new BlockBelow(buf);
-            case FluidIn.ID -> new FluidIn(buf);
-            default -> throw new JsonParseException("Unknown condition type id: " + type);
+    static PacketCodec<RegistryByteBuf, ? extends BarrelRecipeCondition> fromId(byte id) {
+        return switch (id) {
+            case FluidAbove.ID -> FluidAbove.PACKET_CODEC;
+            case BlockAbove.ID -> BlockAbove.PACKET_CODEC;
+            case BlockBelow.ID -> BlockBelow.PACKET_CODEC;
+            case FluidIn.ID -> FluidIn.PACKET_CODEC;
+            default -> throw new IllegalArgumentException("Unknown condition type id: " + id);
         };
     }
+
+    MapCodec<? extends BarrelRecipeCondition> getCodec();
+
+    PacketCodec<RegistryByteBuf, ? extends BarrelRecipeCondition> getPacketCodec();
 
     record FluidAbove(FluidIngredient fluid) implements BarrelRecipeCondition {
         private static final String NAME = "fluid_above";
         private static final byte ID = 0;
 
-        public FluidAbove(JsonObject json) {
-            this(FluidIngredient.fromJson(JsonHelper.getElement(json, "fluid")));
-        }
+        public static final MapCodec<FluidAbove> CODEC = FluidIngredient.CODEC.fieldOf("fluid").xmap(FluidAbove::new, FluidAbove::fluid);
+        public static final PacketCodec<RegistryByteBuf, FluidAbove> PACKET_CODEC = PacketCodec.of(FluidAbove::writePacket, FluidAbove::new);
 
-        public FluidAbove(PacketByteBuf buf) {
+        public FluidAbove(RegistryByteBuf buf) {
             this(FluidIngredient.fromPacket(buf));
         }
 
@@ -75,13 +65,8 @@ public sealed interface BarrelRecipeCondition {
         }
 
         @Override
-        public void writePacket(PacketByteBuf buf) {
+        public void writePacket(RegistryByteBuf buf) {
             fluid.toPacket(buf);
-        }
-
-        @Override
-        public void writeJson(JsonObject json) {
-            json.add("fluid", fluid.toJson());
         }
 
         @Override
@@ -93,17 +78,26 @@ public sealed interface BarrelRecipeCondition {
         public String getName() {
             return NAME;
         }
+
+        @Override
+        public MapCodec<? extends BarrelRecipeCondition> getCodec() {
+            return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeCondition> getPacketCodec() {
+            return PACKET_CODEC;
+        }
     }
 
     record BlockAbove(BlockIngredient block) implements BarrelRecipeCondition {
         private static final String NAME = "block_above";
         private static final byte ID = 1;
 
-        public BlockAbove(JsonObject json) {
-            this(BlockIngredient.fromJson(JsonHelper.getElement(json, "block")));
-        }
+        public static final MapCodec<BlockAbove> CODEC = BlockIngredient.CODEC.fieldOf("block").xmap(BlockAbove::new, BlockAbove::block);
+        public static final PacketCodec<RegistryByteBuf, BlockAbove> PACKET_CODEC = PacketCodec.of(BlockAbove::writePacket, BlockAbove::new);
 
-        public BlockAbove(PacketByteBuf buf) {
+        public BlockAbove(RegistryByteBuf buf) {
             this(BlockIngredient.fromPacket(buf));
         }
 
@@ -113,13 +107,8 @@ public sealed interface BarrelRecipeCondition {
         }
 
         @Override
-        public void writePacket(PacketByteBuf buf) {
-            block.toPacket(buf);
-        }
-
-        @Override
-        public void writeJson(JsonObject json) {
-            json.add("block", block.toJson());
+        public void writePacket(RegistryByteBuf buf) {
+            BlockIngredient.toPacket(buf, block);
         }
 
         @Override
@@ -131,17 +120,26 @@ public sealed interface BarrelRecipeCondition {
         public String getName() {
             return NAME;
         }
+
+        @Override
+        public MapCodec<? extends BarrelRecipeCondition> getCodec() {
+            return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeCondition> getPacketCodec() {
+            return PACKET_CODEC;
+        }
     }
 
     record BlockBelow(BlockIngredient block) implements BarrelRecipeCondition {
         private static final String NAME = "block_below";
         private static final byte ID = 2;
 
-        public BlockBelow(JsonObject json) {
-            this(BlockIngredient.fromJson(JsonHelper.getElement(json, "block")));
-        }
+        public static final MapCodec<BlockBelow> CODEC = BlockIngredient.CODEC.fieldOf("block").xmap(BlockBelow::new, BlockBelow::block);
+        public static final PacketCodec<RegistryByteBuf, BlockBelow> PACKET_CODEC = PacketCodec.of(BlockBelow::writePacket, BlockBelow::new);
 
-        public BlockBelow(PacketByteBuf buf) {
+        public BlockBelow(RegistryByteBuf buf) {
             this(BlockIngredient.fromPacket(buf));
         }
 
@@ -151,13 +149,8 @@ public sealed interface BarrelRecipeCondition {
         }
 
         @Override
-        public void writePacket(PacketByteBuf buf) {
-            block.toPacket(buf);
-        }
-
-        @Override
-        public void writeJson(JsonObject json) {
-            json.add("block", block.toJson());
+        public void writePacket(RegistryByteBuf buf) {
+            BlockIngredient.toPacket(buf, block);
         }
 
         @Override
@@ -168,6 +161,16 @@ public sealed interface BarrelRecipeCondition {
         @Override
         public String getName() {
             return NAME;
+        }
+
+        @Override
+        public MapCodec<? extends BarrelRecipeCondition> getCodec() {
+            return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeCondition> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 
@@ -175,11 +178,10 @@ public sealed interface BarrelRecipeCondition {
         private static final String NAME = "fluid_in";
         private static final byte ID = 3;
 
-        public FluidIn(JsonObject json) {
-            this(FluidIngredient.fromJson(JsonHelper.getElement(json, "fluid")));
-        }
+        public static final MapCodec<FluidIn> CODEC = FluidIngredient.CODEC.fieldOf("fluid").xmap(FluidIn::new, FluidIn::fluid);
+        public static final PacketCodec<RegistryByteBuf, FluidIn> PACKET_CODEC = PacketCodec.of(FluidIn::writePacket, FluidIn::new);
 
-        public FluidIn(PacketByteBuf buf) {
+        public FluidIn(RegistryByteBuf buf) {
             this(FluidIngredient.fromPacket(buf));
         }
 
@@ -187,18 +189,12 @@ public sealed interface BarrelRecipeCondition {
         public boolean check(World world, BarrelBlockEntity barrel) {
             if (barrel.getState() != BarrelState.FLUID && barrel.getState() != BarrelState.EMPTY) return false;
             if (!fluid.test(barrel.getFluid().getFluid())) return false;
-            if (barrel.getFluidAmount() < FluidConstants.BUCKET) return false;
-            return true;
+            return barrel.getFluidAmount() >= FluidConstants.BUCKET;
         }
 
         @Override
-        public void writePacket(PacketByteBuf buf) {
+        public void writePacket(RegistryByteBuf buf) {
             fluid.toPacket(buf);
-        }
-
-        @Override
-        public void writeJson(JsonObject json) {
-            json.add("fluid", fluid.toJson());
         }
 
         @Override
@@ -209,6 +205,16 @@ public sealed interface BarrelRecipeCondition {
         @Override
         public String getName() {
             return NAME;
+        }
+
+        @Override
+        public MapCodec<? extends BarrelRecipeCondition> getCodec() {
+            return CODEC;
+        }
+
+        @Override
+        public PacketCodec<RegistryByteBuf, ? extends BarrelRecipeCondition> getPacketCodec() {
+            return PACKET_CODEC;
         }
     }
 }

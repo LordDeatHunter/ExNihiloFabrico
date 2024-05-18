@@ -4,7 +4,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -40,7 +40,7 @@ public class FireEmiStack extends EmiStack {
     }
 
     @Override
-    public NbtCompound getNbt() {
+    public ComponentChanges getComponentChanges() {
         return null;
     }
 

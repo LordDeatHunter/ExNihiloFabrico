@@ -8,12 +8,17 @@
     },
     {
       "type": "convert_block",
-      "filter": "minecraft:cobblestone",
+      "filter": {
+        "id": "minecraft:cobblestone",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:netherrack"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:netherrack",
   "trigger": {
     "type": "tick",

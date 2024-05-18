@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:slime_block"
+        "id": "minecraft:slime_block"
       }
     }
   ],
@@ -15,6 +15,7 @@
       "fluid": "#c:milk"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:slime_block",
   "trigger": {
     "type": "insert_item",

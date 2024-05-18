@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import wraith.fabricaeexnihilo.recipe.barrel.BarrelRecipe;
 
-@SuppressWarnings("UnstableApiUsage")
 public class BarrelItemStorage extends SnapshotParticipant<BarrelBlockEntity.Snapshot> implements SingleSlotStorage<ItemVariant> {
     private final BarrelBlockEntity barrel;
 

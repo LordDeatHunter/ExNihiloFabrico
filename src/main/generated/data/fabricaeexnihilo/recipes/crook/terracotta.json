@@ -6,5 +6,7 @@
   "ingredient": {
     "item": "fabricaeexnihilo:clay_crook"
   },
-  "result": "fabricaeexnihilo:terracotta_crook"
+  "result": {
+    "id": "fabricaeexnihilo:terracotta_crook"
+  }
 }

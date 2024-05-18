@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.modules.strainer;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
@@ -12,6 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -27,10 +29,9 @@ import java.util.stream.IntStream;
 
 import static wraith.fabricaeexnihilo.FabricaeExNihilo.id;
 
-@SuppressWarnings("UnstableApiUsage")
 public class StrainerBlockEntity extends BaseBlockEntity {
 
-    public static final BlockEntityType<StrainerBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
+    public static final BlockEntityType<StrainerBlockEntity> TYPE = BlockEntityType.Builder.create(
             StrainerBlockEntity::new,
             ModBlocks.STRAINERS.values().toArray(StrainerBlock[]::new)
     ).build(null);
@@ -50,17 +51,17 @@ public class StrainerBlockEntity extends BaseBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         inventory.clear();
-        Inventories.readNbt(nbt, inventory);
+        Inventories.readNbt(nbt, inventory, registryLookup);
         timeUntilCatch = nbt.getInt("timeUntilCatch");
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, inventory, registryLookup);
         nbt.putInt("timeUntilCatch", timeUntilCatch);
     }
 
@@ -78,14 +79,14 @@ public class StrainerBlockEntity extends BaseBlockEntity {
                     .add(LootContextParameters.ORIGIN, Vec3d.of(blockPos))
                     .build(ModLootContextTypes.STRAINER);
 
-            var loot = world.getServer().getLootManager()
-                    .getLootTable(id("gameplay/strainer"))
+            var loot = world.getServer().getReloadableRegistries()
+                    .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, id("gameplay/strainer")))
                     .generateLoot(params);
             for (int i = 0; i < strainer.inventory.size(); i++) {
                 if (loot.isEmpty())
                     break;
                 if (strainer.inventory.get(i).isEmpty()) {
-                    strainer.inventory.set(i, loot.remove(0));
+                    strainer.inventory.set(i, loot.removeFirst());
                 }
             }
             var config = FabricaeExNihilo.CONFIG.get().strainers();

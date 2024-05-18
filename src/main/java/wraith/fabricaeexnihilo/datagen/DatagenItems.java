@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.datagen;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -91,7 +90,7 @@ public class DatagenItems {
 
     private static void registerDummies(Identifier... ids) {
         for (var id : ids) {
-            Registry.register(Registries.ITEM, id, new Item(new FabricItemSettings()));
+            Registry.register(Registries.ITEM, id, new Item(new Item.Settings()));
         }
     }
 }

@@ -8,13 +8,13 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import wraith.fabricaeexnihilo.compatibility.emi.FENEmiPlugin;
 import wraith.fabricaeexnihilo.compatibility.recipeviewer.EntityRenderer;
 import wraith.fabricaeexnihilo.modules.ModTags;
 import wraith.fabricaeexnihilo.recipe.barrel.MilkingRecipe;
 
-@SuppressWarnings("UnstableApiUsage")
 public class EmiMilkingRecipe extends BasicEmiRecipe {
     private static final int WIDTH = 8 * 18;
     private static final int HEIGHT = 3 * 18;
@@ -22,8 +22,9 @@ public class EmiMilkingRecipe extends BasicEmiRecipe {
     private final EmiStack fluid;
     private final int cooldown;
 
-    public EmiMilkingRecipe(MilkingRecipe recipe) {
-        super(FENEmiPlugin.MILKING_CATEGORY, recipe.getId(), WIDTH, HEIGHT);
+    public EmiMilkingRecipe(RecipeEntry<MilkingRecipe> recipeEntry) {
+        super(FENEmiPlugin.MILKING_CATEGORY, recipeEntry.id(), WIDTH, HEIGHT);
+        var recipe = recipeEntry.value();
         entity = recipe.getEntity();
         fluid = FabricEmiStack.of(recipe.getFluid(), recipe.getAmount());
         outputs.add(fluid);

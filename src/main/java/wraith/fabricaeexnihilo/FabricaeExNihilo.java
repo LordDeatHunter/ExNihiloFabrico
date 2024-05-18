@@ -3,14 +3,11 @@ package wraith.fabricaeexnihilo;
 import io.github.mattidragon.configloader.api.ConfigManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.registry.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wraith.fabricaeexnihilo.config.FabricaeExNihiloConfig;
@@ -66,31 +63,11 @@ public class FabricaeExNihilo implements ModInitializer {
         EntrypointHelper.callEntrypoints();
 
         ModLootContextTypes.register();
-        ResourceConditions.register(id("all_items_present"), json -> {
-            var values = JsonHelper.getArray(json, "values");
-
-            for (var value : values) {
-                if (!Registries.ITEM.containsId(new Identifier(value.getAsString()))) {
-                    return false;
-                }
-            }
-            return true;
-        });
-        ResourceConditions.register(id("all_blocks_present"), json -> {
-            var values = JsonHelper.getArray(json, "values");
-
-            for (var value : values) {
-                if (!Registries.BLOCK.containsId(new Identifier(value.getAsString()))) {
-                    return false;
-                }
-            }
-            return true;
-        });
         Registry.register(Registries.LOOT_FUNCTION_TYPE, id("copy_enchantments"), CopyEnchantmentsLootFunction.TYPE);
         Registry.register(Registries.ITEM_GROUP, id("general"), ITEM_GROUP);
 
         LOGGER.debug("Registering Status Effects");
-        ModEffects.registerEffects();
+        ModEffects.init();
 
         LOGGER.debug("Registering Fluids");
         ModFluids.registerFluids();

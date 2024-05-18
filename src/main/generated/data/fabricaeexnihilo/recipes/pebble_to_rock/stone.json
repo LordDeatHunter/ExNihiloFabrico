@@ -11,7 +11,7 @@
     "##"
   ],
   "result": {
-    "item": "minecraft:stone"
-  },
-  "show_notification": true
+    "count": 1,
+    "id": "minecraft:stone"
+  }
 }

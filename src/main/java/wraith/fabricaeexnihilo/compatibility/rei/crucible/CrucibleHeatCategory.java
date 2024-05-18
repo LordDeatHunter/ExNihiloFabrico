@@ -11,7 +11,6 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import wraith.fabricaeexnihilo.compatibility.rei.PluginEntry;
-
 import java.util.ArrayList;
 import java.util.List;
 

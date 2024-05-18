@@ -1,12 +1,12 @@
 package wraith.fabricaeexnihilo.modules.infested;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,7 +25,7 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
     private double progress = 0.0;
     private InfestedLeavesBlock target = ModBlocks.INFESTED_LEAVES.values().stream().findFirst().orElseThrow();
     private int tickCounter = 0;
-    public static final BlockEntityType<InfestingLeavesBlockEntity> TYPE = FabricBlockEntityTypeBuilder.create(
+    public static final BlockEntityType<InfestingLeavesBlockEntity> TYPE = BlockEntityType.Builder.create(
             InfestingLeavesBlockEntity::new,
             ModBlocks.INFESTING_LEAVES
     ).build(null);
@@ -72,26 +72,27 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        readNbtWithoutWorldInfo(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
+        readNbtWithoutWorldInfo(nbt, registryLookup);
     }
 
-    public void readNbtWithoutWorldInfo(NbtCompound nbt) {
+    public void readNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         progress = nbt.getDouble("progress");
         target = Registries.BLOCK.getOrEmpty(new Identifier(nbt.getString("target")))
                 .flatMap(block -> block instanceof InfestedLeavesBlock infested ? Optional.of(infested) : Optional.empty())
                 .orElse(ModBlocks.INFESTED_LEAVES.values().stream().findFirst().orElseThrow());
     }
 
-    public void toNBTWithoutWorldInfo(NbtCompound nbt) {
+    @SuppressWarnings("deprecation")
+    public void toNBTWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putDouble("progress", progress);
-        nbt.putString("target", Registries.BLOCK.getId(target).toString());
+        nbt.putString("target", target.getRegistryEntry().getKey().get().getValue().toString());
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        toNBTWithoutWorldInfo(nbt);
+    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        toNBTWithoutWorldInfo(nbt, registryLookup);
     }
 }

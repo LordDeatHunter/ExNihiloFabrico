@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:stone_hammer"
-            ]
+            "items": "fabricaeexnihilo:stone_hammer"
           }
         ]
       },
@@ -15,17 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.stone_hammer.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:stone_hammer",
-      "nbt": "{Damage:0}"
+      "count": 1,
+      "id": "fabricaeexnihilo:stone_hammer"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.stone_hammer.title"
     }

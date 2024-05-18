@@ -3,8 +3,9 @@ package wraith.fabricaeexnihilo.datagen.provider.recipe;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.DefaultApiModule;
@@ -13,15 +14,15 @@ import wraith.fabricaeexnihilo.datagen.builder.recipe.CrucibleRecipeJsonBuilder;
 import wraith.fabricaeexnihilo.modules.ModTags;
 import wraith.fabricaeexnihilo.recipe.util.BlockIngredient;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 public class CrucibleRecipeProvider extends FabricRecipeProvider {
-    public CrucibleRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public CrucibleRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         new CrucibleHeatRecipeJsonBuilder(BlockIngredient.tag(ModTags.Common.TORCHES), 1).offerTo(exporter, "heat_from_torch");
         new CrucibleHeatRecipeJsonBuilder(Blocks.GLOWSTONE, 2).offerTo(exporter, "heat_from_glowstone");
         new CrucibleHeatRecipeJsonBuilder(Blocks.SHROOMLIGHT, 2).offerTo(exporter, "heat_from_shroomlight");

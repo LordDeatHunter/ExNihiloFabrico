@@ -8,12 +8,17 @@
     },
     {
       "type": "convert_block",
-      "filter": "minecraft:sand",
+      "filter": {
+        "id": "minecraft:sand",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:soul_sand"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:soul_sand",
   "trigger": {
     "type": "tick",

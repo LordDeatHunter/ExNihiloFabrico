@@ -1,6 +1,9 @@
 {
   "type": "fabricaeexnihilo:crook",
-  "block": "#fabricaeexnihilo:infested_leaves",
+  "block": {
+    "id": "#fabricaeexnihilo:infested_leaves",
+    "states": {}
+  },
   "result": {
     "chances": [
       0.75,
@@ -8,7 +11,7 @@
     ],
     "stack": {
       "count": 1,
-      "item": "minecraft:string"
+      "id": "minecraft:string"
     }
   }
 }

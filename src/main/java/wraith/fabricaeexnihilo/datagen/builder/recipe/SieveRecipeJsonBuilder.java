@@ -1,32 +1,21 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
-import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
-import net.minecraft.advancement.criterion.CriterionConditions;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 import wraith.fabricaeexnihilo.compatibility.DefaultApiModule;
-import wraith.fabricaeexnihilo.recipe.ModRecipes;
-import wraith.fabricaeexnihilo.util.CodecUtils;
+import wraith.fabricaeexnihilo.recipe.SieveRecipe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.*;
 
 public class SieveRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
-    private static final Codec<Map<Item, double[]>> ROLLS_CODEC = Codec.unboundedMap(Registries.ITEM.getCodec(), Codec.DOUBLE.listOf()
-            .xmap(doubles -> ArrayUtils.toPrimitive(doubles.toArray(new Double[0])), array -> List.of(ArrayUtils.toObject(array))));
     private final ItemStack result;
     private final List<Segment> segments = new ArrayList<>();
     private Segment currentSegment;
@@ -65,7 +54,8 @@ public class SieveRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
     public SieveRecipeJsonBuilder mesh(Item mesh, double... chances) {
         if (currentSegment == null) throw new IllegalStateException("No active segment");
-        currentSegment.rolls.put(mesh, chances);
+        //noinspection deprecation
+        currentSegment.rolls.put(mesh.getRegistryEntry().registryKey().getValue(), Arrays.stream(chances).boxed().toList());
         return this;
     }
 
@@ -107,7 +97,7 @@ public class SieveRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, CriterionConditions conditions) {
+    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
         throw new UnsupportedOperationException();
     }
 
@@ -123,56 +113,30 @@ public class SieveRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
     @Deprecated
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
+    public void offerTo(RecipeExporter exporter) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
+    public void offerTo(RecipeExporter exporter, String recipePath) {
         offerTo(exporter, new Identifier(recipePath));
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
+    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
         if (currentSegment == null) throw new IllegalStateException("No segments");
         segments.add(currentSegment);
+        if (segments.size() == 1) {
+            exporter.accept(recipeId,
+                    new SieveRecipe(result, currentSegment.input, currentSegment.waterlogged, currentSegment.rolls), null);
+            return;
+        }
         for (var segment : segments) {
-            exporter.accept(new Provider(result, segment, recipeId, segments.size() > 1));
+            exporter.accept(recipeId.withSuffixedPath("_from_" + segment.name),
+                    new SieveRecipe(result, segment.input, segment.waterlogged, segment.rolls), null);
         }
     }
 
-    private record Segment(Ingredient input, boolean waterlogged, String name, Map<Item, double[]> rolls) {
-    }
-
-    private record Provider(ItemStack result, Segment segment, Identifier id, boolean useLongId) implements RecipeJsonProvider {
-        @Override
-        public void serialize(JsonObject json) {
-            json.add("result", CodecUtils.toJson(CodecUtils.ITEM_STACK, result));
-            json.add("input", segment.input.toJson());
-            json.addProperty("waterlogged", segment.waterlogged);
-            json.add("rolls", CodecUtils.toJson(ROLLS_CODEC, segment.rolls));
-        }
-
-        @Override
-        public Identifier getRecipeId() {
-            return useLongId ? id.withSuffixedPath("_from_" + segment.name) : id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getSerializer() {
-            return ModRecipes.SIEVE_SERIALIZER;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject toAdvancementJson() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Identifier getAdvancementId() {
-            return null;
-        }
+    private record Segment(Ingredient input, boolean waterlogged, String name, Map<Identifier, List<Double>> rolls) {
     }
 }

@@ -5,7 +5,7 @@
   },
   "result": {
     "count": 1,
-    "item": "minecraft:red_mushroom"
+    "id": "minecraft:red_mushroom"
   },
   "rolls": {
     "fabricaeexnihilo:copper_mesh": [

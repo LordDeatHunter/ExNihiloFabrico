@@ -2,7 +2,7 @@
   "type": "fabricaeexnihilo:crucible",
   "amount": 20250,
   "fluid": {
-    "type": "minecraft:water"
+    "fluid": "minecraft:water"
   },
   "input": {
     "tag": "minecraft:leaves"

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:gold_mesh"
-            ]
+            "items": "fabricaeexnihilo:gold_mesh"
           }
         ]
       },
@@ -15,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.gold_mesh.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:gold_mesh"
+      "count": 1,
+      "id": "fabricaeexnihilo:gold_mesh"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.gold_mesh.title"
     }

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:raw_iron_piece"
-            ]
+            "items": "fabricaeexnihilo:raw_iron_piece"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_piece",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_piece"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:ore_piece/iron"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

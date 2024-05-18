@@ -7,5 +7,7 @@
   "ingredient": {
     "item": "fabricaeexnihilo:unfired_porcelain_crucible"
   },
-  "result": "fabricaeexnihilo:porcelain_crucible"
+  "result": {
+    "id": "fabricaeexnihilo:porcelain_crucible"
+  }
 }

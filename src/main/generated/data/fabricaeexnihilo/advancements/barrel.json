@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "fabricaeexnihilo:barrels"
+            "items": "#fabricaeexnihilo:barrels"
           }
         ]
       },
@@ -13,16 +13,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.fabricaeexnihilo.barrel.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
-      "item": "fabricaeexnihilo:oak_barrel"
+      "count": 1,
+      "id": "fabricaeexnihilo:oak_barrel"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.fabricaeexnihilo.barrel.title"
     }

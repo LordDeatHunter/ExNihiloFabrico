@@ -5,7 +5,7 @@
       "type": "store_item",
       "stack": {
         "count": 1,
-        "item": "minecraft:obsidian"
+        "id": "minecraft:obsidian"
       }
     }
   ],
@@ -19,6 +19,7 @@
       "fluid": "minecraft:water"
     }
   ],
+  "duration": 0,
   "icon": "minecraft:obsidian",
   "trigger": {
     "type": "tick",

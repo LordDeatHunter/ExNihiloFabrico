@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "fabricaeexnihilo:gold_mesh"
-            ]
+            "items": "fabricaeexnihilo:gold_mesh"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_previous",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_previous"
     ]
   ],
   "rewards": {
     "recipes": [
       "fabricaeexnihilo:mesh/emerald"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

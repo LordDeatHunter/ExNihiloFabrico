@@ -4,12 +4,12 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import wraith.fabricaeexnihilo.util.BonusEnchantingManager;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -21,20 +21,20 @@ public abstract class EnchantmentHelperMixin {
      * check item tags for the applicability of enchantments. The enchantment table skips Enchantment$isAcceptableItem
      * and goes straight for the EnchantmentType's member ... which are all overridden with anonymous functions ....
      *
-     * @param power       Enchantment setup power
+     * @param level       Enchantment setup power
      * @param stack       Stack to be enchanted
-     * @param hasTreasure Include treasure enchantments?
+     * @param treasureAllowed Include treasure enchantments?
      * @param cir         Callback info.
      */
     @Inject(method = "getPossibleEntries", at = @At(value = "RETURN"))
-    private static void fabricaeexnihilo$injectEnchantments(int power, ItemStack stack, boolean hasTreasure, CallbackInfoReturnable<List<EnchantmentLevelEntry>> cir) {
+    private static void fabricaeexnihilo$injectEnchantments(FeatureSet enabledFeatures, int level, ItemStack stack, boolean treasureAllowed, CallbackInfoReturnable<List<EnchantmentLevelEntry>> cir) {
         var list = cir.getReturnValue();
         Registries.ENCHANTMENT.stream()
-                .filter(enchantment -> (hasTreasure || !enchantment.isTreasure()) && BonusEnchantingManager.DATA.getOrDefault(enchantment, Collections.emptyList()).contains(stack.getItem()))
+                .filter(enchantment -> (treasureAllowed || !enchantment.isTreasure()) && BonusEnchantingManager.DATA.getOrDefault(enchantment, Collections.emptyList()).contains(stack.getItem()))
                 .map(enchantmentLevelEntry -> {
-                    for (var level = enchantmentLevelEntry.getMaxLevel(); level > enchantmentLevelEntry.getMinLevel() - 1; level--) {
-                        if (power >= enchantmentLevelEntry.getMinPower(level) && power <= enchantmentLevelEntry.getMaxPower(level)) {
-                            return new EnchantmentLevelEntry(enchantmentLevelEntry, level);
+                    for (var i = enchantmentLevelEntry.getMaxLevel(); i > enchantmentLevelEntry.getMinLevel() - 1; i--) {
+                        if (level >= enchantmentLevelEntry.getMinPower(i) && level <= enchantmentLevelEntry.getMaxPower(i)) {
+                            return new EnchantmentLevelEntry(enchantmentLevelEntry, i);
                         }
                     }
                     return new EnchantmentLevelEntry(enchantmentLevelEntry, 1);

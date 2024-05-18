@@ -4,13 +4,13 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.recipe.crucible.CrucibleRecipe;
 
 import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CrucibleDisplay implements Display {
     private final CategoryIdentifier<?> category;
     public final long amount;
@@ -18,12 +18,13 @@ public class CrucibleDisplay implements Display {
     public final EntryIngredient result;
     private final Identifier id;
 
-    public CrucibleDisplay(CrucibleRecipe recipe, CategoryIdentifier<?> category) {
+    public CrucibleDisplay(RecipeEntry<CrucibleRecipe> recipeEntry, CategoryIdentifier<?> category) {
+        var recipe = recipeEntry.value();
         this.input = EntryIngredients.ofIngredient(recipe.getInput());
         this.category = category;
         this.result = EntryIngredients.of(recipe.getFluid().getFluid());
         this.amount = recipe.getAmount();
-        this.id = recipe.getId();
+        this.id = recipeEntry.id();
     }
 
     @Override

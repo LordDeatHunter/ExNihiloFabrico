@@ -1,5 +1,6 @@
 {
   "type": "fabricaeexnihilo:witch_water_entity",
+  "nbt": "",
   "result": "minecraft:phantom",
   "target": "minecraft:parrot"
 }

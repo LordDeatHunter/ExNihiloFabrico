@@ -1,5 +1,8 @@
 {
   "type": "fabricaeexnihilo:crucible_heat",
-  "block": "#c:torches",
+  "block": {
+    "id": "#c:torches",
+    "states": {}
+  },
   "heat": 1
 }

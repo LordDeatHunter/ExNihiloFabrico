@@ -8,12 +8,17 @@
     },
     {
       "type": "convert_block",
-      "filter": "minecraft:coarse_dirt",
+      "filter": {
+        "id": "minecraft:coarse_dirt",
+        "states": {}
+      },
       "result": {
         "Name": "minecraft:soul_soil"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:soul_soil",
   "trigger": {
     "type": "tick",

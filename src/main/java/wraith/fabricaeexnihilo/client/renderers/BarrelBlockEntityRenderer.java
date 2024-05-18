@@ -50,7 +50,6 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<BarrelBloc
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private void renderFluid(FluidVariant fluid, long amount, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlays) {
         var sprite = FluidVariantRendering.getSprite(fluid);
         var color = FluidVariantRendering.getColor(fluid);
@@ -66,7 +65,7 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<BarrelBloc
         var emitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
         emitter.square(Direction.UP, X_MIN, Z_MIN, X_MAX, Z_MAX, 1 - MathHelper.lerp(amount / (float) FluidConstants.BUCKET, Y_MIN, Y_MAX));
         emitter.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
-        vertexConsumers.getBuffer(RenderLayer.getTranslucent()).quad(matrices.peek(), emitter.toBakedQuad(sprite), r, g, b, light, overlays);
+        vertexConsumers.getBuffer(RenderLayer.getTranslucent()).quad(matrices.peek(), emitter.toBakedQuad(sprite), r, g, b, 1F, light, overlays);
     }
 
     private void renderItem(ItemStack stack, BlockPos pos, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlays, World world) {

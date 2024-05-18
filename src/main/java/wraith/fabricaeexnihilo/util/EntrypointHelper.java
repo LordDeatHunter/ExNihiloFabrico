@@ -1,10 +1,8 @@
 package wraith.fabricaeexnihilo.util;
 
 import com.google.common.collect.Maps;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
@@ -32,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EntrypointHelper {
-    public static final Map<ItemConvertible, List<ConditionJsonProvider>> CONDITIONS = Maps.newIdentityHashMap();
+    public static final Map<ItemConvertible, List<ResourceCondition>> CONDITIONS = Maps.newIdentityHashMap();
 
     public static void callEntrypoints() {
         var entrypoints = FabricLoader.getInstance().getEntrypoints("fabricaeexnihilo:api", FENApiModule.class).stream();
@@ -52,42 +50,36 @@ public class EntrypointHelper {
         return FabricaeExNihilo.id((prefix == null ? "" : prefix) + ore + (suffix == null ? "" : suffix));
     }
 
-    private static final class FENRegistriesImpl implements FENRegistries {
-        @Nullable
-        private final ConditionJsonProvider condition;
+    private record FENRegistriesImpl(@Nullable ResourceCondition condition) implements FENRegistries {
 
-        private FENRegistriesImpl(@Nullable ConditionJsonProvider condition) {
-            this.condition = condition;
+        @Override
+        public Item.Settings defaultItemSettings() {
+            return new Item.Settings();
         }
 
         @Override
-        public FabricItemSettings defaultItemSettings() {
-            return new FabricItemSettings();
+        public AbstractBlock.Settings gravelyBlockSettings() {
+            return AbstractBlock.Settings.copy(Blocks.GRAVEL);
         }
 
         @Override
-        public FabricBlockSettings gravelyBlockSettings() {
-            return FabricBlockSettings.copyOf(Blocks.GRAVEL);
+        public AbstractBlock.Settings infestedLeavesBlockSettings() {
+            return ModBlocks.INFESTED_LEAVES_SETTINGS;
         }
 
         @Override
-        public FabricBlockSettings infestedLeavesBlockSettings() {
-            return FabricBlockSettings.copyOf(ModBlocks.INFESTED_LEAVES_SETTINGS);
+        public AbstractBlock.Settings sandyBlockSettings() {
+            return AbstractBlock.Settings.copy(Blocks.SAND);
         }
 
         @Override
-        public FabricBlockSettings sandyBlockSettings() {
-            return FabricBlockSettings.copyOf(Blocks.SAND);
+        public AbstractBlock.Settings stoneBlockSettings() {
+            return AbstractBlock.Settings.copy(Blocks.STONE).requiresTool();
         }
 
         @Override
-        public FabricBlockSettings stoneBlockSettings() {
-            return FabricBlockSettings.copyOf(Blocks.STONE).requiresTool();
-        }
-
-        @Override
-        public FabricBlockSettings woodenBlockSettings() {
-            return FabricBlockSettings.copyOf(Blocks.OAK_PLANKS);
+        public AbstractBlock.Settings woodenBlockSettings() {
+            return AbstractBlock.Settings.copy(Blocks.OAK_PLANKS);
         }
 
         @Override
@@ -119,7 +111,7 @@ public class EntrypointHelper {
         @Override
         public Block registerCrushedBlock(String name, AbstractBlock.Settings settings) {
             var id = id(name, null, null);
-            var block = ModBlocks.CRUSHED.computeIfAbsent(id, __ -> new FallingBlock(settings));
+            var block = ModBlocks.CRUSHED.computeIfAbsent(id, __ -> new DummyFallingBlock(settings));
             if (condition != null)
                 CONDITIONS.computeIfAbsent(block, __ -> new ArrayList<>()).add(condition);
             return block;
@@ -219,7 +211,8 @@ public class EntrypointHelper {
             return new WoodBlockBundleImpl(sieve, strainer, barrel, crucible);
         }
 
-        private record WoodBlockBundleImpl(Block sieve, Block strainer, Block barrel, Block crucible) implements WoodenBlockBundle {
+        private record WoodBlockBundleImpl(Block sieve, Block strainer, Block barrel,
+                                           Block crucible) implements WoodenBlockBundle {
         }
     }
 }

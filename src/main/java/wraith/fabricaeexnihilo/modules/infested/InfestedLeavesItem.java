@@ -1,13 +1,13 @@
 package wraith.fabricaeexnihilo.modules.infested;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import wraith.fabricaeexnihilo.modules.base.Colored;
 import wraith.fabricaeexnihilo.util.Color;
 
 public class InfestedLeavesItem extends BlockItem implements Colored {
 
-    public InfestedLeavesItem(InfestedLeavesBlock block, FabricItemSettings settings) {
+    public InfestedLeavesItem(InfestedLeavesBlock block, Item.Settings settings) {
         super(block, settings);
     }
 

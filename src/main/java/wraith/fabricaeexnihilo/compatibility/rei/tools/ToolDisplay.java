@@ -4,6 +4,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.rei.ReiIngredientUtil;
 import wraith.fabricaeexnihilo.recipe.ToolRecipe;
@@ -19,12 +20,13 @@ public class ToolDisplay implements Display {
     public final EntryIngredient result;
     private final Identifier id;
 
-    public ToolDisplay(ToolRecipe recipe, CategoryIdentifier<ToolDisplay> category) {
+    public ToolDisplay(RecipeEntry<ToolRecipe> recipeEntry, CategoryIdentifier<ToolDisplay> category) {
+        var recipe = recipeEntry.value();
         this.category = category;
         BlockIngredient blockIngredient = recipe.getBlock();
         this.block = ReiIngredientUtil.of(blockIngredient);
         this.result = EntryIngredients.of(recipe.getResult().stack());
-        this.id = recipe.getId();
+        this.id = recipeEntry.id();
     }
 
     @Override

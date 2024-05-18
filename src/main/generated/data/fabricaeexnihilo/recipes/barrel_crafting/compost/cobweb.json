@@ -6,10 +6,12 @@
       "increment": 0.5,
       "result": {
         "count": 1,
-        "item": "minecraft:white_wool"
+        "id": "minecraft:white_wool"
       }
     }
   ],
+  "conditions": [],
+  "duration": 0,
   "icon": "minecraft:white_wool",
   "trigger": {
     "type": "insert_item",
