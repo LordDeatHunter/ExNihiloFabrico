@@ -24,7 +24,22 @@ public class ToolRecipe extends BaseRecipe<ToolRecipe.Context> {
     private final BlockIngredient block;
     private final Loot result;
 
-    public ToolRecipe( ToolType tool, BlockIngredient block, Loot result) {
+    public static final MapCodec<ToolRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    ToolType.CODEC.fieldOf("type").forGetter(recipe -> recipe.tool),
+                    BlockIngredient.CODEC.fieldOf("block").forGetter(recipe -> recipe.block),
+                    Loot.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
+            ).apply(instance, ToolRecipe::new)
+    );
+
+    public static final PacketCodec<RegistryByteBuf, ToolRecipe> PACKET_CODEC = PacketCodec.tuple(
+            PacketCodec.ofStatic(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(ToolType.class)), recipe -> recipe.tool,
+            BlockIngredient.PACKET_CODEC, recipe -> recipe.block,
+            Loot.PACKET_CODEC, recipe -> recipe.result,
+            ToolRecipe::new
+    );
+
+    public ToolRecipe(ToolType tool, BlockIngredient block, Loot result) {
         this.tool = tool;
         this.block = block;
         this.result = result;
@@ -92,29 +107,14 @@ public class ToolRecipe extends BaseRecipe<ToolRecipe.Context> {
     }
 
     public static class Serializer implements RecipeSerializer<ToolRecipe> {
-        public static final MapCodec<ToolRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                        ToolType.CODEC.fieldOf("type").forGetter(recipe -> recipe.tool),
-                        BlockIngredient.CODEC.fieldOf("block").forGetter(recipe -> recipe.block),
-                        Loot.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
-                ).apply(instance, ToolRecipe::new)
-        );
-
-        public static final PacketCodec<RegistryByteBuf, ToolRecipe> PACKET_CODEC = PacketCodec.tuple(
-                PacketCodec.ofStatic(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(ToolType.class)), recipe -> recipe.tool,
-                BlockIngredient.PACKET_CODEC, recipe -> recipe.block,
-                Loot.PACKET_CODEC, recipe -> recipe.result,
-                ToolRecipe::new
-        );
-
         @Override
         public MapCodec<ToolRecipe> codec() {
-            return CODEC;
+            return ToolRecipe.CODEC;
         }
 
         @Override
         public PacketCodec<RegistryByteBuf, ToolRecipe> packetCodec() {
-            return PACKET_CODEC;
+            return ToolRecipe.PACKET_CODEC;
         }
     }
 

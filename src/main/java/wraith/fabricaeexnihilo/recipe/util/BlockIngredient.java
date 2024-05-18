@@ -59,10 +59,7 @@ public sealed abstract class BlockIngredient implements Predicate<BlockState> {
                     obj -> Pair.of(obj.id(), obj.properties)
             ),
             Codec.PASSTHROUGH.flatMap(
-                    dyn -> DATA_CODEC.parse(dyn).map(data -> dyn.getOps() instanceof RegistryOps<?> registryOps
-                            ? BlockIngredient.fromData(data.getFirst(), data.getSecond(),
-                                registryOps.getEntryLookup(RegistryKeys.BLOCK).orElse(null))
-                            : BlockIngredient.fromData(data.getFirst(), data.getSecond(), null)
+                    dyn -> DATA_CODEC.parse(dyn).map(data -> BlockIngredient.fromData(data.getFirst(), data.getSecond(),null)
                     )
             )
     );

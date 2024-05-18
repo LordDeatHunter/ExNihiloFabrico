@@ -1,6 +1,5 @@
 package wraith.fabricaeexnihilo.datagen.builder.recipe;
 
-import com.google.gson.JsonObject;
 import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;

@@ -19,10 +19,7 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
     public static final Codec<FluidIngredient> CODEC = Codec.of(
             Codec.STRING.comap(FluidIngredient::toId),
             Codec.PASSTHROUGH.flatMap(
-                    dyn -> Codec.STRING.parse(dyn).map(s -> dyn.getOps() instanceof RegistryOps<?> registryOps
-                            ? FluidIngredient.fromId(s,
-                                                     registryOps.getEntryLookup(RegistryKeys.FLUID).orElse(null))
-                            : FluidIngredient.fromId(s, null))
+                    dyn -> Codec.STRING.parse(dyn).map(s -> FluidIngredient.fromId(s, null))
             )
     );
 

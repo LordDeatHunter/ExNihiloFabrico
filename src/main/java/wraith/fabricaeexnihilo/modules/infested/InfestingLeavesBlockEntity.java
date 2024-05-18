@@ -6,8 +6,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -81,8 +79,8 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
 
     public void readNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         progress = nbt.getDouble("progress");
-        target = registryLookup.getWrapperOrThrow(RegistryKeys.BLOCK).getOptional(RegistryKey.of(RegistryKeys.BLOCK, new Identifier(nbt.getString("target"))))
-                .flatMap(block -> block.value() instanceof InfestedLeavesBlock infested ? Optional.of(infested) : Optional.empty())
+        target = Registries.BLOCK.getOrEmpty(new Identifier(nbt.getString("target")))
+                .flatMap(block -> block instanceof InfestedLeavesBlock infested ? Optional.of(infested) : Optional.empty())
                 .orElse(ModBlocks.INFESTED_LEAVES.values().stream().findFirst().orElseThrow());
     }
 
