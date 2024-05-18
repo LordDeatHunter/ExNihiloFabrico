@@ -15,10 +15,11 @@ on:
 
 jobs:
   publish:
-    uses: MattiDragon/MattiDragon/.github/workflows/publish-mc-mod.yaml@275ad65025060abab92dd3a080dae735e89565e7
+    uses: MattiDragon/MattiDragon/.github/workflows/publish-mc-mod.yaml@00051ad2ae1350c882ab08a382d4dda38eff121b
     with:
       version-type: ${{ inputs.version-type }}
       minecraft-versions: ${{ inputs.minecraft-versions }}
+      java-version: 21
       jitpack-safe-version: true
       modrinth-id: j9JARqmz
       curseforge-id: 596911
