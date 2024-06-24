@@ -84,7 +84,7 @@ public class FabricaeExNihilo implements ModInitializer {
         ModBlocks.registerBlockEntities();
 
         LOGGER.debug("Creating Tags");
-        BonusEnchantingManager.generateDefaultTags();
+        BonusEnchantingManager.init();
         LOGGER.debug("Creating Recipes");
         ModRecipes.register();
     }
