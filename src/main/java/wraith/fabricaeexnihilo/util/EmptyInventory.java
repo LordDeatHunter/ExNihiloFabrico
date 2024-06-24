@@ -12,9 +12,10 @@ public interface EmptyInventory extends RecipeInput {
         return 0;
     }
 
+    // Pretend to not be empty in order for RecipeManager.getFirstMatch to work.
     @Override
     default boolean isEmpty() {
-        return true;
+        return false;
     }
 
     @Override
