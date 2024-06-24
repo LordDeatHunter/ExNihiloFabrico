@@ -171,7 +171,7 @@ public class CrucibleBlockEntity extends BaseBlockEntity implements EnchantableB
         queued = nbt.getLong("queued");
         heat = nbt.getInt("heat");
         requiresFireproof = !nbt.contains("requiresFireproof") || nbt.getBoolean("requiresFireproof");
-        enchantments.readNbt(nbt.getCompound("enchantments"));
+        enchantments.readNbt(nbt.getCompound("enchantments"), registryLookup);
         updateHeat(); // Enchantments affect heat
     }
 

@@ -106,7 +106,7 @@ dependencies {
         modRuntimeOnly "dev.emi:emi-fabric:$emi_version"
     }
     if (settings.modmenu) modRuntimeOnly "com.terraformersmc:modmenu:$modmenu_version"
-    if (settings.techReborn) modRuntimeOnly "TechReborn:TechReborn-1.19:$tech_reborn_version"
+    if (settings.techReborn) modRuntimeOnly "TechReborn:TechReborn-1.21:$tech_reborn_version"
     if (settings.modernIndustrialization) modRuntimeOnly "maven.modrinth:modern-industrialization:$modern_industrialization_version"
     if (settings.industrialRevolution) modRuntimeOnly "curse.maven:industrial-revolution-391708:$industrial_revolution_version"
 
@@ -115,7 +115,7 @@ dependencies {
     if (settings.wthit) {
         modRuntimeOnly "mcp.mobius.waila:wthit:fabric-$wthit_version"
     }
-    modCompileOnly "lol.bai.megane:megane-api:7.1.0"
+    modCompileOnly "lol.bai.megane:megane-api:$megane_version"
     if (settings.megane) {
         modRuntimeOnly "lol.bai:badpackets:fabric-0.1.2"
         modRuntimeOnly "lol.bai.megane:megane-runtime:$megane_version"

@@ -172,7 +172,7 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        enchantments.readNbt(nbt.getCompound("enchantments"));
+        enchantments.readNbt(nbt.getCompound("enchantments"), registryLookup);
         state = BarrelState.byId(nbt.getString("state"));
         fluid = CodecUtils.fromNbt(FluidVariant.CODEC, nbt.getCompound("fluid"), registryLookup);
         fluidAmount = nbt.getLong("fluidAmount");
@@ -328,7 +328,6 @@ public class BarrelBlockEntity extends BaseBlockEntity implements EnchantableBlo
         markForUpdate();
     }
 
-    @SuppressWarnings("unchecked")
     private RecipeEntry<BarrelRecipe> getRecipe() {
         if (lazeRecipeId != null && world != null) {
             var recipeEntry = world.getRecipeManager().get(lazeRecipeId);

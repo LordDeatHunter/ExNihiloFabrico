@@ -22,12 +22,12 @@ public class StrainerLootTableProvider extends SimpleFabricLootTableProvider {
     }
 
     @Override
-    public void accept(RegistryWrapper.WrapperLookup registryLookup, BiConsumer<RegistryKey<LootTable>, LootTable.Builder> consumer) {
+    public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> consumer) {
         consumer.accept(RegistryKey.of(RegistryKeys.LOOT_TABLE, id("gameplay/strainer")), LootTable.builder()
                 .pool(LootPool.builder()
-                        .with(LootTableEntry.builder(RegistryKey.of(RegistryKeys.LOOT_TABLE, new Identifier("gameplay/fishing/junk")))
+                        .with(LootTableEntry.builder(RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("gameplay/fishing/junk")))
                                 .weight(10))
-                        .with(LootTableEntry.builder(RegistryKey.of(RegistryKeys.LOOT_TABLE, new Identifier("gameplay/fishing/fish")))
+                        .with(LootTableEntry.builder(RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("gameplay/fishing/fish")))
                                 .weight(85))
                 )
         );

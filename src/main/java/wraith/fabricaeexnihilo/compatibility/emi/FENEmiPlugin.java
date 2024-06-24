@@ -7,10 +7,10 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
 import wraith.fabricaeexnihilo.compatibility.DefaultApiModule;
 import wraith.fabricaeexnihilo.compatibility.emi.recipes.*;
@@ -72,7 +72,7 @@ public class FENEmiPlugin implements EmiPlugin {
         SieveRecipeCombiner.combineRecipes(registry.getRecipeManager(), 3 * 9, (key, outputs) -> registry.addRecipe(new EmiSieveRecipe(key, outputs)));
     }
 
-    private <C extends Inventory, T extends Recipe<C>> void addRecipes(EmiRegistry registry, RecipeType<T> recipe, Function<RecipeEntry<T>, ? extends EmiRecipe> function) {
+    private <C extends RecipeInput, T extends Recipe<C>> void addRecipes(EmiRegistry registry, RecipeType<T> recipe, Function<RecipeEntry<T>, ? extends EmiRecipe> function) {
         registry.getRecipeManager()
                 .listAllOfType(recipe)
                 .stream()

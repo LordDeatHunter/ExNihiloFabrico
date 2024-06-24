@@ -1,15 +1,14 @@
 package wraith.fabricaeexnihilo.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.input.RecipeInput;
 
 /**
  * Utility class for an inventory that isn't able to contain any items.
  */
-public interface EmptyInventory extends Inventory {
+public interface EmptyInventory extends RecipeInput {
     @Override
-    default int size() {
+    default int getSize() {
         return 0;
     }
 
@@ -19,37 +18,7 @@ public interface EmptyInventory extends Inventory {
     }
 
     @Override
-    default ItemStack getStack(int slot) {
+    default ItemStack getStackInSlot(int slot) {
         throw new UnsupportedOperationException("This inventory is empty!");
-    }
-
-    @Override
-    default ItemStack removeStack(int slot, int amount) {
-        throw new UnsupportedOperationException("This inventory is empty!");
-    }
-
-    @Override
-    default ItemStack removeStack(int slot) {
-        throw new UnsupportedOperationException("This inventory is empty!");
-    }
-
-    @Override
-    default void setStack(int slot, ItemStack stack) {
-        throw new UnsupportedOperationException("This inventory is empty!");
-    }
-
-    @Override
-    default void markDirty() {
-
-    }
-
-    @Override
-    default boolean canPlayerUse(PlayerEntity player) {
-        return false;
-    }
-
-    @Override
-    default void clear() {
-
     }
 }

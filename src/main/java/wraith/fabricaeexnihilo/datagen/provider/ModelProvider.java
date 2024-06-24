@@ -47,73 +47,73 @@ public class ModelProvider extends FabricModelProvider {
         register(Models.PARTICLE, BloodFluid.BLOCK, id("block/fluid/blood_still"), generator);
         register(Models.PARTICLE, MilkFluid.BLOCK, id("block/fluid/milk_still"), generator);
         register(Models.PARTICLE, WitchWaterFluid.BLOCK, id("block/fluid/witchwater_still"), generator);
-        register(Models.PARTICLE, ModBlocks.INFESTING_LEAVES, new Identifier("block/oak_leaves"), generator);
+        register(Models.PARTICLE, ModBlocks.INFESTING_LEAVES, Identifier.of("block/oak_leaves"), generator);
 
         // As we are using the vanilla textures we can't autogenerate these
         register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.porcelainCrucible, id("block/porcelain_crucible"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.oakBlocks.crucible(), new Identifier("block/oak_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.birchBlocks.crucible(), new Identifier("block/birch_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.crucible(), new Identifier("block/spruce_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.crucible(), new Identifier("block/dark_oak_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.crucible(), new Identifier("block/jungle_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.crucible(), new Identifier("block/acacia_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.crucible(), new Identifier("block/crimson_stem"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.crucible(), new Identifier("block/warped_stem"), generator);
-        register(CRUCIBLE_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.crucible(), new Identifier("techreborn:block/rubber_log_side"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.crucible(), new Identifier("block/mangrove_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.crucible(), new Identifier("block/cherry_log"), generator);
-        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.crucible(), new Identifier("block/bamboo_block"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.oakBlocks.crucible(), Identifier.of("block/oak_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.birchBlocks.crucible(), Identifier.of("block/birch_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.crucible(), Identifier.of("block/spruce_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.crucible(), Identifier.of("block/dark_oak_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.crucible(), Identifier.of("block/jungle_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.crucible(), Identifier.of("block/acacia_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.crucible(), Identifier.of("block/crimson_stem"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.crucible(), Identifier.of("block/warped_stem"), generator);
+        register(CRUCIBLE_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.crucible(), Identifier.of("techreborn:block/rubber_log_side"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.crucible(), Identifier.of("block/mangrove_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.crucible(), Identifier.of("block/cherry_log"), generator);
+        register(CRUCIBLE_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.crucible(), Identifier.of("block/bamboo_block"), generator);
 
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.oakBlocks.sieve(), new Identifier("block/oak_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.birchBlocks.sieve(), new Identifier("block/birch_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.sieve(), new Identifier("block/spruce_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.sieve(), new Identifier("block/dark_oak_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.sieve(), new Identifier("block/jungle_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.sieve(), new Identifier("block/acacia_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.sieve(), new Identifier("block/crimson_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.sieve(), new Identifier("block/warped_planks"), generator);
-        register(SIEVE_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.sieve(), new Identifier("techreborn:block/rubber_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.sieve(), new Identifier("block/mangrove_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.sieve(), new Identifier("block/cherry_planks"), generator);
-        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.sieve(), new Identifier("block/bamboo_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.oakBlocks.sieve(), Identifier.of("block/oak_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.birchBlocks.sieve(), Identifier.of("block/birch_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.sieve(), Identifier.of("block/spruce_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.sieve(), Identifier.of("block/dark_oak_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.sieve(), Identifier.of("block/jungle_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.sieve(), Identifier.of("block/acacia_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.sieve(), Identifier.of("block/crimson_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.sieve(), Identifier.of("block/warped_planks"), generator);
+        register(SIEVE_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.sieve(), Identifier.of("techreborn:block/rubber_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.sieve(), Identifier.of("block/mangrove_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.sieve(), Identifier.of("block/cherry_planks"), generator);
+        register(SIEVE_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.sieve(), Identifier.of("block/bamboo_planks"), generator);
 
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.stoneBarrel, new Identifier("block/stone"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.oakBlocks.barrel(), new Identifier("block/oak_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.birchBlocks.barrel(), new Identifier("block/birch_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.barrel(), new Identifier("block/spruce_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.barrel(), new Identifier("block/dark_oak_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.barrel(), new Identifier("block/jungle_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.barrel(), new Identifier("block/acacia_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.barrel(), new Identifier("block/crimson_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.barrel(), new Identifier("block/warped_planks"), generator);
-        register(BARREL_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.barrel(), new Identifier("techreborn:block/rubber_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.barrel(), new Identifier("block/mangrove_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.barrel(), new Identifier("block/cherry_planks"), generator);
-        register(BARREL_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.barrel(), new Identifier("block/bamboo_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.stoneBarrel, Identifier.of("block/stone"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.oakBlocks.barrel(), Identifier.of("block/oak_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.birchBlocks.barrel(), Identifier.of("block/birch_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.barrel(), Identifier.of("block/spruce_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.barrel(), Identifier.of("block/dark_oak_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.barrel(), Identifier.of("block/jungle_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.barrel(), Identifier.of("block/acacia_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.barrel(), Identifier.of("block/crimson_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.barrel(), Identifier.of("block/warped_planks"), generator);
+        register(BARREL_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.barrel(), Identifier.of("techreborn:block/rubber_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.barrel(), Identifier.of("block/mangrove_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.barrel(), Identifier.of("block/cherry_planks"), generator);
+        register(BARREL_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.barrel(), Identifier.of("block/bamboo_planks"), generator);
 
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.oakBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/oak_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.birchBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/birch_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/spruce_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/dark_oak_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/jungle_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/acacia_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/crimson_stem")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/warped_stem")), generator);
-        register(STRAINER_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("techreborn:block/rubber_log_side")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/mangrove_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/cherry_log")), generator);
-        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.strainer(), new TextureMap().put(PILAR_KEY, new Identifier("block/bamboo_block")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.oakBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/oak_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.birchBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/birch_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.spruceBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/spruce_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.darkOakBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/dark_oak_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.jungleBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/jungle_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.acaciaBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/acacia_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.crimsonBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/crimson_stem")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.warpedBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/warped_stem")), generator);
+        register(STRAINER_MODEL, TechRebornApiModule.INSTANCE.rubberBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("techreborn:block/rubber_log_side")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.mangroveBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/mangrove_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.cherryBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/cherry_log")), generator);
+        register(STRAINER_MODEL, DefaultApiModule.INSTANCE.bambooBlocks.strainer(), new TextureMap().put(PILAR_KEY, Identifier.of("block/bamboo_block")), generator);
 
         // Some have the wrong leaves as base model, because their texture has color. We depend on leaves looking white when they aren't tinted
-        register(new Model(Optional.of(new Identifier("block/oak_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedOakLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/birch_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedBirchLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/spruce_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedSpruceLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/dark_oak_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedDarkOakLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/acacia_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedAcaciaLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/jungle_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedJungleLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/mangrove_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedMangroveLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/oak_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedCherryLeaves, new TextureMap(), generator);
-        register(new Model(Optional.of(new Identifier("block/acacia_leaves")), Optional.empty()), TechRebornApiModule.INSTANCE.infestedRubberLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/oak_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedOakLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/birch_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedBirchLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/spruce_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedSpruceLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/dark_oak_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedDarkOakLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/acacia_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedAcaciaLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/jungle_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedJungleLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/mangrove_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedMangroveLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/oak_leaves")), Optional.empty()), DefaultApiModule.INSTANCE.infestedCherryLeaves, new TextureMap(), generator);
+        register(new Model(Optional.of(Identifier.of("block/acacia_leaves")), Optional.empty()), TechRebornApiModule.INSTANCE.infestedRubberLeaves, new TextureMap(), generator);
 
         generator.blockStateCollector
                 .accept(
@@ -135,14 +135,14 @@ public class ModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator generator) {
         ModItems.DOLLS.keySet().forEach(id -> {
             var item = Registries.ITEM.get(id);
-            uploadModel(Models.GENERATED, item, new Identifier(id.getNamespace(), "item/dolls/" + id.getPath()), generator);
+            uploadModel(Models.GENERATED, item, Identifier.of(id.getNamespace(), "item/dolls/" + id.getPath()), generator);
         });
-        ModItems.MESHES.forEach((id, item) -> uploadModel(MESH_MODEL, item, new Identifier(id.getNamespace(), "item/ore/" + id.getPath()), generator));
-        ModItems.ORE_PIECES.forEach((id, item) -> uploadModel(Models.GENERATED, item, new Identifier(id.getNamespace(), "item/ore/" + id.getPath()), generator));
-        ModItems.PEBBLES.forEach((id, item) -> uploadModel(Models.GENERATED, item, new Identifier(id.getNamespace(), "item/pebbles/" + id.getPath()), generator));
-        ModItems.SEEDS.forEach((id, item) -> uploadModel(Models.GENERATED, item, new Identifier(id.getNamespace(), "item/seeds/" + id.getPath()), generator));
-        ModTools.CROOKS.forEach((id, item) -> uploadModel(Models.HANDHELD, item, new Identifier(id.getNamespace(), "item/tools/crook/" + id.getPath()), generator));
-        ModTools.HAMMERS.forEach((id, item) -> uploadModel(Models.HANDHELD, item, new Identifier(id.getNamespace(), "item/tools/hammer/" + id.getPath()), generator));
+        ModItems.MESHES.forEach((id, item) -> uploadModel(MESH_MODEL, item, Identifier.of(id.getNamespace(), "item/ore/" + id.getPath()), generator));
+        ModItems.ORE_PIECES.forEach((id, item) -> uploadModel(Models.GENERATED, item, Identifier.of(id.getNamespace(), "item/ore/" + id.getPath()), generator));
+        ModItems.PEBBLES.forEach((id, item) -> uploadModel(Models.GENERATED, item, Identifier.of(id.getNamespace(), "item/pebbles/" + id.getPath()), generator));
+        ModItems.SEEDS.forEach((id, item) -> uploadModel(Models.GENERATED, item, Identifier.of(id.getNamespace(), "item/seeds/" + id.getPath()), generator));
+        ModTools.CROOKS.forEach((id, item) -> uploadModel(Models.HANDHELD, item, Identifier.of(id.getNamespace(), "item/tools/crook/" + id.getPath()), generator));
+        ModTools.HAMMERS.forEach((id, item) -> uploadModel(Models.HANDHELD, item, Identifier.of(id.getNamespace(), "item/tools/hammer/" + id.getPath()), generator));
 
         generator.register(BloodFluid.BUCKET, Models.GENERATED);
         generator.register(BrineFluid.BUCKET, Models.GENERATED);

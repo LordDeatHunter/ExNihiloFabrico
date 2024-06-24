@@ -105,7 +105,7 @@ public class CrucibleBlock extends BlockWithEntity {
             return;
         }
         if (world.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible) {
-            EnchantmentHelper.getEnchantments(itemStack).getEnchantmentsMap().forEach(e -> crucible.getEnchantments().setEnchantmentLevel(e.getKey().value(), e.getIntValue()));
+            EnchantmentHelper.getEnchantments(itemStack).getEnchantmentEntries().forEach(e -> crucible.getEnchantments().setEnchantmentLevel(e.getKey(), e.getIntValue()));
             crucible.updateHeat();
         }
     }

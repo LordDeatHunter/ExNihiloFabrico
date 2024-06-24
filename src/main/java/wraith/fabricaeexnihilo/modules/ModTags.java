@@ -28,17 +28,17 @@ public final class ModTags {
     }
 
     public static final class Common {
-        public static final TagKey<Fluid> BLOOD = TagKey.of(RegistryKeys.FLUID, new Identifier("c", "blood"));
-        public static final TagKey<Fluid> BRINE = TagKey.of(RegistryKeys.FLUID, new Identifier("c", "brine"));
-        public static final TagKey<Block> CONCRETES = TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "concretes"));
-        public static final TagKey<Block> CONCRETE_POWDERS = TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "concrete_powders"));
-        public static final TagKey<Block> TORCHES = TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "torches"));
-        public static final TagKey<Item> COOKED_MEAT = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "cooked_meat"));
-        public static final TagKey<Item> RAW_MEAT = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "raw_meat"));
-        public static final TagKey<Item> SEEDS = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "seeds"));
-        public static final TagKey<Item> VEGETABLES = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "vegetables"));
-        public static final TagKey<Item> PORCELAIN = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "porcelain"));
-        public static final TagKey<Item> SALT = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "salt"));
+        public static final TagKey<Fluid> BLOOD = TagKey.of(RegistryKeys.FLUID, Identifier.of("c", "blood"));
+        public static final TagKey<Fluid> BRINE = TagKey.of(RegistryKeys.FLUID, Identifier.of("c", "brine"));
+        public static final TagKey<Block> CONCRETES = TagKey.of(RegistryKeys.BLOCK, Identifier.of("c", "concretes"));
+        public static final TagKey<Block> CONCRETE_POWDERS = TagKey.of(RegistryKeys.BLOCK, Identifier.of("c", "concrete_powders"));
+        public static final TagKey<Block> TORCHES = TagKey.of(RegistryKeys.BLOCK, Identifier.of("c", "torches"));
+        public static final TagKey<Item> COOKED_MEAT = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "cooked_meat"));
+        public static final TagKey<Item> RAW_MEAT = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "raw_meat"));
+        public static final TagKey<Item> SEEDS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "seeds"));
+        public static final TagKey<Item> VEGETABLES = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "vegetables"));
+        public static final TagKey<Item> PORCELAIN = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "porcelain"));
+        public static final TagKey<Item> SALT = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "salt"));
 
         private Common() {
         }

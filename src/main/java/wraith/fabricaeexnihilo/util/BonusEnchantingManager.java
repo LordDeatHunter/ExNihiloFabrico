@@ -1,21 +1,22 @@
 package wraith.fabricaeexnihilo.util;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.registry.RegistryKey;
 import wraith.fabricaeexnihilo.FabricaeExNihilo;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
 import wraith.fabricaeexnihilo.modules.ModItems;
 import wraith.fabricaeexnihilo.modules.ModTools;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class BonusEnchantingManager {
-    public static final Map<Enchantment, List<Item>> DATA = new HashMap<>();
+    public static final Map<RegistryKey<Enchantment>, List<Item>> DATA = new Object2ObjectOpenHashMap<>();
 
     private BonusEnchantingManager() {
     }
