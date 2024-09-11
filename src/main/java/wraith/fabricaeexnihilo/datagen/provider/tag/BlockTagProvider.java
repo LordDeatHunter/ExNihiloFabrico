@@ -3,6 +3,7 @@ package wraith.fabricaeexnihilo.datagen.provider.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.tag.BlockTags;
 import wraith.fabricaeexnihilo.modules.ModBlocks;
@@ -54,6 +55,7 @@ public class BlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.STONE, Blocks.COBBLESTONE, Blocks.GRAVEL, Blocks.SAND, ItemUtils.getExNihiloBlock("silt"))
                 .add(Blocks.ANDESITE, Blocks.GRANITE, Blocks.DIORITE, Blocks.CALCITE, Blocks.PRISMARINE)
                 .add(Blocks.END_STONE, Blocks.END_STONE_BRICKS, Blocks.NETHER_BRICKS, Blocks.NETHERRACK)
+                .add(Blocks.BLACKSTONE, Blocks.COBBLED_DEEPSLATE)
                 .add(ItemUtils.getExNihiloBlock("crushed_granite"));
     }
 }
