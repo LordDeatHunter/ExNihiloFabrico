@@ -21,6 +21,8 @@
     "minecraft:end_stone_bricks",
     "minecraft:nether_bricks",
     "minecraft:netherrack",
-    "fabricaeexnihilo:crushed_granite"
+    "fabricaeexnihilo:crushed_granite",
+    "minecraft:blackstone",
+    "minecraft:cobbled_deepslate"
   ]
 }
