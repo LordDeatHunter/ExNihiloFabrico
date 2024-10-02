@@ -52,6 +52,7 @@ public class BlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.STONE, Blocks.COBBLESTONE, Blocks.GRAVEL, Blocks.SAND, ItemUtils.getExNihiloBlock("silt"))
                 .add(Blocks.ANDESITE, Blocks.GRANITE, Blocks.DIORITE, Blocks.CALCITE, Blocks.PRISMARINE)
                 .add(Blocks.END_STONE, Blocks.END_STONE_BRICKS, Blocks.NETHER_BRICKS, Blocks.NETHERRACK)
+                .add(Blocks.BLACKSTONE, Blocks.COBBLED_DEEPSLATE)
                 .add(ItemUtils.getExNihiloBlock("crushed_granite"));
 
         var pickaxeMineableTag = getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE);
