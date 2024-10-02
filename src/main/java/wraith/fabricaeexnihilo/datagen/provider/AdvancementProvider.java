@@ -42,7 +42,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 .display(DefaultApiModule.INSTANCE.oakBlocks.sieve(),
                         Text.translatable("advancements.fabricaeexnihilo.root.title"),
                         Text.translatable("advancements.fabricaeexnihilo.root.description"),
-                        new Identifier("textures/gui/advancements/backgrounds/stone.png"),
+                        Identifier.of("textures/gui/advancements/backgrounds/stone.png"),
                         AdvancementFrame.TASK,
                         true, true, false)
                 .criterion("crafting_table", InventoryChangedCriterion.Conditions.items(Items.CRAFTING_TABLE))

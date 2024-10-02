@@ -55,7 +55,7 @@ public class FabricaeExNihilo implements ModInitializer {
     public static final ConfigManager<wraith.fabricaeexnihilo.config.FabricaeExNihiloConfig> CONFIG = ConfigManager.create(wraith.fabricaeexnihilo.config.FabricaeExNihiloConfig.CODEC, FabricaeExNihiloConfig.DEFAULT, "fabricaeexnihilo");
 
     public static Identifier id(String path) {
-        return new Identifier("fabricaeexnihilo", path);
+        return Identifier.of("fabricaeexnihilo", path);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class FabricaeExNihilo implements ModInitializer {
         ModBlocks.registerBlockEntities();
 
         LOGGER.debug("Creating Tags");
-        BonusEnchantingManager.generateDefaultTags();
+        BonusEnchantingManager.init();
         LOGGER.debug("Creating Recipes");
         ModRecipes.register();
     }

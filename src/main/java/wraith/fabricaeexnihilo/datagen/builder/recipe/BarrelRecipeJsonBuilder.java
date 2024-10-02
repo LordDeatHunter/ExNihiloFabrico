@@ -239,7 +239,7 @@ public class BarrelRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
     @Override
     public void offerTo(RecipeExporter exporter, String recipePath) {
-        offerTo(exporter, new Identifier(recipePath));
+        offerTo(exporter, Identifier.of(recipePath));
     }
 
     @Override

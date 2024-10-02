@@ -33,7 +33,7 @@ public class TechRebornApiModule implements FENApiModule {
 
         carbonMesh = registries.registerMesh("carbon", Color.BLACK, 14, registries.defaultItemSettings());
         rubberBlocks = registries.registerWood("rubber", false, registries.woodenBlockSettings());
-        infestedRubberLeaves = registries.registerInfestedLeaves("rubber", new Identifier("techreborn:rubber_leaves"), registries.infestedLeavesBlockSettings());
+        infestedRubberLeaves = registries.registerInfestedLeaves("rubber", Identifier.of("techreborn:rubber_leaves"), registries.infestedLeavesBlockSettings());
     }
 
     @Override

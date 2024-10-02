@@ -27,9 +27,9 @@ public sealed abstract class BlockIngredient implements Predicate<BlockState> {
 
     private static BlockIngredient fromData(String id, Map<String, String> states) {
         if (id.startsWith("#")) {
-            return new Tag(TagKey.of(RegistryKeys.BLOCK, new Identifier(id.substring(1))), states);
+            return new Tag(TagKey.of(RegistryKeys.BLOCK, Identifier.of(id.substring(1))), states);
         } else {
-            return new Single(Registries.BLOCK.getEntry(new Identifier(id)).orElseThrow(), states);
+            return new Single(Registries.BLOCK.getEntry(Identifier.of(id)).orElseThrow(), states);
         }
     }
 

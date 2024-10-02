@@ -20,9 +20,9 @@ public sealed abstract class FluidIngredient implements Predicate<Fluid> {
 
     public static FluidIngredient fromId(String id) {
         if (id.startsWith("#")) {
-            return new Tag(TagKey.of(RegistryKeys.FLUID, new Identifier(id.substring(1))));
+            return new Tag(TagKey.of(RegistryKeys.FLUID, Identifier.of(id.substring(1))));
         } else {
-            return new Single(Registries.FLUID.get(new Identifier(id)));
+            return new Single(Registries.FLUID.get(Identifier.of(id)));
         }
     }
 

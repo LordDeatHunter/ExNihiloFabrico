@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.*;
@@ -113,7 +114,9 @@ public class SieveBlockEntity extends BaseBlockEntity {
 
         var config = FabricaeExNihilo.CONFIG.get().sieves();
         var haste = player.getActiveStatusEffects().get(StatusEffects.HASTE);
-        var efficiency = config.efficiency() ? EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, mesh) : 0;
+        // NOTE: perhaps replace the strict efficiency check with something more generic?
+        var efficiency = config.efficiency() ? EnchantmentHelper.getLevel(
+                world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.EFFICIENCY), mesh) : 0;
         var hasteLevel = config.haste() ? (haste == null ? -1 : haste.getAmplifier()) + 1 : 0;
 
         progress += config.baseProgress()

@@ -101,14 +101,14 @@ public class DefaultApiModule implements FENApiModule {
         porcelainCrucible = registries.registerCrucible("porcelain", true, registries.stoneBlockSettings());
         stoneBarrel = registries.registerBarrel("stone", true, registries.stoneBlockSettings());
 
-        infestedOakLeaves = registries.registerInfestedLeaves("oak", new Identifier("minecraft:oak_leaves"), registries.infestedLeavesBlockSettings());
-        infestedBirchLeaves = registries.registerInfestedLeaves("birch", new Identifier("minecraft:birch_leaves"), registries.infestedLeavesBlockSettings());
-        infestedSpruceLeaves = registries.registerInfestedLeaves("spruce", new Identifier("minecraft:spruce_leaves"), registries.infestedLeavesBlockSettings());
-        infestedAcaciaLeaves = registries.registerInfestedLeaves("acacia", new Identifier("minecraft:acacia_leaves"), registries.infestedLeavesBlockSettings());
-        infestedDarkOakLeaves = registries.registerInfestedLeaves("dark_oak", new Identifier("minecraft:dark_oak_leaves"), registries.infestedLeavesBlockSettings());
-        infestedJungleLeaves = registries.registerInfestedLeaves("jungle", new Identifier("minecraft:jungle_leaves"), registries.infestedLeavesBlockSettings());
-        infestedMangroveLeaves = registries.registerInfestedLeaves("mangrove", new Identifier("minecraft:mangrove_leaves"), registries.infestedLeavesBlockSettings());
-        infestedCherryLeaves = registries.registerInfestedLeaves("cherry", new Identifier("minecraft:cherry_leaves"), registries.infestedLeavesBlockSettings());
+        infestedOakLeaves = registries.registerInfestedLeaves("oak", Identifier.of("minecraft:oak_leaves"), registries.infestedLeavesBlockSettings());
+        infestedBirchLeaves = registries.registerInfestedLeaves("birch", Identifier.of("minecraft:birch_leaves"), registries.infestedLeavesBlockSettings());
+        infestedSpruceLeaves = registries.registerInfestedLeaves("spruce", Identifier.of("minecraft:spruce_leaves"), registries.infestedLeavesBlockSettings());
+        infestedAcaciaLeaves = registries.registerInfestedLeaves("acacia", Identifier.of("minecraft:acacia_leaves"), registries.infestedLeavesBlockSettings());
+        infestedDarkOakLeaves = registries.registerInfestedLeaves("dark_oak", Identifier.of("minecraft:dark_oak_leaves"), registries.infestedLeavesBlockSettings());
+        infestedJungleLeaves = registries.registerInfestedLeaves("jungle", Identifier.of("minecraft:jungle_leaves"), registries.infestedLeavesBlockSettings());
+        infestedMangroveLeaves = registries.registerInfestedLeaves("mangrove", Identifier.of("minecraft:mangrove_leaves"), registries.infestedLeavesBlockSettings());
+        infestedCherryLeaves = registries.registerInfestedLeaves("cherry", Identifier.of("minecraft:cherry_leaves"), registries.infestedLeavesBlockSettings());
 
         stringMesh = registries.registerMesh("string", Color.WHITE, 10, registries.defaultItemSettings());
         flintMesh = registries.registerMesh("flint", Color.GRAY, 12, registries.defaultItemSettings());
@@ -122,36 +122,36 @@ public class DefaultApiModule implements FENApiModule {
         var seedConfig = FabricaeExNihilo.CONFIG.get().seeds();
         if (seedConfig.enabled()) {
             if (seedConfig.mycelium()) {
-                myceliumSeeds = registries.registerTransformingSeed("mycelium", new Identifier("minecraft:dirt"), new Identifier("minecraft:mycelium"));
+                myceliumSeeds = registries.registerTransformingSeed("mycelium", Identifier.of("minecraft:dirt"), Identifier.of("minecraft:mycelium"));
             }
             if (seedConfig.netherSpores()) {
-                warpedSeeds = registries.registerTransformingSeed("warped", new Identifier("minecraft:netherrack"), new Identifier("minecraft:warped_nylium"));
-                crimsonSeeds = registries.registerTransformingSeed("crimson", new Identifier("minecraft:netherrack"), new Identifier("minecraft:crimson_nylium"));
+                warpedSeeds = registries.registerTransformingSeed("warped", Identifier.of("minecraft:netherrack"), Identifier.of("minecraft:warped_nylium"));
+                crimsonSeeds = registries.registerTransformingSeed("crimson", Identifier.of("minecraft:netherrack"), Identifier.of("minecraft:crimson_nylium"));
             }
             if (seedConfig.grass()) {
-                grassSeeds = registries.registerTransformingSeed("grass", new Identifier("minecraft:dirt"), new Identifier("minecraft:grass_block"));
+                grassSeeds = registries.registerTransformingSeed("grass", Identifier.of("minecraft:dirt"), Identifier.of("minecraft:grass_block"));
             }
             //TODO: Replace seeds bellow with vanilla variants
             if (seedConfig.chorus()) {
-                chorusSeeds = registries.registerSeed("chorus", new Identifier("minecraft:chorus_flower"));
+                chorusSeeds = registries.registerSeed("chorus", Identifier.of("minecraft:chorus_flower"));
             }
             if (seedConfig.seaPickle()) {
-                seaPickleSeeds = registries.registerSeed("sea_pickle", new Identifier("minecraft:sea_pickle"));
+                seaPickleSeeds = registries.registerSeed("sea_pickle", Identifier.of("minecraft:sea_pickle"));
             }
             if (seedConfig.sugarCane()) {
-                sugarcaneSeeds = registries.registerSeed("sugarcane", new Identifier("minecraft:sugar_cane"));
+                sugarcaneSeeds = registries.registerSeed("sugarcane", Identifier.of("minecraft:sugar_cane"));
             }
             if (seedConfig.cactus()) {
-                cactusSeeds = registries.registerSeed("cactus", new Identifier("minecraft:cactus"));
+                cactusSeeds = registries.registerSeed("cactus", Identifier.of("minecraft:cactus"));
             }
             if (seedConfig.kelp()) {
-                kelpSeeds = registries.registerSeed("kelp", new Identifier("minecraft:kelp"));
+                kelpSeeds = registries.registerSeed("kelp", Identifier.of("minecraft:kelp"));
             }
             if (seedConfig.flowerSeeds()) {
-                sunflowerSeeds = registries.registerTallPlantSeed("sunflower", new Identifier("minecraft:sunflower"));
-                lilacSeeds = registries.registerTallPlantSeed("lilac", new Identifier("minecraft:lilac"));
-                roseBushSeeds = registries.registerTallPlantSeed("rose_bush", new Identifier("minecraft:rose_bush"));
-                peonySeeds = registries.registerTallPlantSeed("peony", new Identifier("minecraft:peony"));
+                sunflowerSeeds = registries.registerTallPlantSeed("sunflower", Identifier.of("minecraft:sunflower"));
+                lilacSeeds = registries.registerTallPlantSeed("lilac", Identifier.of("minecraft:lilac"));
+                roseBushSeeds = registries.registerTallPlantSeed("rose_bush", Identifier.of("minecraft:rose_bush"));
+                peonySeeds = registries.registerTallPlantSeed("peony", Identifier.of("minecraft:peony"));
             }
         }
     }

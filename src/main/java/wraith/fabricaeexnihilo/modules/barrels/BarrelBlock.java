@@ -100,7 +100,7 @@ public class BarrelBlock extends BlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.getBlockEntity(pos) instanceof BarrelBlockEntity barrelEntity) {
-            EnchantmentHelper.getEnchantments(itemStack).getEnchantmentsMap().forEach((e) -> barrelEntity.getEnchantmentContainer().setEnchantmentLevel(e.getKey().value(), e.getIntValue()));
+            EnchantmentHelper.getEnchantments(itemStack).getEnchantmentEntries().forEach((e) -> barrelEntity.getEnchantmentContainer().setEnchantmentLevel(e.getKey(), e.getIntValue()));
         }
     }
 

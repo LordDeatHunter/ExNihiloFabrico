@@ -79,7 +79,7 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
 
     public void readNbtWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         progress = nbt.getDouble("progress");
-        target = Registries.BLOCK.getOrEmpty(new Identifier(nbt.getString("target")))
+        target = Registries.BLOCK.getOrEmpty(Identifier.of(nbt.getString("target")))
                 .flatMap(block -> block instanceof InfestedLeavesBlock infested ? Optional.of(infested) : Optional.empty())
                 .orElse(ModBlocks.INFESTED_LEAVES.values().stream().findFirst().orElseThrow());
     }
@@ -87,7 +87,7 @@ public class InfestingLeavesBlockEntity extends BaseBlockEntity implements Color
     @SuppressWarnings("deprecation")
     public void toNBTWithoutWorldInfo(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putDouble("progress", progress);
-        nbt.putString("target", target.getRegistryEntry().getKey().get().getValue().toString());
+        nbt.putString("target", target.getRegistryEntry().registryKey().getValue().toString());
     }
 
     @Override
