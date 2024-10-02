@@ -1,0 +1,5 @@
+{
+  "fabricaeexnihilo:wthit_plugin": {
+    "initializer": "wraith.fabricaeexnihilo.compatibility.wthit.WthitPlugin"
+  }
+}

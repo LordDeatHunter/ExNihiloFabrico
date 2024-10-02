@@ -48,10 +48,6 @@
     "megane:modules": [
       "wraith.fabricaeexnihilo.compatibility.megane.FENMeganeModule"
     ],
-    "waila:plugins": {
-      "initializer": "wraith.fabricaeexnihilo.compatibility.wthit.WthitPlugin",
-      "id": "fabricaeexnihilo:wthit_plugin"
-    },
     "DISABLED(II doesn't work well with accessor mixins for the time being), loom:injected_interfaces": {
       "net/minecraft/class_4915": ["wraith/fabricaeexnihilo/mixins/ItemModelGeneratorAccess"],
       "net/minecraft/class_2203\u0024class_2209": ["wraith/fabricaeexnihilo/mixins/NbtPathAccess"]
